@@ -31,6 +31,7 @@ Install the stack, configure each service, connect social OAuth, and assign admi
 <LinkCard title="Installation" description="Docker Compose self-host, local development, and production deploys" href="/docs/installation" />
 <LinkCard title="Backend Setup" description="Env vars, Supabase, and backend services" href="/docs/configuration-backend" />
 <LinkCard title="Frontend Setup" description="Vite env vars and web configuration" href="/docs/configuration-web" />
+<LinkCard title="Browser extension" description="Chrome extension for Skool and cookie-session channels" href="/docs/installation/chrome-extension" />
 <LinkCard title="Workers Setup" description="Orchestrator workers, BullMQ, Redis, and Railway deploy" href="/docs/configuration-worker" />
 <LinkCard title="CLI Auth Server Setup" description="Deploy and configure the CLI device-flow auth server" href="/docs/configuration-agent" />
 <LinkCard title="Admin Roles" description="Platform admin access and post-deployment setup" href="/docs/admin" />
@@ -59,6 +60,7 @@ Every self-hosting section plus General, Cloud, and contributing guides.
 <LinkCard title="Installation" description="Docker Compose self-host, local development, and production deploys" href="/docs/installation" />
 <LinkCard title="Backend Setup" description="Env vars, Supabase, and backend services" href="/docs/configuration-backend" />
 <LinkCard title="Frontend Setup" description="Vite env vars and web configuration" href="/docs/configuration-web" />
+<LinkCard title="Browser extension" description="Chrome extension for Skool and cookie-session channels" href="/docs/installation/chrome-extension" />
 <LinkCard title="Workers Setup" description="Orchestrator workers, BullMQ, Redis, and Railway deploy" href="/docs/configuration-worker" />
 <LinkCard title="CLI Auth Server Setup" description="Deploy and configure the CLI device-flow auth server" href="/docs/configuration-agent" />
 <LinkCard title="Admin Roles" description="Platform admin access and post-deployment setup" href="/docs/admin" />

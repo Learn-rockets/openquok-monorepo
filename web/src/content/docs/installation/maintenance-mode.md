@@ -1,7 +1,7 @@
 ---
 title: Maintenance mode
 description: Pause the app during maintenance or a database move.
-order: 7
+order: 8
 lastUpdated: 2026-09-19
 ---
 

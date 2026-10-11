@@ -76,6 +76,7 @@ Configure Redis, Sentry (optional), Google OAuth (optional), email (Resend in pr
 <LinkCard title="Docker Compose (self-host)" description="Run API, web, Redis, and workers from infra/self-host/" href="/docs/installation/docker-compose" />
 <LinkCard title="Production deployment" description="Align FRONTEND_DOMAIN_URL with VITE_FRONTEND_DOMAIN_URL in production" href="/docs/installation/production-deployment" />
 <LinkCard title="Vite (SvelteKit)" description="VITE_FRONTEND_DOMAIN_URL and OAuth alignment" href="/docs/configuration-web/vite" />
+<LinkCard title="Browser extension" description="Cookie-session channels (Skool); extension ID on the web app" href="/docs/installation/chrome-extension" />
 <LinkCard title="Installation" description="Deploy and configure OpenQuok" href="/docs/installation" />
 <LinkCard title="Configuration - Worker" description="BullMQ workers, Docker, Redis, and Railway" href="/docs/configuration-worker" />
 <LinkCard title="Developer guidelines" description="Conventions for working in this repository" href="/docs/developer-guidelines" />

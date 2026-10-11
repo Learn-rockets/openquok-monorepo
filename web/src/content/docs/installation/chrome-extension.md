@@ -1,7 +1,7 @@
 ---
 title: OpenQuok browser extension
 description: Install the OpenQuok Chrome extension for cookie-session channels.
-order: 8
+order: 7
 lastUpdated: 2026-10-09
 sidebar:
   label: Browser extension
