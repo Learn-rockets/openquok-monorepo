@@ -165,7 +165,7 @@ export const openquokCompareProduct: CompareProduct = {
 	icon: icons.OpenQuok.name,
 	tagline: 'Social media scheduler for people and AI agents',
 	overview:
-		'OpenQuok is an open-source social media scheduler. Connect Facebook, Instagram, Threads, YouTube, TikTok, LinkedIn, X, Dev.to, and more. Plan posts on calendar and kanban views. Publish from the dashboard, or send drafts from agents with skills, MCP, and the Public API. Separate workspaces keep brands, clients, and agents apart.',
+		'OpenQuok is an open-source social media scheduler. Connect Facebook, Instagram, Threads, YouTube, TikTok, LinkedIn, X, Dev.to, Bluesky, Skool, and more. Plan posts on calendar and kanban views. Publish from the dashboard, or send drafts from agents with skills, MCP, and the Public API. Separate workspaces keep brands, clients, and agents apart.',
 	pricingPlans: OPENQUOK_PRICING_PLANS,
 	channels: OPENQUOK_CHANNELS,
 	featureSupport: buildOpenQuokFeatureSupport(),

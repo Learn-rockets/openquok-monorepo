@@ -23,15 +23,3 @@ export const tiktokPublicApiPostingPlatform: PublicApiPlatformPageViewModel = bu
 		'Post TikTok videos and photo carousels with OpenQuok POST /public/posts. Direct publish or inbox upload, privacy toggles, and structured API responses.',
 	keywords: KEYWORDS
 });
-
-export const tiktokPublicApiSchedulingPlatform: PublicApiPlatformPageViewModel = buildPublicApiPlatformPage({
-	slug: SLUG,
-	capability: 'scheduling',
-	formatExamples: PUBLIC_API_FORMAT_EXAMPLES_BY_PLATFORM[SLUG].scheduling,
-	heroDescription:
-		'Queue TikTok videos and carousels for a future publish time. Set scheduledAt in UTC and tune privacy or inbox upload before the worker publishes.',
-	metaTitle: 'TikTok Scheduling API',
-	metaDescription:
-		'Schedule TikTok videos and photo carousels with OpenQuok POST /public/posts. Set scheduledAt in UTC, privacy levels, and inbox upload from one JSON payload.',
-	keywords: KEYWORDS
-});

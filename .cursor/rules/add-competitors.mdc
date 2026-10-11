@@ -79,7 +79,7 @@ Export a `CompareProduct` with:
 | `overview` | 2–3 short sentences for platform overview and alternatives listings (ASD-STE100) |
 | `pricingPlans` | `ComparePricingPlan[]` — public list prices in USD; `monthlyPrice: null` for custom/enterprise; add a **Self-host** row at `$0` when the vendor ships AGPL/OSS self-host with no software fee |
 | `pricingUnit` | Optional: `per_channel` (Buffer, Hopper HQ), `per_seat` (Hootsuite), or omit for flat workspace/account bundles |
-| `channels` | Human labels aligned with `listAvailablePublicChannelCompareLabels()` in `channels/index.ts` so channel compare icons resolve |
+| `channels` | Human labels aligned with `listAvailablePublicChannelCompareLabels()` in `channels/index.ts` (all `PUBLIC_CHANNEL_LANDING_PAGES` labels + extras) so channel compare icons resolve on both sides |
 | `featureSupport` | `Partial<Record<PublicPricingCompareRowId, CompareFeatureCell>>` — one cell per row in `PUBLIC_PRICING_COMPARE_ROWS` (`included` / `excluded` / `text`) |
 | `comparison` | `headline`, `notAnother`, `builtFor`, `positioningWhenLeft`, optional `withoutTitle`, and `talkingPoints` — all ASD-STE100 |
 
@@ -174,7 +174,7 @@ Smoke-test URLs:
 Only update when **OpenQuok product facts** change (pricing tiers, limits, channels):
 
 - Pull plan limits from `openquok-common` (`planLimitsForTier`, etc.) — do not hand-copy prices.
-- Channels from `listAvailablePublicChannelCompareLabels()`.
+- Channels from `listAvailablePublicChannelCompareLabels()` (every public catalog channel, including coming-soon — no per-channel edit in `openquok.ts`).
 - `featureSupport` built dynamically in `buildOpenQuokFeatureSupport()`.
 - OpenQuok is `COMPARE_HUB_BASE_SLUG`; it is **not** an alternatives target slug.
 

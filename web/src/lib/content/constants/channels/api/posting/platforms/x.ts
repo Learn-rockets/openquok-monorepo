@@ -24,16 +24,3 @@ export const xPublicApiPostingPlatform: PublicApiPlatformPageViewModel = buildPu
 		'Post to X with OpenQuok POST /public/posts. Tweets, scheduled thread replies, media, and cross-account reposts from one JSON payload.',
 	keywords: KEYWORDS
 });
-
-export const xPublicApiSchedulingPlatform: PublicApiPlatformPageViewModel = buildPublicApiPlatformPage({
-	slug: SLUG,
-	capability: 'scheduling',
-	formatExamples: PUBLIC_API_FORMAT_EXAMPLES_BY_PLATFORM[SLUG].scheduling,
-	heroPlatformLabel: 'Twitter / X',
-	heroDescription:
-		'Schedule Twitter/X posts through one simple API. Queue tweets and thread chains for a future instant with scheduledAt in UTC and chained follow-up replies.',
-	metaTitle: 'X Scheduling API',
-	metaDescription:
-		'Schedule X posts with OpenQuok POST /public/posts. Queue tweets, thread replies, and media for a future publish time in UTC.',
-	keywords: KEYWORDS
-});

@@ -31,6 +31,7 @@ Install the stack, configure each service, connect social OAuth, and assign admi
 <LinkCard title="Installation" description="Docker Compose self-host, local development, and production deploys" href="/docs/installation" />
 <LinkCard title="Backend Setup" description="Env vars, Supabase, and backend services" href="/docs/configuration-backend" />
 <LinkCard title="Frontend Setup" description="Vite env vars and web configuration" href="/docs/configuration-web" />
+<LinkCard title="Browser extension" description="Chrome extension for Skool and cookie-session channels" href="/docs/installation/chrome-extension" />
 <LinkCard title="Workers Setup" description="Orchestrator workers, BullMQ, Redis, and Railway deploy" href="/docs/configuration-worker" />
 <LinkCard title="CLI Auth Server Setup" description="Deploy and configure the CLI device-flow auth server" href="/docs/configuration-agent" />
 <LinkCard title="Admin Roles" description="Platform admin access and post-deployment setup" href="/docs/admin" />
@@ -39,7 +40,7 @@ Install the stack, configure each service, connect social OAuth, and assign admi
 
 ## Self-hosted defaults
 
-For the full operator stack (API, web, Redis, workers), use <a href="/docs/installation/docker-compose">Docker Compose (self-host)</a>. After <code>up --build</code>, open <Badge text="http://localhost:4007" variant="default" /> — Compose serves the UI; you do not run the Vite dev server for that path.
+For the full operator stack (API, web, Redis, workers), use <a href="/docs/installation/docker-compose">Docker Compose (self-host)</a>. After <code>up --build</code>, open <Badge text="http://localhost:4007" variant="default" /> — Compose serves the UI; you do not run the Vite dev server.
 
 <Callout type="tip" title="Without Email">
 <p>Set <Badge text="EMAIL_ENABLED" variant="envBackend" />{' '}<code>=false</code> — no outbound mail; signup marks users verified.</p>
@@ -59,6 +60,7 @@ Every self-hosting section plus General, Cloud, and contributing guides.
 <LinkCard title="Installation" description="Docker Compose self-host, local development, and production deploys" href="/docs/installation" />
 <LinkCard title="Backend Setup" description="Env vars, Supabase, and backend services" href="/docs/configuration-backend" />
 <LinkCard title="Frontend Setup" description="Vite env vars and web configuration" href="/docs/configuration-web" />
+<LinkCard title="Browser extension" description="Chrome extension for Skool and cookie-session channels" href="/docs/installation/chrome-extension" />
 <LinkCard title="Workers Setup" description="Orchestrator workers, BullMQ, Redis, and Railway deploy" href="/docs/configuration-worker" />
 <LinkCard title="CLI Auth Server Setup" description="Deploy and configure the CLI device-flow auth server" href="/docs/configuration-agent" />
 <LinkCard title="Admin Roles" description="Platform admin access and post-deployment setup" href="/docs/admin" />

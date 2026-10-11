@@ -20,6 +20,16 @@ export const SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS = [
 export type SupportedAnalyticsProviderIdentifier =
 	(typeof SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS)[number];
 
+export function providerSupportsOpenQuokAnalytics(identifier: string): boolean {
+	return (SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS as readonly string[]).includes(identifier);
+}
+
+export function channelProviderIdentifiersSupportAnalytics(
+	providerIdentifiers: readonly string[]
+): boolean {
+	return providerIdentifiers.some(providerSupportsOpenQuokAnalytics);
+}
+
 /** Allowed lookback windows for account and post analytics (API accepts only these values). */
 export const ANALYTICS_DATE_WINDOW_DAYS_OPTIONS = [7, 30, 90] as const;
 
@@ -101,7 +111,8 @@ export const socialProviderDisplayNameByIdentifier: Record<string, string> = {
 	linkedin: 'LinkedIn',
 	'linkedin-page': 'LinkedIn Page',
 	devto: 'Dev.to',
-	bluesky: 'Bluesky'
+	bluesky: 'Bluesky',
+	skool: 'Skool'
 };
 
 export function socialProviderDisplayLabel(identifier: string): string {
@@ -168,7 +179,8 @@ export function socialProviderEmoji(identifier: string): string {
 		linkedin: '[in]',
 		'linkedin-page': '[in]',
 		devto: 'DEV',
-		bluesky: '🦋'
+		bluesky: '🦋',
+		skool: 'Sk'
 	};
 	return byId[key] ?? '🔗';
 }
@@ -247,6 +259,12 @@ const SOCIAL_PROVIDER_ICON_SPECS: readonly SocialProviderIconSpec[] = [
 		icon: icons.BlueskyGlyph.name,
 		listIcon: icons.Bluesky.name,
 		labels: ['Bluesky']
+	},
+	{
+		identifiers: ['skool'],
+		icon: icons.SkoolGlyph.name,
+		listIcon: icons.Skool.name,
+		labels: ['Skool']
 	},
 	{
 		icon: icons.Mastodon.name,

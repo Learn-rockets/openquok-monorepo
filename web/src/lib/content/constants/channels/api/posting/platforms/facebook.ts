@@ -24,16 +24,3 @@ export const facebookPublicApiPostingPlatform: PublicApiPlatformPageViewModel =
 			'Post to Facebook Pages with OpenQuok POST /public/posts. Text, images, Reels, link previews, and follow-up comments from one JSON payload.',
 		keywords: KEYWORDS
 	});
-
-export const facebookPublicApiSchedulingPlatform: PublicApiPlatformPageViewModel =
-	buildPublicApiPlatformPage({
-		slug: SLUG,
-		capability: 'scheduling',
-		formatExamples: PUBLIC_API_FORMAT_EXAMPLES_BY_PLATFORM[SLUG].scheduling,
-		heroDescription:
-			'Queue Facebook Page posts for a future publish time. Set scheduledAt in UTC with link previews and follow-up comment settings.',
-		metaTitle: 'Facebook Scheduling API',
-		metaDescription:
-			'Schedule Facebook Page posts with OpenQuok POST /public/posts. Queue text, images, Reels, and link previews for a future UTC time.',
-		keywords: KEYWORDS
-	});

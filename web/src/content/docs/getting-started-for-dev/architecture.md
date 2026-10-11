@@ -2,7 +2,7 @@
 title: Project Architecture
 description: OpenQuok's architecture — project layout and key files for OpenQuok.
 order: 1
-lastUpdated: 2026-10-03
+lastUpdated: 2026-10-10
 ---
 
 <script>
@@ -17,12 +17,15 @@ const runtimeArchitecture = `flowchart LR
     backend[Backend API]:::svc
     orchestrator[Orchestrator workers]:::svc
     agent[CLI / SDK / MCP]:::client
+    browserExt[Browser extension]:::client
     redis[Redis / BullMQ]:::ext
     supabase[Supabase]:::ext
     storage[Storage]:::ext
     resend[Resend]:::ext
 
     web --> backend
+    web --> browserExt
+    browserExt --> backend
     agent --> backend
     backend --> supabase
     backend --> redis
@@ -77,7 +80,7 @@ The customer-facing **SvelteKit** app lives in <Badge text="web/" variant="path"
 
 ## Runtime architecture
 
-OpenQuok has **three main services**, **programmatic clients**, and **four external systems**. The web app and API talk over HTTP; with `bullmq` transport, the API enqueues Flowcraft runs to Redis and orchestrator workers execute them. External systems usually run outside the app process.
+OpenQuok has **three main services** (web, API, and workers), a **browser extension** for some networks, **CLI and SDK tools**, and **four external systems** (database, queues, files, and email). The web app calls the API over the network. The extension works with the dashboard when you connect a channel. Workers run jobs from a queue — for example they publish scheduled posts, including posts for channels that use the extension.
 
 <Mermaid string={runtimeArchitecture} />
 
@@ -85,6 +88,7 @@ OpenQuok has **three main services**, **programmatic clients**, and **four exter
 - [Backend API](#backend-api) — Express API, Supabase assets, and workflow enqueue.
 - [Orchestrator](#orchestrator) — BullMQ workers for posts, email, and token refresh.
 - [Programmatic clients](#programmatic-clients) — CLI, SDK, and MCP against the public API.
+- [Browser extension](#browser-extension) — Chrome add-on for networks like Skool; keeps your site sign-in in sync with OpenQuok.
 - **Supabase** — Postgres, Auth, and optional Storage buckets.
 - **Redis / BullMQ** — Job queues and shared cache between API and workers.
 - **Storage** — User media (Supabase Storage, R2, or local disk in self-host).
@@ -115,6 +119,12 @@ See <a href="/docs/developer-guidelines/orchestrator-workflows">Orchestrator wor
 
 The CLI, Node SDK, and hosted MCP server call <Badge text="/api/v1/public/*" variant="path" />. The CLI may use the device-flow auth server in <Badge text="agent/server/" variant="path" /> for login — see <a href="/docs/configuration-agent/architecture">Auth server architecture</a>.
 
+<h3 id="browser-extension">Browser extension</h3>
+
+The OpenQuok **Chrome extension** (<Badge text="extension/" variant="path" />) does not schedule posts on your computer. When you add a channel in the dashboard, the extension reads your sign-in on the network site and sends it to OpenQuok. OpenQuok stores it safely and uses it when a post is due. The extension updates that sign-in on a regular schedule.
+
+See <a href="/docs/installation/chrome-extension">Chrome extension</a> to install, build, or self-host. See [Project layout](#project-layout) below for where the extension package lives in the repo.
+
 ## Project Layout
 
 Repository layout at the root:
@@ -134,6 +144,7 @@ Repository layout at the root:
   - src/
 - backend/
 - common/
+- extension/
 - infra/
   - self-host/
   - docker-compose.yml
@@ -152,7 +163,8 @@ Repository layout at the root:
 - <Badge text="agent/" variant="path" /> — Published as <Badge text="@openquok/auto-cli" variant="default" />: the programmatic CLI, agent skills under <Badge text="skills/" variant="path" />, and the OAuth2 device-flow auth server in <Badge text="server/" variant="path" />. See <a href="/docs/getting-started-for-cli">Getting Started - CLI</a> and <a href="/docs/configuration-agent">Configuration - Agent</a>.
 - <Badge text=".backups/" variant="path" /> See <a href="/docs/configuration-backend/supabase-backup">Supabase backup</a>.
 - <Badge text="backend/" variant="path" /> — Supabase project assets (migrations, RLS, modules) and the Express API that talks to Supabase (database + auth, and Storage).
-- <Badge text="common/" variant="path" /> — Shared workspace package (`openquok-common`): types and small utilities imported by <Badge text="backend/" variant="path" /> and <Badge text="orchestrator/" variant="path" /> (for example notification email types).
+- <Badge text="common/" variant="path" /> — Shared workspace package (`openquok-common`): types and small utilities imported by <Badge text="backend/" variant="path" />, <Badge text="orchestrator/" variant="path" />, <Badge text="web/" variant="path" />, and <Badge text="extension/" variant="path" /> (including <Badge text="browser-extension/" variant="path" /> message protocol and cookie-session provider registry).
+- <Badge text="extension/" variant="path" /> — Published as <Badge text="@openquok/browser-extension" variant="default" />: Chrome MV3 service worker, cookie harvest, and refresh alarms. Build output in <Badge text="extension/dist/" variant="path" />. See <a href="/docs/installation/chrome-extension">Chrome extension</a>.
 - <Badge text=".github/" variant="path" /> — CI workflows (for example release automation under <Badge text="workflows/" variant="path" />).
 - <Badge text="infra/" variant="path" /> — Docker Compose and self-host env templates. Dev dependencies live in <Badge text="infra/docker-compose.yml" variant="path" />; the full operator stack is under <Badge text="infra/self-host/" variant="path" />. See <a href="/docs/installation/docker-compose">Docker Compose</a>.
 - <Badge text="orchestrator/" variant="path" /> — Workspace package: Flowcraft blueprints, BullMQ adapters, and worker entrypoints. See <a href="/docs/developer-guidelines/orchestrator-workflows">Orchestrator workflows</a>, <a href="/docs/configuration-worker">Configuration - Worker</a>, and <a href="/docs/configuration-worker/railway">Railway (workers)</a>.
@@ -199,7 +211,7 @@ Repository layout at the root:
 - <Badge text="api/" variant="path" /> and <Badge text="handler/" variant="path" /> — HTTP entrypoints shaped or types for Vercel. Use them as the deployment shell.
 - <Badge text="services/" variant="path" /> — Domain orchestration and use-cases; this layer is also where caching belongs when you need to reuse or shorten expensive work across requests (in-memory, keyed stores, or upstream cache). Services may also call `openquok-orchestrator` to enqueue Flowcraft runs.
 - <Badge text="supabase/" variant="path" /> — Database source of truth: modular SQL under <Badge text="db/" variant="path" /> tables, RLS, functions, seeds, and migration files.
-- <Badge text="integrations/" variant="path" /> — Social provider adapters (OAuth, publish, analytics) consumed by services and orchestrator activities.
+- <Badge text="integrations/" variant="path" /> — Social provider adapters (OAuth, credentials-in-app, cookie-session via extension, publish, analytics) consumed by services and orchestrator activities. Extension refresh and connect paths are handled in <Badge text="services/IntegrationConnectionService.ts" variant="path" />.
 - <Badge text="routes/publicApi/" variant="path" /> — Programmatic API surface mounted at <Badge text="/api/v1/public/*" variant="path" /> (SDK, CLI, MCP clients).
 - <Badge text="mcp/" variant="path" /> — Hosted MCP server tools and auth wired into the API process.
 - <Badge text="swagger/" variant="path" /> — OpenAPI JSDoc sources merged into <Badge text="/api/v1/openapi.json" variant="path" /> for docs and SDK alignment.
@@ -261,6 +273,32 @@ When <Badge text="config/orchestratorFlows.ts" variant="path" /> keeps transport
 
 See <a href="/docs/configuration-agent/architecture">Auth server architecture</a> for the device-login sequence and endpoint map.
 
+### <Badge text="extension/" variant="path" />
+
+Chrome Manifest V3 package for **cookie-session** social channels:
+
+<FileTree>
+
+- extension/
+  - manifest.json
+  - src/
+    - background.ts
+    - messageHandler.ts
+    - cookies/
+    - refresh/
+    - providers/
+    - storage/
+  - dist/
+  - package.json
+  - vite.config.ts
+
+</FileTree>
+
+- <Badge text="src/background.ts" variant="path" /> and <Badge text="messageHandler.ts" variant="path" /> — Entrypoints for `chrome.runtime` messages from the dashboard (<Badge text="externally_connectable" variant="param" /> in <Badge text="manifest.json" variant="path" />).
+- <Badge text="src/cookies/" variant="path" /> — Read provider cookies from the user’s browser profile (requires matching <Badge text="host_permissions" variant="param" /> per platform).
+- <Badge text="src/refresh/" variant="path" /> — Alarms and <Badge text="POST /integrations/extension-refresh" variant="path" /> calls using the signed <Badge text="extensionToken" variant="param" /> from channel connect.
+- <Badge text="src/providers/" variant="path" /> — Extension-side provider registry aligned with <Badge text="common/src/browser-extension/cookieSessionProviders.ts" variant="path" />.
+
 ### <Badge text="infra/" variant="path" />
 
 Docker and self-host operator assets:
@@ -321,6 +359,7 @@ The SvelteKit app root:
 - <Badge text="src/routes/" variant="path" /> — File-based routing. Route groups <Badge text="(public)" variant="path" />, <Badge text="(auth)" variant="path" />, <Badge text="(protected)" variant="path" />, <Badge text="(docs)" variant="path" />, <Badge text="(legal)" variant="path" /> share layouts and auth boundaries without affecting the URL prefix. <Badge text="maintenance/" variant="path" /> is the write-freeze landing page when <Badge text="MAINTENANCE_MODE=freeze_writes" variant="envBackend" /> (see <Badge text="src/lib/maintenance/" variant="path" /> and <Badge text="hooks.server.ts" variant="path" />).
 - <Badge text="src/data/" variant="path" /> — Small typed registries and config imported from <Badge text="$data/…" variant="path" />(e.g. `docs.ts`, `icons.ts`).
 - <Badge text="src/lib/core/" variant="path" /> — HttpGateway, cookies, shared presenters that sit next to I/O. DTOs from the API are parsed here and in repositories, not in `.svelte` files.
+- <Badge text="src/lib/integrations/browser-extension/" variant="path" /> — Dashboard bridge to <Badge text="@openquok/browser-extension" variant="default" /> (connect flow, cookie encode, refresh registration after <Badge text="social-connect" variant="param" />).
 - <Badge text="src/lib/area-admin/" variant="path" />, <Badge text="src/lib/area-protected/" variant="path" />, <Badge text="src/lib/area-public/" variant="path" /> — Page-level presenters, including admin console, signed-in app, public/marketing and etc. Routes import singletons from these indexes.
 - <Badge text="src/lib/ui/" variant="path" /> — Reusable UI components (buttons, dialogs, docs chrome, DaisyUI-styled patterns). Feature routes pass view models and callbacks into these components.
 - **Theming (DaisyUI)** — Styling favors **semantic DaisyUI + Tailwind** tokens (<Badge text="bg-base-100" variant="param" />, <Badge text="text-base-content" variant="param" />, <Badge text="border-base-300" variant="param" />, <Badge text="primary" variant="param" />, and  etc.) so theme presets swap via CSS variables instead of hand-maintained color pairs per component.

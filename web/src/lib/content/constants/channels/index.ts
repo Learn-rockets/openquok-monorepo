@@ -3,7 +3,7 @@
  *
  * **pSEO tiers under `channels/`** (see `web-seo-pseo.mdc`):
  * - **Tier 1** — `catalog/platforms/{slug}.ts` + `catalog/seeds.ts` → `/channels/{slug}`
- * - **Tier 2** — `api/posting/platforms/{slug}.ts` → posting/scheduling API marketing
+ * - **Tier 2** — `api/posting/platforms/{slug}.ts` and `api/scheduling/platforms/{slug}.ts` → API marketing
  * - **Tier 3** — `tool-surfaces/{slug}.ts` + `tools/{tool}/general.ts` → `/tools/{tool}/{slug}` patches
  *
  * **Different folders (not channel identity):**
@@ -40,6 +40,7 @@ export {
 	facebookChannel,
 	instagramChannel,
 	linkedinChannel,
+	skoolChannel,
 	threadsChannel,
 	tiktokChannel,
 	xChannel,
@@ -131,7 +132,8 @@ export function getPublicChannelBySlug(slug: string): PublicChannelLandingPageVi
 		...withSeo,
 		faqItems: appendPublicGeneralFaqItems(
 			[...prependedFaqs, ...withSeo.faqItems],
-			PUBLIC_CHANNELS_HUB_FAQ_ITEM_IDS
+			PUBLIC_CHANNELS_HUB_FAQ_ITEM_IDS,
+			{ generalFirst: true }
 		)
 	};
 }
@@ -144,14 +146,26 @@ export function listAvailablePublicChannels(): PublicChannelLandingPageViewModel
 	return PUBLIC_CHANNEL_LANDING_PAGES.filter((page) => page.available);
 }
 
-/** Platform labels for competitor compare tables — includes `comparePlatformLabels` extras. */
+/**
+ * Platform labels for competitor compare tables (`openquok.ts` and peer `competitors/*.ts`).
+ * Uses every entry in `PUBLIC_CHANNEL_LANDING_PAGES` (live and coming-soon) so new catalog
+ * channels appear on `/compare/*` without hand-editing OpenQuok. Also appends `comparePlatformLabels` extras.
+ */
 export function listAvailablePublicChannelCompareLabels(): string[] {
 	const labels: string[] = [];
+	const seen = new Set<string>();
 
-	for (const channel of listAvailablePublicChannels()) {
-		labels.push(channel.platformLabel);
+	for (const channel of listPublicChannelsForHub()) {
+		const push = (label: string) => {
+			if (seen.has(label)) return;
+			seen.add(label);
+			labels.push(label);
+		};
+		push(channel.platformLabel);
 		if (channel.comparePlatformLabels) {
-			labels.push(...channel.comparePlatformLabels);
+			for (const extra of channel.comparePlatformLabels) {
+				push(extra);
+			}
 		}
 	}
 

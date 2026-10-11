@@ -7,7 +7,7 @@ import {
 	SHARED_CHANNEL_SEO_KEYWORDS
 } from '$lib/content/constants/channels/catalog/shared';
 import { getPublicChannelSeedAudienceCards } from '$lib/content/constants/channels';
-import { SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS } from '$data/social-providers';
+import { channelProviderIdentifiersSupportAnalytics } from '$data/social-providers';
 import {
 	buildAgentChannelAnalyticsCliCommands,
 	buildAgentChannelCliCommandReference,
@@ -32,7 +32,8 @@ const CHANNEL_PROVIDER_IDENTIFIERS: Record<string, readonly string[]> = {
 	linkedin: ['linkedin', 'linkedin-page'],
 	x: ['x'],
 	devto: ['devto'],
-	bluesky: ['bluesky']
+	bluesky: ['bluesky'],
+	skool: ['skool']
 };
 
 const KANBAN_BENTO_BY_CHANNEL: Record<string, PublicChannelFeatureBentoId> = {
@@ -44,7 +45,8 @@ const KANBAN_BENTO_BY_CHANNEL: Record<string, PublicChannelFeatureBentoId> = {
 	linkedin: 'linkedin-bulk-scheduling',
 	x: 'x-bulk-scheduling',
 	devto: 'devto-bulk-scheduling',
-	bluesky: 'bluesky-bulk-scheduling'
+	bluesky: 'bluesky-bulk-scheduling',
+	skool: 'skool-bulk-scheduling'
 };
 
 const ANALYTICS_BENTO_BY_CHANNEL: Record<string, PublicChannelFeatureBentoId> = {
@@ -59,15 +61,13 @@ const ANALYTICS_BENTO_BY_CHANNEL: Record<string, PublicChannelFeatureBentoId> = 
 	bluesky: 'bluesky-insights'
 };
 
-const ANALYTICS_CAPABLE_IDENTIFIERS = new Set<string>(SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS);
-
 export function buildAgentChannelPageConfig(
 	host: PublicAgentChannelHostConfig,
 	channel: PublicChannelLandingPageViewModel
 ): PublicAgentChannelPageConfig {
 	const providerIdentifiers =
 		CHANNEL_PROVIDER_IDENTIFIERS[channel.slug] ?? [channel.platformId || channel.slug];
-	const supportsAnalytics = providerIdentifiers.some((id) => ANALYTICS_CAPABLE_IDENTIFIERS.has(id));
+	const supportsAnalytics = channelProviderIdentifiersSupportAnalytics(providerIdentifiers);
 
 	return {
 		channelSlug: channel.slug,

@@ -24,16 +24,3 @@ export const instagramPublicApiPostingPlatform: PublicApiPlatformPageViewModel =
 			'Post to Instagram with OpenQuok POST /public/posts. Feed, Reels, carousels, and Stories with provider settings from one JSON payload.',
 		keywords: KEYWORDS
 	});
-
-export const instagramPublicApiSchedulingPlatform: PublicApiPlatformPageViewModel =
-	buildPublicApiPlatformPage({
-		slug: SLUG,
-		capability: 'scheduling',
-		formatExamples: PUBLIC_API_FORMAT_EXAMPLES_BY_PLATFORM[SLUG].scheduling,
-		heroDescription:
-			'Queue Instagram content for a future publish time. Set scheduledAt in UTC and choose post type, trial reels, or collaborators before publish.',
-		metaTitle: 'Instagram Scheduling API',
-		metaDescription:
-			'Schedule Instagram posts with OpenQuok POST /public/posts. Queue feed, Reels, carousels, and Stories for a future UTC publish time.',
-		keywords: KEYWORDS
-	});
