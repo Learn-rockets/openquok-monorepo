@@ -96,6 +96,7 @@
 			title: string;
 			group: string;
 			groupLabel?: string;
+			groupSlug?: string;
 			label?: string;
 			labelLabel?: string;
 		};
@@ -212,6 +213,7 @@
 	let skTitle = $state('');
 	let skGroup = $state('');
 	let skGroupLabel = $state('');
+	let skGroupSlug = $state('');
 	let skLabel = $state('');
 	let skLabelLabel = $state('');
 
@@ -447,12 +449,14 @@
 			skTitle = typeof s.skool.title === 'string' ? s.skool.title : '';
 			skGroup = typeof s.skool.group === 'string' ? s.skool.group : '';
 			skGroupLabel = typeof s.skool.groupLabel === 'string' ? s.skool.groupLabel : '';
+			skGroupSlug = typeof s.skool.groupSlug === 'string' ? s.skool.groupSlug : '';
 			skLabel = typeof s.skool.label === 'string' ? s.skool.label : '';
 			skLabelLabel = typeof s.skool.labelLabel === 'string' ? s.skool.labelLabel : '';
 		} else {
 			skTitle = '';
 			skGroup = '';
 			skGroupLabel = '';
+			skGroupSlug = '';
 			skLabel = '';
 			skLabelLabel = '';
 		}
@@ -582,6 +586,7 @@
 		} else if (identifier === 'skool') {
 			const group = skGroup.trim();
 			const groupLabel = skGroupLabel.trim();
+			const groupSlug = skGroupSlug.trim();
 			const label = skLabel.trim();
 			const labelLabel = skLabelLabel.trim();
 			next = {
@@ -589,6 +594,7 @@
 					title: skTitle.trim(),
 					group,
 					...(groupLabel ? { groupLabel } : {}),
+					...(groupSlug ? { groupSlug } : {}),
 					...(label && label !== 'none' ? { label } : {}),
 					...(labelLabel ? { labelLabel } : {})
 				}
@@ -747,6 +753,7 @@
 			bind:title={skTitle}
 			bind:group={skGroup}
 			bind:groupLabel={skGroupLabel}
+			bind:groupSlug={skGroupSlug}
 			bind:label={skLabel}
 			bind:labelLabel={skLabelLabel}
 			{organizationId}

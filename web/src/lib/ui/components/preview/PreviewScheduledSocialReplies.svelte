@@ -13,7 +13,7 @@
 		threadFinisher: { enabled: boolean; message: string } | null;
 		/** Threads: same-account delayed engagement (`threads.internalEngagementPlug`), after finisher in the worker. */
 		delayedEngagementReply?: { message: string; delaySeconds: number } | null;
-		variant: 'threads' | 'instagram' | 'general';
+		variant: 'threads' | 'instagram' | 'general' | 'skool';
 		/**
 		 * Threads-only: same account as the main post (avatar + name per reply).
 		 * When omitted with variant `threads`, falls back to the simple list (no avatars).
@@ -63,13 +63,19 @@
 			? 'pt-2'
 			: variant === 'threads'
 				? 'mt-4 pt-1'
-				: 'mt-4 border-t border-base-300 pt-4'
+				: variant === 'skool'
+					? 'border-t border-[#E5E5E5] pt-4'
+					: 'mt-4 border-t border-base-300 pt-4'
 	);
 </script>
 
 {#if replies.length > 0 || (threadFinisher?.enabled && (threadFinisher.message ?? '').trim()) || delayedEngagementReply}
 	<div class={rootGapClass}>
-		{#if variant !== 'threads'}
+		{#if variant === 'skool'}
+			<div class="mb-2 text-xs font-semibold uppercase tracking-wide text-[#737373]">
+				Scheduled replies
+			</div>
+		{:else if variant !== 'threads'}
 			<div class="mb-2 text-xs font-semibold uppercase tracking-wide text-base-content/50">
 				Scheduled replies
 			</div>
@@ -321,6 +327,19 @@
 						</p>
 					</li>
 				{/if}
+			</ul>
+		{:else if variant === 'skool'}
+			<ul class="flex flex-col gap-2">
+				{#each replies as r (r.id)}
+					<li class="rounded-lg border border-[#E5E5E5] bg-white px-3 py-2.5 shadow-sm">
+						<div class="text-[11px] font-medium text-[#737373]">
+							{formatScheduledReplyDelayLabel(r.delaySeconds)}
+						</div>
+						<p class="mt-1 whitespace-pre-wrap text-sm leading-5 text-[#262626]">
+							{plain(r.message)}
+						</p>
+					</li>
+				{/each}
 			</ul>
 		{:else if variant === 'instagram'}
 			<ul class="flex flex-col gap-3">

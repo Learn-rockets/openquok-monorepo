@@ -51,7 +51,7 @@ Open Skool and sign in. The extension needs <Badge text="auth_token" variant="pa
 
 In your workspace, open <Badge text="Add Channel" variant="new" /> → <strong>Skool</strong>. Read the browser-extension notice, then continue.
 
-![Load Unpacked OpenQuok Chrome Extension](/docs/_assets//social-integration/skool/read-skool-notice.webp)
+![Skool browser-extension connect notice in Add Channel](/docs/_assets/social-integration/skool/read-skool-notice.webp)
 
 
 OpenQuok reads cookies, validates your account, and saves the channel.

@@ -34,6 +34,24 @@ describe("resolveSkoolSettings", () => {
         });
     });
 
+    it("reads groupSlug for public post URLs", () => {
+        expect(
+            resolveSkoolSettings({
+                providerSettings: {
+                    skool: {
+                        title: "T",
+                        group: "g1",
+                        groupSlug: "openquok-2201",
+                    },
+                },
+            })
+        ).toEqual({
+            title: "T",
+            groupId: "g1",
+            groupSlug: "openquok-2201",
+        });
+    });
+
     it("treats label none as omitted", () => {
         expect(
             resolveSkoolSettings({

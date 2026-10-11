@@ -64,7 +64,7 @@ describe("SkoolProvider", () => {
 
     it("maps groups tool rows to value/label options", async () => {
         mockFetchJson(200, {
-            groups: [{ id: "g1", metadata: { display_name: "My Group" } }],
+            groups: [{ id: "g1", name: "my-group", metadata: { display_name: "My Group" } }],
         });
 
         const token = JSON.stringify({ auth_token: "t", client_id: "c" });
@@ -85,6 +85,6 @@ describe("SkoolProvider", () => {
             deleted_at: null,
         });
 
-        expect(rows).toEqual([{ value: "g1", label: "My Group" }]);
+        expect(rows).toEqual([{ value: "g1", label: "My Group", groupSlug: "my-group" }]);
     });
 });

@@ -6,6 +6,7 @@ describe("skoolScheduledPublishHooks", () => {
             rootProviderSettings: {
                 skool: {
                     group: "group-abc",
+                    groupSlug: "openquok-2201",
                     label: "label-xyz",
                     title: "Weekly",
                     replies: [{ id: "r1", message: "hi", delaySeconds: 0 }],
@@ -16,6 +17,7 @@ describe("skoolScheduledPublishHooks", () => {
             providerSettings: {
                 skool: {
                     group: "group-abc",
+                    groupSlug: "openquok-2201",
                     label: "label-xyz",
                     title: "Weekly",
                 },

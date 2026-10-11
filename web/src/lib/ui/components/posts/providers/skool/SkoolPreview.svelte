@@ -101,7 +101,9 @@
 		</div>
 	{/if}
 
-	<div class="px-4 py-3">
-		<PreviewScheduledSocialReplies replies={threadReplies} {threadFinisher} variant="general" />
-	</div>
+	{#if threadReplies.length > 0}
+		<div class="px-4 pb-4">
+			<PreviewScheduledSocialReplies replies={threadReplies} {threadFinisher} variant="skool" />
+		</div>
+	{/if}
 </div>

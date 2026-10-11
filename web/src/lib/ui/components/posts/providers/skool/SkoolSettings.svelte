@@ -18,6 +18,7 @@
 		title?: string;
 		group?: string;
 		groupLabel?: string;
+		groupSlug?: string;
 		label?: string;
 		labelLabel?: string;
 		organizationId?: string | null;
@@ -29,6 +30,7 @@
 		title = $bindable(''),
 		group = $bindable(''),
 		groupLabel = $bindable(''),
+		groupSlug = $bindable(''),
 		label = $bindable(''),
 		labelLabel = $bindable(''),
 		organizationId = null,
@@ -93,10 +95,14 @@
 						: '';
 			const value =
 				typeof rec.value === 'string' && rec.value.trim() ? rec.value.trim() : labelText;
+			const slug =
+				typeof (rec as { groupSlug?: unknown }).groupSlug === 'string'
+					? (rec as { groupSlug: string }).groupSlug.trim()
+					: '';
 			if (!value || !labelText) continue;
 			if (seen[value]) continue;
 			seen[value] = true;
-			out.push({ value, label: labelText });
+			out.push({ value, label: labelText, ...(slug ? { groupSlug: slug } : {}) });
 		}
 		return out;
 	}
@@ -141,6 +147,7 @@
 		group = raw;
 		const match = displayGroups.find((g) => g.value === raw);
 		groupLabel = match?.label ?? '';
+		groupSlug = match?.groupSlug ?? '';
 		label = '';
 		labelLabel = '';
 	}

@@ -9,6 +9,8 @@ export type SkoolResolvedPublishSettings = {
     title: string;
     groupId: string;
     labelId?: string;
+    /** Community path segment for public URLs (e.g. `openquok-2201`). */
+    groupSlug?: string;
 };
 
 function readString(source: Record<string, unknown>, ...keys: string[]): string {
@@ -75,11 +77,13 @@ export function resolveSkoolSettings(postDetailsSettings: unknown): SkoolResolve
     const title = readString(source, "title");
     const groupId = readGroupId(source);
     const labelId = readLabelId(source);
+    const groupSlug = readString(source, "groupSlug", "group_slug", "communitySlug", "community");
 
     return {
         title,
         groupId,
         ...(labelId ? { labelId } : {}),
+        ...(groupSlug ? { groupSlug } : {}),
     };
 }
 

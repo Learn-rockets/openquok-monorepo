@@ -60,6 +60,7 @@ export function readSkoolLaunchSettings(settings: Record<string, unknown>): Skoo
 
 	const group = readGroupId(source);
 	const groupLabel = readString(source, 'groupLabel', 'group_label');
+	const groupSlug = readString(source, 'groupSlug', 'group_slug', 'communitySlug');
 	const label = readLabelId(source);
 	const labelLabel = readString(source, 'labelLabel', 'label_label');
 
@@ -67,6 +68,7 @@ export function readSkoolLaunchSettings(settings: Record<string, unknown>): Skoo
 		title,
 		group,
 		...(groupLabel ? { groupLabel } : {}),
+		...(groupSlug ? { groupSlug } : {}),
 		...(label ? { label } : {}),
 		...(labelLabel ? { labelLabel } : {})
 	};

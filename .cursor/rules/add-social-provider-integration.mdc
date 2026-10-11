@@ -30,6 +30,7 @@ globs:
   - web/src/content/docs/platforms/**
   - web/src/content/docs/creating-posts/**
   - web/src/content/docs/cli-examples/**
+  - web/src/lib/ui/components/preview/PreviewScheduledSocialReplies.svelte
   - web/src/lib/posts/utils/create-post/followUp.ts
   - web/src/lib/posts/utils/create-post/providerSettings.ts
   - backend/utils/dtos/PostDTO.ts
@@ -96,9 +97,24 @@ One kebab-case slug everywhere: `provider.identifier`, DB `provider_identifier`,
 
 Per-channel `{id}Preview.svelte` only (not `GeneralPreviewComponent` for shipped networks). Minimum: phone `max-w` frame, fixed aspect, correct `ImageSlider` variant for photos, `classify*PreviewMediaMode` + tests, wire `/p/[postId]`. References: `TiktokPreview.svelte`, `InstagramPreview.svelte`, `mediaDrop.ts`, `AddEditModal.svelte`. Image-heavy networks need letterbox — do not use full-width `object-cover` only.
 
+## Follow-up comment preview (only when `comment()` ships)
+
+Composer already passes `threadReplies` into `ShowAllProviders` → `{id}Preview`. Each follow-up-capable provider must **render** them (not only enable the Follow-up comments panel).
+
+| Step | Action |
+| --- | --- |
+| `{id}Preview.svelte` | Accept `threadReplies` (+ `threadFinisher` if used); render below main post chrome |
+| Reply UI | Use `PreviewScheduledSocialReplies` with a variant that matches the card (light vs dark). **Do not** use `variant="general"` on a light native card — theme `text-base-content` on `#FAFAFA`-style chrome hides reply text in dark composer UI. Add `variant="{id}"` in `PreviewScheduledSocialReplies.svelte` when needed (reference: `skool`, `instagram`, `threads`) |
+| Wiring | `ShowAllProviders` branch must pass `{threadReplies}` (and `providerSettings` when settings affect preview) |
+| Public link | `/p/[postId]` must pass the same `threadReplies` / settings as the composer (`AddEditModal` → `previewThreadRepliesVm`) |
+| Bento / landing | Follow-up feature rows: mock one reply row (`threadReplies` + `hideProviderHelp` / `compactEditor` as peers do) — e.g. `BentoSkoolFollowUps.svelte`, `BentoThreadsMediaReplies.svelte` |
+| Orchestrator | `orchestrator/providers/{id}.ts` `buildFollowUpCommentSettings` when comment publish needs root `providerSettings` (e.g. Skool group on reply payload) |
+
+Smoke-test: add a follow-up row in the composer, focus preview on that channel, confirm reply **body text** is readable (not just the “Scheduled replies” heading).
+
 ## Follow-ups (only when `comment()` ships)
 
-Update: `followUp.ts` (`channelSupportsFollowUpComments`, bucket); `PostDTO.ts` `replyChainBucketForProvider`; `scheduledSocialPostActivities.ts` `supportsFollowUps` + reply settings to `comment()`; `SetGridTable.presenter` if needed; launch `postComment` / `comments`; `{bucket}.replies` in agent/CLI/docs; `threads-and-comments.md` row; preview/bento `threadReplies` if marketed.
+Update: `followUp.ts` (`channelSupportsFollowUpComments`, bucket); `PostDTO.ts` `replyChainBucketForProvider`; `orchestrator/providers/{id}.ts` scheduled publish hooks + `publishFollowUpReplies.ts` path; `SetGridTable.presenter` if needed; launch `postComment` / `comments`; `{bucket}.replies` in agent/CLI/docs; `threads-and-comments.md` row; complete [Follow-up comment preview](#follow-up-comment-preview-only-when-comment-ships) when marketed.
 
 ## Cross-account plugs (only when catalog ships them)
 
@@ -177,7 +193,8 @@ Use as the execution list; details above only when you need them.
 
 - [ ] Launch config + preview (+ settings preview wiring) + optional `SettingsAccordion`
 - [ ] `social-providers.ts` display + icon
-- [ ] Follow-up / plug gates only if backend supports them
+- [ ] **Follow-up comment preview** (if `comment()`): `{id}Preview` + `PreviewScheduledSocialReplies` variant with correct contrast; `ShowAllProviders` + `/p/[postId]`; bento mock `threadReplies` when follow-ups are marketed
+- [ ] Follow-up / plug **gates** (orchestrator, `followUp.ts`, `PostDTO`) only if backend supports them
 - [ ] `writing-the-post.md` editor row when composer ships
 
 **Catalog & marketing**

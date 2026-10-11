@@ -81,12 +81,14 @@ export type DevtoLaunchProviderSettings = {
 	mainImage?: { path: string };
 };
 
-export type SkoolSelectOption = { value: string; label: string };
+export type SkoolSelectOption = { value: string; label: string; groupSlug?: string };
 
 export type SkoolLaunchProviderSettings = {
 	title: string;
 	group: string;
 	groupLabel?: string;
+	/** Community URL segment from Skool (`name` on the group), e.g. `openquok-2201`. */
+	groupSlug?: string;
 	label?: string;
 	labelLabel?: string;
 };

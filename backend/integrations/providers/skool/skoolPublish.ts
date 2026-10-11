@@ -107,11 +107,55 @@ async function uploadMediaToSkool(
     return fileIds.join(",");
 }
 
-function skoolReleaseUrl(postSlug: string): string {
-    const slug = postSlug.trim();
-    if (!slug) return "https://www.skool.com/";
-    if (slug.startsWith("http://") || slug.startsWith("https://")) return slug;
-    return `https://www.skool.com/${slug.replace(/^\//, "")}`;
+/** Public Skool URL: `https://www.skool.com/{community}/{post-slug}` when both segments exist. */
+export function skoolReleaseUrl(
+    postSlug: string | undefined | null,
+    communitySlug?: string | undefined | null
+): string {
+    const postPart = (postSlug ?? "").trim().replace(/^\//, "");
+    const community = (communitySlug ?? "").trim().replace(/^\/+|\/+$/g, "");
+
+    if (postPart.startsWith("http://") || postPart.startsWith("https://")) {
+        return postPart;
+    }
+    if (!postPart && !community) {
+        return "https://www.skool.com/";
+    }
+    if (community && postPart) {
+        return `https://www.skool.com/${community}/${postPart}`;
+    }
+    if (community) {
+        return `https://www.skool.com/${community}`;
+    }
+    return `https://www.skool.com/${postPart}`;
+}
+
+async function fetchSkoolCommunitySlug(
+    cookies: SkoolSessionCookies,
+    groupId: string
+): Promise<string> {
+    const id = groupId.trim();
+    if (!id) return "";
+    try {
+        const group = await skoolFetchJson<{ name?: string }>(
+            `/groups/${encodeURIComponent(id)}`,
+            cookies,
+            { method: "GET" }
+        );
+        return typeof group.name === "string" ? group.name.trim() : "";
+    } catch {
+        return "";
+    }
+}
+
+async function resolveSkoolCommunitySlugForPublish(
+    cookies: SkoolSessionCookies,
+    resolved: ReturnType<typeof resolveSkoolSettings>
+): Promise<string> {
+    if (resolved.groupSlug?.trim()) {
+        return resolved.groupSlug.trim();
+    }
+    return fetchSkoolCommunitySlug(cookies, resolved.groupId);
 }
 
 export async function publishSkoolPost(
@@ -153,10 +197,11 @@ export async function publishSkoolPost(
     );
 
     const postId = String(created.id);
+    const communitySlug = await resolveSkoolCommunitySlugForPublish(cookies, resolved);
     return {
         id: postId,
         postId,
-        releaseURL: skoolReleaseUrl(created.name),
+        releaseURL: skoolReleaseUrl(created.name, communitySlug),
         status: "success",
     };
 }
@@ -200,31 +245,36 @@ export async function publishSkoolComment(
     );
 
     const postId = String(created.id);
+    const communitySlug = await resolveSkoolCommunitySlugForPublish(cookies, resolved);
     return {
         id: postId,
         postId,
-        releaseURL: skoolReleaseUrl(created.name),
+        releaseURL: skoolReleaseUrl(created.name, communitySlug),
         status: "success",
     };
 }
 
-export type SkoolGroupOption = { value: string; label: string };
+export type SkoolGroupOption = { value: string; label: string; groupSlug?: string };
 
 export async function fetchSkoolGroupOptions(
     cookies: SkoolSessionCookies,
     userId: string
 ): Promise<SkoolGroupOption[]> {
     const { groups } = await skoolFetchJson<{
-        groups?: Array<{ id: string; metadata?: { display_name?: string } }>;
+        groups?: Array<{ id: string; name?: string; metadata?: { display_name?: string } }>;
     }>(`/users/${encodeURIComponent(userId)}/groups?offset=0&limit=30`, cookies, { method: "GET" });
 
     if (!Array.isArray(groups)) return [];
     return groups
         .filter((g) => g?.id)
-        .map((g) => ({
-            value: String(g.id),
-            label: g.metadata?.display_name?.trim() || String(g.id),
-        }));
+        .map((g) => {
+            const groupSlug = typeof g.name === "string" ? g.name.trim() : "";
+            return {
+                value: String(g.id),
+                label: g.metadata?.display_name?.trim() || String(g.id),
+                ...(groupSlug ? { groupSlug } : {}),
+            };
+        });
 }
 
 export async function fetchSkoolLabelOptions(

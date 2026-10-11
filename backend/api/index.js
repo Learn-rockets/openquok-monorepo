@@ -372,6 +372,55 @@ var init_pricing = __esm({
   }
 });
 
+// ../common/dist/browser-extension/messages.js
+var BROWSER_EXTENSION_MESSAGE_TYPE;
+var init_messages = __esm({
+  "../common/dist/browser-extension/messages.js"() {
+    BROWSER_EXTENSION_MESSAGE_TYPE = {
+      PING: "PING",
+      GET_PROVIDERS: "GET_PROVIDERS",
+      GET_COOKIES: "GET_COOKIES",
+      STORE_REFRESH_TOKEN: "STORE_REFRESH_TOKEN",
+      REMOVE_REFRESH_TOKEN: "REMOVE_REFRESH_TOKEN"
+    };
+    new Set(Object.values(BROWSER_EXTENSION_MESSAGE_TYPE));
+  }
+});
+
+// ../common/dist/browser-extension/cookieSessionProviders.js
+var SKOOL_PROVIDER, COOKIE_SESSION_PROVIDERS;
+var init_cookieSessionProviders = __esm({
+  "../common/dist/browser-extension/cookieSessionProviders.js"() {
+    SKOOL_PROVIDER = {
+      identifier: "skool",
+      name: "Skool",
+      cookieUrl: "https://www.skool.com/",
+      hostPermission: "*://*.skool.com/*",
+      requiredCookies: [
+        { name: "auth_token", domain: ".skool.com" },
+        { name: "client_id", domain: ".skool.com" }
+      ]
+    };
+    COOKIE_SESSION_PROVIDERS = [SKOOL_PROVIDER];
+    new Map(COOKIE_SESSION_PROVIDERS.map((provider) => [provider.identifier, provider]));
+  }
+});
+
+// ../common/dist/browser-extension/pageAssist.js
+var init_pageAssist = __esm({
+  "../common/dist/browser-extension/pageAssist.js"() {
+  }
+});
+
+// ../common/dist/browser-extension/index.js
+var init_browser_extension = __esm({
+  "../common/dist/browser-extension/index.js"() {
+    init_messages();
+    init_cookieSessionProviders();
+    init_pageAssist();
+  }
+});
+
 // ../common/dist/media/virtualPaths.js
 function normalizeMediaVirtualPath(path7) {
   const raw = String(path7 ?? "").trim().replace(/\\/g, "/");
@@ -438,6 +487,7 @@ var init_dist = __esm({
     init_uploadLimits();
     init_types();
     init_pricing();
+    init_browser_extension();
     init_virtualPaths();
   }
 });
@@ -10855,6 +10905,7 @@ function replyChainBucketForProvider(providerIdentifier) {
   if (id === "linkedin" || id === "linkedin-page") return "linkedin";
   if (id === "facebook") return "facebook";
   if (id === "bluesky") return "bluesky";
+  if (id === "skool") return "skool";
   return "threads";
 }
 function parseFollowUpReplyMedia(raw) {
@@ -24315,6 +24366,614 @@ var init_blueskyProvider = __esm({
   }
 });
 
+// integrations/providers/skool/resolveSkoolSettings.ts
+function isPlainObject15(value) {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+function readString3(source, ...keys) {
+  for (const key of keys) {
+    const value = source[key];
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+  return "";
+}
+function readGroupId(source) {
+  const direct = readString3(source, "group", "group_id", "groupId");
+  if (direct) return direct;
+  const group = source.group;
+  if (isPlainObject15(group)) {
+    const nested = group.id ?? group.value;
+    if (typeof nested === "string" && nested.trim()) return nested.trim();
+    if (typeof nested === "number" && Number.isFinite(nested)) {
+      return String(nested);
+    }
+  }
+  return "";
+}
+function readLabelId(source) {
+  const direct = readString3(source, "label", "label_id", "labelId");
+  if (direct) return direct === "none" ? void 0 : direct;
+  const label = source.label;
+  if (isPlainObject15(label)) {
+    const nested = label.id ?? label.value;
+    if (typeof nested === "string" && nested.trim()) {
+      const id = nested.trim();
+      return id === "none" ? void 0 : id;
+    }
+  }
+  return void 0;
+}
+function resolveSkoolSettings(postDetailsSettings) {
+  if (!isPlainObject15(postDetailsSettings)) {
+    return { title: "", groupId: "" };
+  }
+  let source = { ...postDetailsSettings };
+  const providerSettings = postDetailsSettings.providerSettings;
+  if (isPlainObject15(providerSettings)) {
+    const { skool: skoolBucket, ...flatProviderSettings } = providerSettings;
+    source = { ...source, ...flatProviderSettings };
+    if (isPlainObject15(skoolBucket)) {
+      source = { ...source, ...skoolBucket };
+    }
+  } else if (isPlainObject15(postDetailsSettings.skool)) {
+    source = { ...source, ...postDetailsSettings.skool };
+  }
+  const title = readString3(source, "title");
+  const groupId = readGroupId(source);
+  const labelId = readLabelId(source);
+  const groupSlug = readString3(source, "groupSlug", "group_slug", "communitySlug", "community");
+  return {
+    title,
+    groupId,
+    ...labelId ? { labelId } : {},
+    ...groupSlug ? { groupSlug } : {}
+  };
+}
+var SKOOL_MAX_LENGTH, SKOOL_TITLE_MIN_LENGTH, SKOOL_SETTINGS_SCHEMA;
+var init_resolveSkoolSettings = __esm({
+  "integrations/providers/skool/resolveSkoolSettings.ts"() {
+    SKOOL_MAX_LENGTH = 5e3;
+    SKOOL_TITLE_MIN_LENGTH = 1;
+    SKOOL_SETTINGS_SCHEMA = {
+      type: "object",
+      required: ["title", "group"],
+      properties: {
+        title: { type: "string", minLength: SKOOL_TITLE_MIN_LENGTH, description: "Post title" },
+        group: { type: "string", description: "Skool group id to publish in" },
+        label: { type: "string", description: "Category (label) id \u2014 required for most Skool groups" }
+      }
+    };
+  }
+});
+
+// integrations/providers/skool/skoolCredentials.ts
+function decodeSkoolConnectCode(code) {
+  try {
+    const raw = Buffer.from(code.trim(), "base64").toString("utf8");
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("Invalid cookie payload");
+    }
+    const out = {};
+    for (const [key, value] of Object.entries(parsed)) {
+      if (typeof value === "string" && value.trim()) {
+        out[key] = value.trim();
+      }
+    }
+    const missing = SKOOL_REQUIRED_COOKIE_NAMES.filter((name) => !out[name]);
+    if (missing.length > 0) {
+      throw new Error(`Missing required cookies: ${missing.join(", ")}`);
+    }
+    return out;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Invalid cookie data";
+    throw new Error(message);
+  }
+}
+function parseSkoolSessionToken(accessToken2) {
+  try {
+    const parsed = JSON.parse(accessToken2);
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("Invalid stored session");
+    }
+    const missing = SKOOL_REQUIRED_COOKIE_NAMES.filter((name) => !parsed[name]?.trim());
+    if (missing.length > 0) {
+      throw new Error(`Missing session cookies: ${missing.join(", ")}`);
+    }
+    return parsed;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Invalid stored session";
+    throw new Error(message);
+  }
+}
+function serializeSkoolSessionToken(cookies) {
+  return JSON.stringify(cookies);
+}
+function skoolCookieHeader(cookies) {
+  return Object.entries(cookies).filter(([, value]) => typeof value === "string" && value.length > 0).map(([name, value]) => `${name}=${value}`).join("; ");
+}
+var SKOOL_REQUIRED_COOKIE_NAMES;
+var init_skoolCredentials = __esm({
+  "integrations/providers/skool/skoolCredentials.ts"() {
+    SKOOL_REQUIRED_COOKIE_NAMES = ["auth_token", "client_id"];
+  }
+});
+
+// integrations/providers/skool/skoolApi.ts
+function mapSkoolApiBodyError(body) {
+  if (body.includes("must be admin or level")) {
+    return "You can't post to this channel";
+  }
+  if (body.includes("cannot post to this label")) {
+    return "Cannot post to this label";
+  }
+  if (body.includes("You must select a category")) {
+    return "Select a Skool category in post settings";
+  }
+  try {
+    const parsed = JSON.parse(body);
+    const fields = parsed?.fields;
+    if (Array.isArray(fields)) {
+      for (const field of fields) {
+        const err = field?.error;
+        if (typeof err === "string" && err.trim()) {
+          return err.trim();
+        }
+      }
+    }
+  } catch {
+  }
+  return void 0;
+}
+function formatSkoolHttpError(status, text) {
+  const mapped = mapSkoolApiBodyError(text);
+  if (mapped) return mapped;
+  const trimmed = text.trim();
+  if (trimmed.startsWith("<") && trimmed.toLowerCase().includes("cloudfront")) {
+    return `Skool blocked this request (HTTP ${status}). Sign in on skool.com in Chrome, reconnect via the extension, and try again.`;
+  }
+  if (trimmed && !trimmed.startsWith("<")) {
+    const snippet = trimmed.length > 400 ? `${trimmed.slice(0, 400)}\u2026` : trimmed;
+    return `Skool API error (HTTP ${status}): ${snippet}`;
+  }
+  return `Skool API error (HTTP ${status})`;
+}
+async function readSkoolResponseText(res) {
+  try {
+    return await res.text();
+  } catch {
+    return "";
+  }
+}
+async function skoolFetch(path7, cookies, init2) {
+  const url = path7.startsWith("http") ? path7 : `${SKOOL_API}${path7.startsWith("/") ? path7 : `/${path7}`}`;
+  const headers = new Headers(init2?.headers);
+  headers.set("Cookie", skoolCookieHeader(cookies));
+  const waf = cookies["aws-waf-token"];
+  if (waf) {
+    headers.set("x-aws-waf-token", waf);
+  }
+  return fetch(url, { ...init2, headers });
+}
+async function fetchSkoolSelf(cookies) {
+  const res = await skoolFetch("/self", cookies, { method: "GET" });
+  const text = await readSkoolResponseText(res);
+  if (!res.ok) {
+    throw new Error(formatSkoolHttpError(res.status, text).replace(/^Skool API error/, "Skool session validation failed"));
+  }
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    throw new Error("Skool session validation returned invalid JSON");
+  }
+  if (!json?.id) {
+    throw new Error("Skool session validation failed");
+  }
+  return json;
+}
+async function skoolFetchJson(path7, cookies, init2) {
+  const res = await skoolFetch(path7, cookies, init2);
+  const text = await readSkoolResponseText(res);
+  if (!res.ok) {
+    throw new Error(formatSkoolHttpError(res.status, text));
+  }
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error("Skool API returned invalid JSON");
+  }
+}
+var SKOOL_API;
+var init_skoolApi = __esm({
+  "integrations/providers/skool/skoolApi.ts"() {
+    init_skoolCredentials();
+    SKOOL_API = "https://api2.skool.com";
+  }
+});
+
+// integrations/providers/skool/skoolPublish.ts
+function extractMedia4(settings) {
+  if (!settings || typeof settings !== "object") return [];
+  const media = settings.media;
+  if (Array.isArray(media)) {
+    return media.filter((m) => !!m && typeof m.path === "string" && m.path.length > 0);
+  }
+  const items = media?.items;
+  if (Array.isArray(items)) {
+    return items.filter((m) => !!m && typeof m.path === "string" && m.path.length > 0);
+  }
+  return [];
+}
+function resolvePublicMediaUrl6(path7) {
+  const raw = path7.trim();
+  if (!raw) throw new Error("Media path is empty");
+  if (raw.startsWith("http://") || raw.startsWith("https://")) return raw;
+  const url = publicUrlForObjectKey(raw);
+  if (!url) {
+    throw new Error(
+      "Cannot build a public media URL for Skool (set STORAGE_R2_PUBLIC_BASE_URL for R2, or use full https:// URLs)"
+    );
+  }
+  return url;
+}
+async function uploadMediaToSkool(media, userId, cookies) {
+  if (!media.length) return "";
+  const fileIds = [];
+  for (const item of media) {
+    const mediaUrl = resolvePublicMediaUrl6(item.path);
+    const headResponse = await fetch(mediaUrl, {
+      method: "HEAD",
+      headers: { "accept-encoding": "identity" },
+      redirect: "follow"
+    });
+    const contentType = headResponse.headers.get("content-type") || "application/octet-stream";
+    const contentLength = Number(headResponse.headers.get("content-length") || 0);
+    if (!headResponse.ok || !contentLength) {
+      throw new Error("Could not determine the media size for upload");
+    }
+    const fileName = item.path.split("/").pop() || "file";
+    const createFileResponse = await skoolFetchJson("/files", cookies, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        file_name: fileName,
+        content_type: contentType,
+        content_length: contentLength,
+        content_disposition: "",
+        ref: "",
+        owner_id: userId,
+        large_thumbnail: false
+      })
+    });
+    const fileResponse = await fetch(mediaUrl, {
+      headers: { "accept-encoding": "identity" },
+      redirect: "follow"
+    });
+    if (!fileResponse.ok || !fileResponse.body) {
+      throw new Error(`Failed to fetch media: ${fileResponse.statusText}`);
+    }
+    const uploadResponse = await fetch(createFileResponse.write_url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": createFileResponse.content_type,
+        "Content-Length": String(contentLength),
+        "x-amz-acl": createFileResponse.acl
+      },
+      body: fileResponse.body,
+      duplex: "half"
+    });
+    if (!uploadResponse.ok) {
+      const errText = await uploadResponse.text().catch(() => "");
+      throw new Error(errText || "Failed to upload the media file");
+    }
+    fileIds.push(createFileResponse.file.id);
+  }
+  return fileIds.join(",");
+}
+function skoolReleaseUrl(postSlug, communitySlug) {
+  const postPart = (postSlug ?? "").trim().replace(/^\//, "");
+  const community = (communitySlug ?? "").trim().replace(/^\/+|\/+$/g, "");
+  if (postPart.startsWith("http://") || postPart.startsWith("https://")) {
+    return postPart;
+  }
+  if (!postPart && !community) {
+    return "https://www.skool.com/";
+  }
+  if (community && postPart) {
+    return `https://www.skool.com/${community}/${postPart}`;
+  }
+  if (community) {
+    return `https://www.skool.com/${community}`;
+  }
+  return `https://www.skool.com/${postPart}`;
+}
+async function fetchSkoolCommunitySlug(cookies, groupId) {
+  const id = groupId.trim();
+  if (!id) return "";
+  try {
+    const group = await skoolFetchJson(
+      `/groups/${encodeURIComponent(id)}`,
+      cookies,
+      { method: "GET" }
+    );
+    return typeof group.name === "string" ? group.name.trim() : "";
+  } catch {
+    return "";
+  }
+}
+async function resolveSkoolCommunitySlugForPublish(cookies, resolved) {
+  if (resolved.groupSlug?.trim()) {
+    return resolved.groupSlug.trim();
+  }
+  return fetchSkoolCommunitySlug(cookies, resolved.groupId);
+}
+async function publishSkoolPost(accessToken2, internalUserId, postDetails) {
+  const cookies = parseSkoolSessionToken(accessToken2);
+  const resolved = resolveSkoolSettings(postDetails.settings);
+  if (!resolved.groupId) {
+    throw new Error("Skool group is required");
+  }
+  if (!resolved.title || resolved.title.length < 1) {
+    throw new Error("Skool post title is required");
+  }
+  const message = stripComposerBodyForEditor("normal", postDetails.message);
+  const attachments = await uploadMediaToSkool(extractMedia4(postDetails.settings), internalUserId, cookies);
+  const created = await skoolFetchJson(
+    "/posts?follow=true",
+    cookies,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        post_type: "generic",
+        group_id: resolved.groupId,
+        metadata: {
+          title: resolved.title,
+          content: message,
+          attachments,
+          ...resolved.labelId ? { labels: resolved.labelId } : {},
+          action: 0,
+          video_ids: ""
+        }
+      })
+    }
+  );
+  const postId = String(created.id);
+  const communitySlug = await resolveSkoolCommunitySlugForPublish(cookies, resolved);
+  return {
+    id: postId,
+    postId,
+    releaseURL: skoolReleaseUrl(created.name, communitySlug),
+    status: "success"
+  };
+}
+async function publishSkoolComment(accessToken2, internalUserId, rootPostId, parentPostId, postDetails) {
+  const cookies = parseSkoolSessionToken(accessToken2);
+  const resolved = resolveSkoolSettings(postDetails.settings);
+  if (!resolved.groupId) {
+    throw new Error("Skool group is required");
+  }
+  const message = stripComposerBodyForEditor("normal", postDetails.message);
+  const attachments = await uploadMediaToSkool(extractMedia4(postDetails.settings), internalUserId, cookies);
+  const created = await skoolFetchJson(
+    "/posts?follow=true",
+    cookies,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        post_type: "comment",
+        group_id: resolved.groupId,
+        root_id: rootPostId,
+        parent_id: parentPostId,
+        metadata: {
+          title: "",
+          content: message,
+          attachments,
+          action: 0,
+          video_ids: ""
+        }
+      })
+    }
+  );
+  const postId = String(created.id);
+  const communitySlug = await resolveSkoolCommunitySlugForPublish(cookies, resolved);
+  return {
+    id: postId,
+    postId,
+    releaseURL: skoolReleaseUrl(created.name, communitySlug),
+    status: "success"
+  };
+}
+async function fetchSkoolGroupOptions(cookies, userId) {
+  const { groups } = await skoolFetchJson(`/users/${encodeURIComponent(userId)}/groups?offset=0&limit=30`, cookies, { method: "GET" });
+  if (!Array.isArray(groups)) return [];
+  return groups.filter((g) => g?.id).map((g) => {
+    const groupSlug = typeof g.name === "string" ? g.name.trim() : "";
+    return {
+      value: String(g.id),
+      label: g.metadata?.display_name?.trim() || String(g.id),
+      ...groupSlug ? { groupSlug } : {}
+    };
+  });
+}
+async function fetchSkoolLabelOptions(cookies, groupId) {
+  const { metadata } = await skoolFetchJson(
+    `/groups/${encodeURIComponent(groupId)}`,
+    cookies,
+    { method: "GET" }
+  );
+  const labelsCsv = metadata?.labels?.trim();
+  if (!labelsCsv) {
+    return [];
+  }
+  const labelIds = labelsCsv.split(",").map((s) => s.trim()).filter(Boolean);
+  if (!labelIds.length) {
+    return [{ value: "none", label: "Default Label" }];
+  }
+  const labelInformation = await Promise.all(
+    labelIds.map(
+      (labelId) => skoolFetchJson(
+        `/labels/${encodeURIComponent(labelId)}`,
+        cookies,
+        { method: "GET" }
+      )
+    )
+  );
+  return labelInformation.map((p) => ({
+    value: String(p.id),
+    label: p.metadata?.display_name?.trim() || String(p.id)
+  }));
+}
+var init_skoolPublish = __esm({
+  "integrations/providers/skool/skoolPublish.ts"() {
+    init_MediaRepository();
+    init_stripComposerBodyForEditor();
+    init_skoolApi();
+    init_skoolCredentials();
+    init_resolveSkoolSettings();
+  }
+});
+function tokenTtlSeconds3() {
+  return dayjs6__default.default().add(SKOOL_TOKEN_TTL_YEARS, "year").unix() - dayjs6__default.default().unix();
+}
+var SKOOL_TOKEN_TTL_YEARS, SkoolProvider;
+var init_skoolProvider = __esm({
+  "integrations/providers/skool/skoolProvider.ts"() {
+    init_makeId();
+    init_resolveSkoolSettings();
+    init_skoolCredentials();
+    init_skoolApi();
+    init_skoolPublish();
+    SKOOL_TOKEN_TTL_YEARS = 100;
+    SkoolProvider = class {
+      identifier = "skool";
+      name = "Skool";
+      editor = "normal";
+      isBetweenSteps = false;
+      isChromeExtension = true;
+      scopes = [];
+      extensionCookies = [
+        { name: "client_id", domain: ".skool.com" },
+        { name: "auth_token", domain: ".skool.com" }
+      ];
+      toolTip = "Connect with the OpenQuok browser extension while logged in to Skool";
+      rules = "Skool posts require a title, a group, and a category (label). Body text is plain. Images upload to Skool storage at publish time. Follow-up comments on your own posts are supported when the group allows it.";
+      maxLength(_additionalSettings) {
+        return SKOOL_MAX_LENGTH;
+      }
+      validateCreatePost(input) {
+        const resolved = resolveSkoolSettings({
+          providerSettings: input.providerSettings
+        });
+        if (!resolved.title || resolved.title.length < SKOOL_TITLE_MIN_LENGTH) {
+          return "Skool posts require a title";
+        }
+        if (!resolved.groupId) {
+          return "Select a Skool group";
+        }
+        if (!resolved.labelId) {
+          return "Select a Skool category";
+        }
+        return null;
+      }
+      tools() {
+        return [
+          {
+            methodName: "groups",
+            description: "List Skool groups as { value: id, label: name } options."
+          },
+          {
+            methodName: "label",
+            description: "List labels for a Skool group ({ id: group id } in request data).",
+            dataSchema: {
+              type: "object",
+              required: ["id"],
+              properties: { id: { type: "string", description: "Skool group id" } }
+            }
+          }
+        ];
+      }
+      settingsSchema() {
+        return SKOOL_SETTINGS_SCHEMA;
+      }
+      async generateAuthUrl() {
+        const state = makeId(6);
+        const codeVerifier = makeId(10);
+        return { url: state, codeVerifier, state };
+      }
+      async authenticate(params) {
+        try {
+          const cookies = decodeSkoolConnectCode(params.code);
+          const data = await fetchSkoolSelf(cookies);
+          const first = data.first_name?.trim() ?? "";
+          const last = data.last_name?.trim() ?? "";
+          const displayName = [first, last].filter(Boolean).join(" ").trim() || data.name || "Skool";
+          return {
+            refreshToken: "",
+            expiresIn: tokenTtlSeconds3(),
+            accessToken: serializeSkoolSessionToken(cookies),
+            id: String(data.id),
+            name: displayName,
+            picture: data.metadata?.picture_profile?.trim() || "",
+            username: data.name ?? String(data.id)
+          };
+        } catch (e) {
+          const message = e instanceof Error ? e.message : "Invalid cookie data";
+          if (message.includes("Missing required cookies")) {
+            return message;
+          }
+          return "Invalid cookie data";
+        }
+      }
+      /** Session cookies are refreshed by the browser extension, not server cron. */
+      async refreshToken(_refreshToken) {
+        return {
+          refreshToken: "",
+          expiresIn: 0,
+          accessToken: "",
+          id: "",
+          name: "",
+          picture: "",
+          username: ""
+        };
+      }
+      async groups(accessToken2, _data, internalId, _integration) {
+        try {
+          const cookies = parseSkoolSessionToken(accessToken2);
+          return await fetchSkoolGroupOptions(cookies, internalId);
+        } catch {
+          return [];
+        }
+      }
+      async label(accessToken2, data, _internalId, _integration) {
+        try {
+          const groupId = typeof data?.id === "string" ? data.id.trim() : "";
+          if (!groupId) return [];
+          const cookies = parseSkoolSessionToken(accessToken2);
+          return await fetchSkoolLabelOptions(cookies, groupId);
+        } catch {
+          return [];
+        }
+      }
+      async post(id, accessToken2, postDetails, _integration) {
+        if (!postDetails.length) return [];
+        const result = await publishSkoolPost(accessToken2, id, postDetails[0]);
+        return [result];
+      }
+      async comment(id, postId, lastCommentId, accessToken2, postDetails, _integration) {
+        if (!postDetails.length) return [];
+        const parentId = lastCommentId?.trim() || postId;
+        const result = await publishSkoolComment(accessToken2, id, postId, parentId, postDetails[0]);
+        return [result];
+      }
+    };
+  }
+});
+
 // integrations/integrationManager.ts
 var socialIntegrationList, IntegrationManager;
 var init_integrationManager = __esm({
@@ -24330,6 +24989,7 @@ var init_integrationManager = __esm({
     init_xProvider();
     init_devtoProvider();
     init_blueskyProvider();
+    init_skoolProvider();
     socialIntegrationList = [
       new ThreadsProvider(),
       new FacebookProvider(),
@@ -24341,7 +25001,8 @@ var init_integrationManager = __esm({
       new TiktokProvider(),
       new XProvider(),
       new DevToProvider(),
-      new BlueskyProvider()
+      new BlueskyProvider(),
+      new SkoolProvider()
     ];
     IntegrationManager = class {
       getAllIntegrations() {
@@ -25270,6 +25931,59 @@ var init_integrationConnectPrefill = __esm({
     init_AppError();
   }
 });
+function base64UrlEncode2(buf) {
+  return buf.toString("base64url");
+}
+function base64UrlDecode2(str) {
+  return Buffer.from(str, "base64url");
+}
+function signExtensionRefreshToken(payload, secret) {
+  if (!secret) {
+    throw new Error("Extension refresh token secret is not configured (set SECURITY_SECRET)");
+  }
+  const expiresAt = new Date(Date.now() + EXTENSION_REFRESH_TOKEN_TTL_MS).toISOString();
+  const id = crypto.randomBytes(6).toString("hex");
+  const full = { ...payload, expiresAt, id };
+  const raw = JSON.stringify(full);
+  const payloadB64 = base64UrlEncode2(Buffer.from(raw, "utf8"));
+  const sig = crypto.createHmac(ALG2, secret).update(payloadB64).digest();
+  return `${payloadB64}${SEP2}${base64UrlEncode2(sig)}`;
+}
+function decodeExtensionRefreshToken(token, secret) {
+  if (!secret) return { ok: false, reason: "missing_secret" };
+  if (!token?.trim()) return { ok: false, reason: "malformed" };
+  const idx = token.lastIndexOf(SEP2);
+  if (idx === -1) return { ok: false, reason: "malformed" };
+  const payloadB64 = token.slice(0, idx);
+  const sigB64 = token.slice(idx + 1);
+  try {
+    const expectedSig = crypto.createHmac(ALG2, secret).update(payloadB64).digest();
+    const actualSig = base64UrlDecode2(sigB64);
+    if (actualSig.length !== expectedSig.length || !crypto.timingSafeEqual(actualSig, expectedSig)) {
+      return { ok: false, reason: "invalid_signature" };
+    }
+    const raw = base64UrlDecode2(payloadB64).toString("utf8");
+    const payload = JSON.parse(raw);
+    if (new Date(payload.expiresAt).getTime() < Date.now()) {
+      return { ok: false, reason: "expired" };
+    }
+    return { ok: true, payload };
+  } catch {
+    return { ok: false, reason: "malformed" };
+  }
+}
+function verifyExtensionRefreshToken(token, secret) {
+  const decoded = decodeExtensionRefreshToken(token, secret);
+  return decoded.ok ? decoded.payload : null;
+}
+var ALG2, SEP2, EXTENSION_REFRESH_TOKEN_TTL_MS;
+var init_extensionRefreshToken = __esm({
+  "utils/auth/extensionRefreshToken.ts"() {
+    ALG2 = "sha256";
+    SEP2 = ".";
+    EXTENSION_REFRESH_TOKEN_TTL_MS = 400 * 24 * 60 * 60 * 1e3;
+  }
+});
 function rootInternalId(internalId) {
   const parts = internalId.split("_");
   return parts.length > 1 ? parts.pop() ?? null : internalId;
@@ -25321,6 +26035,8 @@ var init_IntegrationConnectionService = __esm({
     init_providerProfilePictureFetch();
     init_Logger();
     init_additionalSettings();
+    init_GlobalConfig();
+    init_extensionRefreshToken();
     CACHE_KEYS14 = {
       oauth: {
         login: (state) => `login:${state}`,
@@ -25616,7 +26332,7 @@ var init_IntegrationConnectionService = __esm({
             throw new AppError("Integration not allowed", 400);
           }
           const integrationProvider = this.manager.getSocialIntegration(integration);
-          if (integrationProvider?.customFields) {
+          if (integrationProvider?.customFields || integrationProvider?.isChromeExtension) {
             throw new AppError("Connect this channel in the dashboard with an API key", 400);
           }
           return await this.buildOAuthAuthorizationUrl(organizationId, integration, opts, "public");
@@ -25754,15 +26470,16 @@ var init_IntegrationConnectionService = __esm({
           throw new AppError("Integration not found", 404);
         }
         const cache = this.requireCache();
-        const getCodeVerifier = integrationProvider.customFields ? "none" : await cache.get(CACHE_KEYS14.oauth.login(body.state));
-        if (!getCodeVerifier && !integrationProvider.customFields) {
+        const usesDashboardConnect = !!integrationProvider.customFields || !!integrationProvider.isChromeExtension;
+        const getCodeVerifier = usesDashboardConnect ? "none" : await cache.get(CACHE_KEYS14.oauth.login(body.state));
+        if (!getCodeVerifier && !usesDashboardConnect) {
           throw new AppError(
             "Invalid OAuth state: login verifier missing for this state (expired, already used, or cache unavailable). Remove any partial channel and connect again.",
             400,
             { errorCode: "OAUTH_STATE_INVALID", metadata: { reason: "missing_code_verifier" } }
           );
         }
-        if (!integrationProvider.customFields) {
+        if (!usesDashboardConnect) {
           await this.invalidateOAuthCacheKey(CACHE_KEYS14.oauth.login(body.state));
         }
         const organizationKey = CACHE_KEYS14.oauth.organization(body.state);
@@ -25899,6 +26616,16 @@ var init_IntegrationConnectionService = __esm({
         if (!shouldKeepOrganizationState) {
           await this.invalidateOAuthCacheKey(organizationKey);
         }
+        const inviteSecret = config.auth?.inviteTokenSecret?.trim() ?? "";
+        const extensionToken = integrationProvider.isChromeExtension && inviteSecret ? signExtensionRefreshToken(
+          {
+            integrationId: row.id,
+            organizationId: row.organization_id,
+            internalId: row.internal_id,
+            provider: integration
+          },
+          inviteSecret
+        ) : void 0;
         return {
           id: row.id,
           organizationId: row.organization_id,
@@ -25911,8 +26638,76 @@ var init_IntegrationConnectionService = __esm({
           inBetweenSteps: row.in_between_steps,
           refreshNeeded: false,
           onboarding: onboarding === "true",
-          pages
+          pages,
+          ...extensionToken ? { extensionToken } : {}
         };
+      }
+      /**
+       * POST /integrations/extension-refresh — re-validates extension-harvested cookies and updates the channel token.
+       * Authenticated with a signed extension refresh JWT returned from social connect.
+       */
+      async extensionRefresh(code, bearerToken) {
+        const secret = config.auth?.inviteTokenSecret?.trim() ?? "";
+        const payload = verifyExtensionRefreshToken(bearerToken, secret);
+        if (!payload) {
+          throw new AppError("Invalid extension refresh token", 401);
+        }
+        const row = await this.integrations.getById(payload.organizationId, payload.integrationId);
+        if (!row || row.deleted_at) {
+          throw new AppError("Integration not found", 404);
+        }
+        if (row.provider_identifier !== payload.provider) {
+          throw new AppError("Integration provider mismatch", 400);
+        }
+        if (row.internal_id !== payload.internalId) {
+          throw new AppError("Integration account mismatch", 400);
+        }
+        const integrationProvider = this.manager.getSocialIntegration(row.provider_identifier);
+        if (!integrationProvider?.isChromeExtension) {
+          throw new AppError("Extension refresh is not supported for this channel", 400);
+        }
+        const authResult = await this.safeAuthenticate(
+          integrationProvider,
+          { code },
+          "none",
+          void 0
+        );
+        if ("error" in authResult && !("accessToken" in authResult)) {
+          await this.integrations.setRefreshNeeded(payload.organizationId, row.id, true);
+          throw new AppError(authResult.error, 400, {
+            metadata: { refresh_needed: true }
+          });
+        }
+        const resolvedAuth = authResult;
+        if (!resolvedAuth.id) {
+          await this.integrations.setRefreshNeeded(payload.organizationId, row.id, true);
+          throw new AppError("Invalid session cookies", 400, { metadata: { refresh_needed: true } });
+        }
+        if (String(resolvedAuth.id) !== String(row.internal_id)) {
+          await this.integrations.setRefreshNeeded(payload.organizationId, row.id, true);
+          throw new AppError("Skool account changed \u2014 reconnect this channel", 400, {
+            metadata: { refresh_needed: true }
+          });
+        }
+        await this.integrations.upsertIntegration({
+          organizationId: payload.organizationId,
+          internalId: row.internal_id,
+          name: row.name,
+          picture: row.picture,
+          providerIdentifier: row.provider_identifier,
+          integrationType: row.type === "article" ? "article" : "social",
+          token: resolvedAuth.accessToken,
+          refreshToken: resolvedAuth.refreshToken ?? "",
+          expiresInSeconds: resolvedAuth.expiresIn,
+          profile: row.profile,
+          inBetweenSteps: row.in_between_steps,
+          additionalSettingsJson: row.additional_settings ?? "[]",
+          customInstanceDetails: row.custom_instance_details,
+          postingTimesJson: row.posting_times,
+          rootInternalId: row.root_internal_id,
+          clearRefreshNeeded: true
+        });
+        return { ok: true };
       }
       async connectSocialMedia(authUserId, integration, body) {
         return this.connectSocialMediaInternal(authUserId, integration, body);
@@ -26436,7 +27231,7 @@ var init_TransactionalNotificationEmailService = __esm({
     };
   }
 });
-function isPlainObject15(value) {
+function isPlainObject16(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 function providerCaptionDisplayName(providerIdentifier) {
@@ -26515,12 +27310,12 @@ function collectCaptionTextsFromProviderSettings(providerIdentifier, providerSet
   }
   const id = providerIdentifier.trim().toLowerCase();
   if (id === "threads") {
-    const threads = isPlainObject15(providerSettings.threads) ? providerSettings.threads : null;
+    const threads = isPlainObject16(providerSettings.threads) ? providerSettings.threads : null;
     if (threads) {
       if (threads.enabled === true) {
         pushCaptionText(out, threads.message, `${displayName} thread finisher`);
       }
-      const engagement = isPlainObject15(threads.internalEngagementPlug) ? threads.internalEngagementPlug : null;
+      const engagement = isPlainObject16(threads.internalEngagementPlug) ? threads.internalEngagementPlug : null;
       if (engagement?.enabled === true) {
         pushCaptionText(out, engagement.message, `${displayName} delayed engagement`);
       }
@@ -26528,12 +27323,12 @@ function collectCaptionTextsFromProviderSettings(providerIdentifier, providerSet
   }
   for (const bucket of CROSS_ACCOUNT_PLUG_BUCKETS) {
     const bucketSettings = providerSettings[bucket];
-    if (!isPlainObject15(bucketSettings)) continue;
+    if (!isPlainObject16(bucketSettings)) continue;
     const plugs = bucketSettings.crossAccountPlugs;
     if (!Array.isArray(plugs)) continue;
     for (const plug of plugs) {
-      if (!isPlainObject15(plug)) continue;
-      const fields = isPlainObject15(plug.fields) ? plug.fields : null;
+      if (!isPlainObject16(plug)) continue;
+      const fields = isPlainObject16(plug.fields) ? plug.fields : null;
       pushCaptionText(out, fields?.comment, `${displayName} cross-account plug comment`);
     }
   }
@@ -32085,7 +32880,7 @@ var init_publicRouteRegistry = __esm({
     };
     isPublicApiPath = (path7) => path7 === "/public" || path7.startsWith("/public/");
     isUploadPath = (path7) => path7 === "/public/upload" || path7.startsWith("/public/upload/") || path7 === "/public/upload-from-url" || path7 === "/media/upload" || path7 === "/media/upload-server" || path7 === "/media/upload-simple";
-    isIntegrationConnectPath = (path7) => /^\/integrations\/social-connect\/[^/]+$/.test(path7) || /^\/integrations\/public\/provider\/[^/]+\/connect$/.test(path7);
+    isIntegrationConnectPath = (path7) => /^\/integrations\/social-connect\/[^/]+$/.test(path7) || /^\/integrations\/public\/provider\/[^/]+\/connect$/.test(path7) || path7 === "/integrations/extension-refresh";
     LISTING_BOOKMARK_MUTATION_PATH = /^\/listings\/[0-9a-f-]{36}\/bookmark$/i;
     LINK_DIRECTORY_SAVED_SITE_OUTREACH_PATH = /^\/link-directory\/me\/saved-sites\/[0-9a-f-]{36}\/outreach-completion$/i;
     isBookmarkSavedMutationRoute = (req, routePath) => {
@@ -36338,6 +37133,18 @@ var init_IntegrationController = __esm({
             field,
             value
           );
+          res.status(200).json({ success: true, data });
+        } catch (error) {
+          next(error);
+        }
+      };
+      /** POST /integrations/extension-refresh — browser extension periodic cookie refresh. */
+      extensionRefresh = async (req, res, next) => {
+        try {
+          const authHeader = req.headers.authorization;
+          const bearer = typeof authHeader === "string" && authHeader.startsWith("Bearer ") ? authHeader.slice("Bearer ".length).trim() : "";
+          const body = req.body;
+          const data = await this.integrationConnectionService.extensionRefresh(body.code, bearer);
           res.status(200).json({ success: true, data });
         } catch (error) {
           next(error);
@@ -43176,6 +43983,12 @@ var validateIntegrationConnectPrefillRequest = validateRequest({
 var validateIntegrationMentionsRequest = validateRequest({
   body: integrationMentionsBodySchema
 });
+var extensionRefreshBodySchema = zod.z.object({
+  code: zod.z.string().min(1, "code is required")
+});
+var validateExtensionRefreshBody = validateRequest({
+  body: extensionRefreshBodySchema
+});
 
 // routes/integrationApi/NoAuthRoutes.ts
 var integrationNoAuthRouter = express.Router();
@@ -43186,6 +43999,11 @@ integrationNoAuthRouter.post(
   optionalAuth5,
   validateSocialConnectBody,
   integrationController.connectSocialMediaNoAuth
+);
+integrationNoAuthRouter.post(
+  "/extension-refresh",
+  validateExtensionRefreshBody,
+  integrationController.extensionRefresh
 );
 integrationNoAuthRouter.post(
   "/public/provider/:id/connect",
