@@ -3,7 +3,7 @@ import type { AudienceCard } from '$lib/ui/templates/WhoIsFor.svelte';
 import { icons } from '$data/icons';
 import {
 	AGENT_HOST_FIRST_CLASS_CHANNEL_BADGE,
-	getPrimaryAgentHostSlugForChannelPage,
+	getPrimaryEcosystemSurfaceSlugForChannelPage,
 	isFirstClassChannelForHost
 } from '$lib/content/constants/agents/ecosystems';
 import type { PublicChannelSiblingGridItem } from '$lib/content/utils/buildPublicChannelSiblingGridCopy';
@@ -69,7 +69,7 @@ export function enrichPublicChannelSiblingGridItems(
 	items: readonly PublicChannelSiblingGridItem[],
 	activeChannelSlug: string
 ): PublicChannelSiblingGridItem[] {
-	const hostSlug = getPrimaryAgentHostSlugForChannelPage(activeChannelSlug);
+	const hostSlug = getPrimaryEcosystemSurfaceSlugForChannelPage(activeChannelSlug);
 	if (!hostSlug) return [...items];
 
 	return items.map((item) => {

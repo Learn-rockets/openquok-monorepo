@@ -11,6 +11,7 @@ export const MCP_CLIENTS = [
 	'Amp',
 	'Codex',
 	'Antigravity CLI',
+	'Android Studio',
 	'Warp',
 	'Muse Code',
 	'Grok Build'
@@ -32,6 +33,7 @@ export const MCP_CLIENT_DOCS_SLUG: Record<McpClient, string> = {
 	Amp: 'amp',
 	Codex: 'codex',
 	'Antigravity CLI': 'antigravity-cli',
+	'Android Studio': 'android-studio',
 	Warp: 'warp',
 	'Muse Code': 'muse-code',
 	'Grok Build': 'grok-build'
@@ -119,6 +121,13 @@ export function getMcpClientConfig(
 						mcpServers: { [MCP_SERVER_NAME]: { serverUrl: urlWithKey } }
 					}),
 					hint: 'Add to ~/.gemini/config/mcp_config.json'
+				};
+			case 'Android Studio':
+				return {
+					config: json({
+						mcpServers: { [MCP_SERVER_NAME]: { httpUrl: urlWithKey } }
+					}),
+					hint: 'Settings → Tools → AI → MCP Servers (saved in Android Studio mcp.json).'
 				};
 			case 'Warp':
 				return {
@@ -229,6 +238,18 @@ export function getMcpClientConfig(
 					}
 				}),
 				hint: 'Add to ~/.gemini/config/mcp_config.json'
+			};
+		case 'Android Studio':
+			return {
+				config: json({
+					mcpServers: {
+						[MCP_SERVER_NAME]: {
+							httpUrl: urlBase,
+							headers: { Authorization: bearer }
+						}
+					}
+				}),
+				hint: 'Settings → Tools → AI → MCP Servers (saved in Android Studio mcp.json).'
 			};
 		case 'Warp':
 			return {

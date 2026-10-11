@@ -87,6 +87,7 @@ const LANDING_HERO_TITLE_HIGHLIGHT_WORDS = [
 	// MCP clients & agent tooling
 	'VS Code / Copilot',
 	'Antigravity CLI',
+	'Android Studio',
 	'Devin Desktop',
 	'Claude Cowork',
 	'Claude Code',

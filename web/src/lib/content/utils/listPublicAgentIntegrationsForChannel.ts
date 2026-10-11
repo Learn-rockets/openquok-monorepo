@@ -5,7 +5,7 @@ import { listPublicAgentsForHub } from '$lib/content/constants/agents';
 import { getPublicAgentChannelBySlug } from '$lib/content/constants/agents/channels/index';
 import { getPublicChannelBySlug } from '$lib/content/constants/channels';
 import {
-	getPrimaryAgentHostSlugForChannelPage,
+	getPrimaryEcosystemSurfaceSlugForChannelPage,
 	isFirstClassChannelForHost,
 	sortAgentIntegrationsForEcosystem
 } from '$lib/content/constants/agents/ecosystems';
@@ -88,7 +88,7 @@ export function listPublicAgentIntegrationsForChannel(
 	return {
 		agentHosts: sortChannelPageAgentIntegrations(agentHosts, normalizedChannel),
 		mcpClients: (() => {
-			const hostSlug = getPrimaryAgentHostSlugForChannelPage(normalizedChannel);
+			const hostSlug = getPrimaryEcosystemSurfaceSlugForChannelPage(normalizedChannel);
 			if (!hostSlug) return mcpClients;
 			return sortAgentIntegrationsForEcosystem(mcpClients, hostSlug, 'mcp-client');
 		})()

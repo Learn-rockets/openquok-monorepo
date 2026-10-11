@@ -14,6 +14,7 @@ export type McpVerifySafariMockContentId =
 	| 'mcp-verify-amp'
 	| 'mcp-verify-codex'
 	| 'mcp-verify-antigravity-cli'
+	| 'mcp-verify-android-studio'
 	| 'mcp-verify-warp'
 	| 'mcp-verify-muse-code'
 	| 'mcp-verify-grok-build';
@@ -28,6 +29,7 @@ export type McpInstallSafariMockContentId =
 	| 'mcp-install-amp'
 	| 'mcp-install-codex'
 	| 'mcp-install-antigravity-cli'
+	| 'mcp-install-android-studio'
 	| 'mcp-install-warp'
 	| 'mcp-install-muse-code'
 	| 'mcp-install-grok-build';
@@ -162,6 +164,18 @@ const THEMES: Record<McpClient, McpClientVerifyMockTheme> = {
 		accentSoftClass: 'bg-blue-500/15 text-blue-100',
 		borderClass: 'border-white/10',
 		configFileHint: 'mcp_config.json'
+	},
+	'Android Studio': {
+		layout: 'ide',
+		mockUrl: 'developer.android.com/studio',
+		productLabel: 'Android Studio',
+		panelLabel: 'Gemini',
+		icon: icons.AndroidStudio.name,
+		surfaceClass: 'bg-[#1e1f22]',
+		accentClass: 'text-emerald-300',
+		accentSoftClass: 'bg-emerald-500/15 text-emerald-100',
+		borderClass: 'border-white/10',
+		configFileHint: 'mcp.json'
 	},
 	Warp: {
 		layout: 'terminal',

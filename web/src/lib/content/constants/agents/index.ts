@@ -36,6 +36,7 @@ export {
 	buildMcpClientEcosystemFaqItems,
 	getAgentHostEcosystem,
 	getAgentHostEcosystemId,
+	getPrimaryEcosystemSurfaceSlugForChannelPage,
 	getMcpClientEcosystemId,
 	isFirstClassChannelForHost,
 	resolveAgentChannelAudienceCards,

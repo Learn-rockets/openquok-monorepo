@@ -1,6 +1,7 @@
 import type { McpLandingSeed } from '$lib/content/constants/mcps/types';
 
 import { antigravity_cliMcpSeed } from '$lib/content/constants/mcps/hosts/antigravity-cli';
+import { android_studioMcpSeed } from '$lib/content/constants/mcps/hosts/android-studio';
 import { chatgptMcpSeed } from '$lib/content/constants/mcps/hosts/chatgpt';
 import { codexMcpSeed } from '$lib/content/constants/mcps/hosts/codex';
 import { cursorMcpSeed } from '$lib/content/constants/mcps/hosts/cursor';
@@ -16,6 +17,7 @@ import { grok_buildMcpSeed } from '$lib/content/constants/mcps/hosts/grok-build'
 /** Single registry for MCP landing seeds — order drives hub, nav, and footer columns. */
 export const MCP_LANDING_SEEDS: readonly McpLandingSeed[] = [
 	antigravity_cliMcpSeed,
+	android_studioMcpSeed,
 	chatgptMcpSeed,
 	codexMcpSeed,
 	cursorMcpSeed,

@@ -182,6 +182,8 @@ export const publicFaqHref = {
 	manusLanding: faqHrefAgent('manus'),
 	cursorLanding: faqHrefAgent('cursor'),
 	cursorMcpGuide: faqHrefDocs('mcp-setup-guides/cursor'),
+	antigravityCliLanding: faqHrefAgent('antigravity-cli'),
+	androidStudioLanding: faqHrefAgent('android-studio'),
 	blogBufferAlternatives: faqHrefBlogPost(
 		'best-buffer-alternatives-for-teams-that-approve-ai-content-before-posting'
 	),

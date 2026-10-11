@@ -12,6 +12,7 @@ import type { PublicMcpIntegrationViewModel, PublicMcpLandingPageViewModel } fro
 export * from '$lib/content/constants/mcps/types';
 export * from '$lib/content/constants/mcps/general';
 export { antigravity_cliMcpSeed } from '$lib/content/constants/mcps/hosts/antigravity-cli';
+export { android_studioMcpSeed } from '$lib/content/constants/mcps/hosts/android-studio';
 export { chatgptMcpSeed } from '$lib/content/constants/mcps/hosts/chatgpt';
 export { codexMcpSeed } from '$lib/content/constants/mcps/hosts/codex';
 export { cursorMcpSeed } from '$lib/content/constants/mcps/hosts/cursor';

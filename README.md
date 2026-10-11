@@ -82,6 +82,7 @@ Posting formats, follow-up comments, and analytics vary by platform. Some integr
   <a href="https://www.openquok.com/agents/thinkrail"><img src="./assets/readme/agents-mcp/thinkrail.svg" alt="ThinkRail" width="32" height="32"></a>
   <a href="https://www.openquok.com/agents/manus"><img src="./assets/readme/agents-mcp/manus.svg" alt="Manus" width="32" height="32"></a>
   <a href="https://www.openquok.com/agents/antigravity-cli"><img src="./assets/readme/agents-mcp/antigravity-cli.svg" alt="Antigravity CLI" width="32" height="32"></a>
+  <a href="https://www.openquok.com/agents/android-studio"><img src="./assets/readme/agents-mcp/android-studio.svg" alt="Android Studio" width="32" height="32"></a>
   <a href="https://www.openquok.com/agents/chatgpt"><img src="./assets/readme/agents-mcp/chatgpt.svg" alt="ChatGPT" width="32" height="32"></a>
   <a href="https://www.openquok.com/agents/codex"><img src="./assets/readme/agents-mcp/codex.svg" alt="Codex" width="32" height="32"></a>
   <a href="https://www.openquok.com/agents/cursor"><img src="./assets/readme/agents-mcp/cursor.svg" alt="Cursor" width="32" height="32"></a>
@@ -95,7 +96,7 @@ Posting formats, follow-up comments, and analytics vary by platform. Some integr
   <a href="https://www.openquok.com/agents/grok-build"><img src="./assets/readme/agents-mcp/grok-build.svg" alt="Grok Build" width="32" height="32"></a>
 </p>
 
-**Agent hosts** — **OpenClaw**, **Hermes Agent**, **Grok Bot**, **Dots**, **Meta Muse**, **ThinkRail**, and **Manus** — install [OpenQuok Core](https://www.openquok.com/creators/openquok/building-blocks/openquok-core) (`@openquok/auto-cli` skill) and schedule from chat or a terminal. **MCP clients** — **Antigravity CLI**, **ChatGPT**, **Codex**, **Cursor**, **Claude Code**, **Claude Cowork**, **VS Code / Copilot**, **Devin Desktop**, **Amp**, **Warp**, **Muse Code**, and **Grok Build** — connect OpenQuok over HTTP with a workspace programmatic token. Drafts from every path land in the same review queue on Home and the calendar.
+**Agent hosts** — **OpenClaw**, **Hermes Agent**, **Grok Bot**, **Dots**, **Meta Muse**, **ThinkRail**, and **Manus** — install [OpenQuok Core](https://www.openquok.com/creators/openquok/building-blocks/openquok-core) (`@openquok/auto-cli` skill) and schedule from chat or a terminal. **MCP clients** — **Antigravity CLI**, **Android Studio**, **ChatGPT**, **Codex**, **Cursor**, **Claude Code**, **Claude Cowork**, **VS Code / Copilot**, **Devin Desktop**, **Amp**, **Warp**, **Muse Code**, and **Grok Build** — connect OpenQuok over HTTP with a workspace programmatic token. Drafts from every path land in the same review queue on Home and the calendar.
 
 Create a programmatic token under **Account → Settings → Developers → Access**, or [start on Cloud](https://www.openquok.com/pricing) when you want hosted plans and billing handled for you.
 

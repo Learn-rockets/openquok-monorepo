@@ -243,6 +243,17 @@ Update `agent/skills/openquok-core/` (`SKILL.md` metadata JSON for the host when
 - Reference implementation: **`mcps/hosts/grok-build.ts`**, **`getMcpClientConfig`** `'Grok Build'` cases, MCP mock theme unions (`mcp-verify-grok-build`, `mcp-install-grok-build`). Terminal layout mocks (`grok.com/build`). Icon: **`GrokBuild`** (Grok AI swirl), not **`GrokBot`** (X-letter mark).
 - Ecosystem: **`MCP_CLIENT_ECOSYSTEM_BY_SLUG['grok-build'] = 'xai-grok'`** — fourth WhoIsFor card **X as your home network** (same title as Grok Bot, terminal-agent copy).
 
+### Android Studio specifics (`android-studio`)
+
+- **MCP client** — `MCP_CLIENTS` + `mcps/hosts/android-studio.ts` + `mcp-setup-guides/android-studio.md`. Official MCP docs: Gemini in Android Studio → Settings → Tools → AI → MCP Servers (`httpUrl` + optional `headers` in `mcp.json`).
+- **Not** Antigravity CLI — Antigravity uses `~/.gemini/config/mcp_config.json` with **`serverUrl`**, not Android Studio’s **`httpUrl`**. Cross-link **`/agents/antigravity-cli`** in FAQ and docs.
+- Reference implementation: **`mcps/hosts/android-studio.ts`**, **`getMcpClientConfig`** `'Android Studio'` cases, IDE layout mocks (`mcp-verify-android-studio`). Icon: **`AndroidStudio`** (inline SVG in `branded-icons.ts`).
+- Ecosystem: **`MCP_CLIENT_ECOSYSTEM_BY_SLUG['android-studio'] = 'google-gemini'`** — fourth WhoIsFor card **Gemini-first in Google’s toolchain** (same title as Antigravity CLI, IDE copy; cite YouTube as the video example). **`relatedMcpSlugs`**: `android-studio`, `antigravity-cli`; **`firstClassChannelSlugs`**: `youtube`. **`meta-consumer`** **`relatedAgentSlugs`** includes **`meta-muse`** for grid pin order.
+
+### Antigravity CLI ecosystem
+
+- **`MCP_CLIENT_ECOSYSTEM_BY_SLUG['antigravity-cli'] = 'google-gemini'`** — same Gemini-first WhoIsFor card as Android Studio (terminal copy).
+
 ### Meta Muse specifics (`meta-muse`)
 
 - **Not** Muse Code — consumer personal agent (custom connectors, Secure VM). **Do not** reuse `mcps/muse-code.ts` or `mcp-setup-guides/muse-code.md` for this host.

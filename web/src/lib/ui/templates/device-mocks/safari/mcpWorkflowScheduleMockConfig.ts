@@ -14,6 +14,7 @@ export type McpWorkflowScheduleMockContentId =
 	| 'mcp-workflow-amp'
 	| 'mcp-workflow-codex'
 	| 'mcp-workflow-antigravity-cli'
+	| 'mcp-workflow-android-studio'
 	| 'mcp-workflow-warp'
 	| 'mcp-workflow-muse-code'
 	| 'mcp-workflow-grok-build';

@@ -23,6 +23,7 @@ For **agent hosts** that run the CLI skill (OpenClaw, Hermes Agent, Grok Bot, Do
 
 <CardGrid>
 <LinkCard title="Antigravity CLI" description="Add OpenQuok in ~/.gemini/config/mcp_config.json for agy." href="/docs/mcp-setup-guides/antigravity-cli" />
+<LinkCard title="Android Studio" description="Add OpenQuok in Android Studio MCP settings for Gemini Agent mode." href="/docs/mcp-setup-guides/android-studio" />
 <LinkCard title="ChatGPT" description="Add OpenQuok as a custom connector. Paste the MCP URL with your token." href="/docs/mcp-setup-guides/chatgpt" />
 <LinkCard title="Codex" description="Add OpenQuok MCP servers in Codex config.toml." href="/docs/mcp-setup-guides/codex" />
 <LinkCard title="Cursor" description="Add OpenQuok in .cursor/mcp.json. Use Agent and Composer." href="/docs/mcp-setup-guides/cursor" />

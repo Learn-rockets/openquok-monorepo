@@ -80,6 +80,7 @@ For step-by-step guides with troubleshooting, see <a href="/docs/mcp-setup-guide
 | <Badge text="Amp" variant="default" /> | Terminal command or Amp <Badge text="settings.json" variant="path" /> | <a href="/docs/mcp-setup-guides/amp">Amp</a> |
 | <Badge text="Codex" variant="default" /> | <Badge text="~/.codex/config.toml" variant="path" /> | <a href="/docs/mcp-setup-guides/codex">Codex</a> |
 | <Badge text="Antigravity CLI" variant="default" /> | <Badge text="~/.gemini/config/mcp_config.json" variant="path" /> | <a href="/docs/mcp-setup-guides/antigravity-cli">Antigravity CLI</a> |
+| <Badge text="Android Studio" variant="default" /> | <Badge text="mcp.json" variant="path" /> (IDE MCP settings) | <a href="/docs/mcp-setup-guides/android-studio">Android Studio</a> |
 | <Badge text="Warp" variant="default" /> | Settings → MCP Servers | <a href="/docs/mcp-setup-guides/warp">Warp</a> |
 | <Badge text="Muse Code" variant="default" /> | <Badge text="~/.config/muse/settings.json" variant="path" /> | <a href="/docs/mcp-setup-guides/muse-code">Muse Code</a> |
 | <Badge text="Grok Build" variant="default" /> | Terminal <Badge text="grok mcp add" variant="default" /> or <Badge text="~/.grok/config.toml" variant="path" /> | <a href="/docs/mcp-setup-guides/grok-build">Grok Build</a> |

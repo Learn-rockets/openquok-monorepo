@@ -14,6 +14,7 @@ export type McpWorkflowAnalyticsMockContentId =
 	| 'mcp-analytics-amp'
 	| 'mcp-analytics-codex'
 	| 'mcp-analytics-antigravity-cli'
+	| 'mcp-analytics-android-studio'
 	| 'mcp-analytics-warp'
 	| 'mcp-analytics-muse-code'
 	| 'mcp-analytics-grok-build';

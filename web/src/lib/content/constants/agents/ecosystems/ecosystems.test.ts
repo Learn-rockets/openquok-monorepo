@@ -36,7 +36,7 @@ const BASE_AUDIENCE_CARD = {
 };
 
 describe('AGENT_HOST_ECOSYSTEM_BY_SLUG', () => {
-	it('maps known host slugs to three ecosystem profiles', () => {
+	it('maps known host slugs to ecosystem profiles', () => {
 		expect(AGENT_HOST_ECOSYSTEM_BY_SLUG.openclaw).toBe('openai-personal-agents');
 		expect(AGENT_HOST_ECOSYSTEM_BY_SLUG.dots).toBe('openai-personal-agents');
 		expect(AGENT_HOST_ECOSYSTEM_BY_SLUG['meta-muse']).toBe('meta-consumer');
@@ -59,6 +59,7 @@ describe('getAgentHostEcosystem', () => {
 	it('returns meta first-class channels for Meta Muse', () => {
 		const ecosystem = getAgentHostEcosystem('meta-muse');
 		expect(ecosystem?.firstClassChannelSlugs).toEqual(['facebook', 'instagram', 'threads']);
+		expect(ecosystem?.relatedAgentSlugs).toEqual(['meta-muse']);
 	});
 
 	it('returns OpenAI sibling pins for OpenClaw', () => {
@@ -113,6 +114,8 @@ describe('isFirstClassChannelForHost', () => {
 		expect(isFirstClassChannelForHost('meta-muse', 'threads')).toBe(true);
 		expect(isFirstClassChannelForHost('grok-build', 'x')).toBe(true);
 		expect(isFirstClassChannelForHost('muse-code', 'threads')).toBe(true);
+		expect(isFirstClassChannelForHost('android-studio', 'youtube')).toBe(true);
+		expect(isFirstClassChannelForHost('antigravity-cli', 'youtube')).toBe(true);
 	});
 });
 
@@ -259,6 +262,8 @@ describe('resolveMcpClientAudienceCards', () => {
 	it('appends X-home-network for Grok Build and Meta-owned for Muse Code', () => {
 		expect(getMcpClientEcosystemId('grok-build')).toBe('xai-grok');
 		expect(getMcpClientEcosystemId('muse-code')).toBe('meta-consumer');
+		expect(getMcpClientEcosystemId('android-studio')).toBe('google-gemini');
+		expect(getMcpClientEcosystemId('antigravity-cli')).toBe('google-gemini');
 		expect(resolveMcpClientAudienceCards([BASE_AUDIENCE_CARD], 'grok-build').at(-1)?.title).toBe(
 			'X as your home network'
 		);
@@ -278,6 +283,10 @@ describe('resolveMcpClientAudienceCards', () => {
 			'Meta-owned channels first'
 		);
 		expect(getPublicMcpLandingBySlug('cursor')?.audienceCards).toHaveLength(3);
+		expect(getPublicMcpLandingBySlug('android-studio')?.audienceCards).toHaveLength(4);
+		expect(getPublicMcpLandingBySlug('android-studio')?.audienceCards.at(-1)?.title).toBe(
+			'Gemini-first in Google’s toolchain'
+		);
 	});
 });
 
@@ -311,9 +320,23 @@ describe('channel page ecosystem (/channels/{slug})', () => {
 	it('maps X and Meta channels to ecosystem ids', () => {
 		expect(getChannelPageEcosystemId('x')).toBe('xai-grok');
 		expect(getChannelPageEcosystemId('facebook')).toBe('meta-consumer');
+		expect(getChannelPageEcosystemId('youtube')).toBe('google-gemini');
 		expect(buildPublicChannelEcosystemAudienceTailoredCard('x', 'X')?.title).toContain(
 			'Grok Bot'
 		);
+	});
+
+	it('pins android-studio then antigravity-cli MCP for YouTube ecosystem', () => {
+		const items = [
+			{ slug: 'cursor', title: 'Cursor' },
+			{ slug: 'antigravity-cli', title: 'Antigravity CLI' },
+			{ slug: 'android-studio', title: 'Android Studio' }
+		];
+		expect(
+			sortAgentIntegrationsForEcosystem(items, 'android-studio', 'mcp-client').map(
+				(item) => item.slug
+			)
+		).toEqual(['android-studio', 'antigravity-cli', 'cursor']);
 	});
 
 	it('pins grok-build then cursor MCP for Grok Bot ecosystem', () => {

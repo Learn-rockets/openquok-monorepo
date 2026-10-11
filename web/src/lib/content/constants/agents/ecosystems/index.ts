@@ -14,7 +14,11 @@ import {
 	publicFaqHref
 } from '$lib/content/utils/publicFaqLinks';
 
-export type AgentHostEcosystemId = 'meta-consumer' | 'openai-personal-agents' | 'xai-grok';
+export type AgentHostEcosystemId =
+	| 'meta-consumer'
+	| 'openai-personal-agents'
+	| 'xai-grok'
+	| 'google-gemini';
 
 export type AgentHostEcosystem = {
 	id: AgentHostEcosystemId;
@@ -28,11 +32,12 @@ const CARD_CONTAINER_CLASS = 'h-full min-h-[18rem]';
 /** Hub grid badge for ecosystem first-class channels. */
 export const AGENT_HOST_FIRST_CLASS_CHANNEL_BADGE = 'First-class';
 
+
 const ECOSYSTEM_PROFILES: Record<AgentHostEcosystemId, AgentHostEcosystem> = {
 	'meta-consumer': {
 		id: 'meta-consumer',
 		firstClassChannelSlugs: ['facebook', 'instagram', 'threads'],
-		relatedAgentSlugs: [],
+		relatedAgentSlugs: ['meta-muse'],
 		relatedMcpSlugs: ['muse-code']
 	},
 	'openai-personal-agents': {
@@ -46,6 +51,12 @@ const ECOSYSTEM_PROFILES: Record<AgentHostEcosystemId, AgentHostEcosystem> = {
 		firstClassChannelSlugs: ['x'],
 		relatedAgentSlugs: [],
 		relatedMcpSlugs: ['grok-build', 'cursor']
+	},
+	'google-gemini': {
+		id: 'google-gemini',
+		firstClassChannelSlugs: ['youtube'],
+		relatedAgentSlugs: [],
+		relatedMcpSlugs: ['android-studio', 'antigravity-cli']
 	}
 };
 
@@ -60,7 +71,9 @@ export const AGENT_HOST_ECOSYSTEM_BY_SLUG: Readonly<Record<string, AgentHostEcos
 /** MCP client slug → ecosystem id for WhoIsFor / first-class channel copy. */
 export const MCP_CLIENT_ECOSYSTEM_BY_SLUG: Readonly<Record<string, AgentHostEcosystemId>> = {
 	'muse-code': 'meta-consumer',
-	'grok-build': 'xai-grok'
+	'grok-build': 'xai-grok',
+	'antigravity-cli': 'google-gemini',
+	'android-studio': 'google-gemini'
 };
 
 const audienceTailoredCardByHostSlug: Readonly<Record<string, AudienceCard>> = {
@@ -113,6 +126,22 @@ const audienceTailoredCardByMcpSlug: Readonly<Record<string, AudienceCard>> = {
 		title: 'X as your home network',
 		description:
 			'Grok Build fits xAI’s terminal coding agent. X is first-class; connect other networks in OpenQuok when you need them.',
+		containerClass: CARD_CONTAINER_CLASS
+	},
+	'android-studio': {
+		iconName: icons.AndroidStudio.name,
+		iconClass: 'text-emerald-400',
+		title: 'Gemini-first in Google’s toolchain',
+		description:
+			'Connect OpenQuok MCP in Android Studio Agent mode. YouTube is a natural first channel for video and Shorts. You can still schedule every other supported network from the same workspace.',
+		containerClass: CARD_CONTAINER_CLASS
+	},
+	'antigravity-cli': {
+		iconName: icons.Antigravity.name,
+		iconClass: 'text-blue-400',
+		title: 'Gemini-first in Google’s toolchain',
+		description:
+			'Connect OpenQuok in Antigravity CLI for Gemini in your terminal. YouTube is a natural first channel for video and Shorts. You can still schedule every other supported network from the same workspace.',
 		containerClass: CARD_CONTAINER_CLASS
 	}
 };
@@ -180,6 +209,22 @@ function metaOwnedFirstClassChannelFaqDescription(agentSlug: string, docsPath: s
 	const ig = faqLink(links.agentChannel('instagram'), 'Instagram');
 	const threads = faqLink(links.agentChannel('threads'), 'Threads');
 	return `Facebook, Instagram, and Threads are first-class ${agentLabel} channels on OpenQuok. Start with ${fb}, ${ig}, or ${threads}, then add other networks from the same workspace.`;
+}
+
+function googleGeminiSurfaceCompareFaqDescription(): string {
+	const androidStudio = faqLink(publicFaqHref.androidStudioLanding, 'Android Studio');
+	const antigravity = faqLink(publicFaqHref.antigravityCliLanding, 'Antigravity CLI');
+	return `${androidStudio} is Gemini in Agent mode inside the Android IDE. You add OpenQuok in MCP server settings and call tools from chat. ${antigravity} is Gemini’s terminal agent. You add OpenQuok in ~/.gemini/config/mcp_config.json and run agy from your shell. Same workspace and approval flow. Pick Android Studio when you ship mobile apps beside Gemini. Pick Antigravity CLI when the terminal is home base.`;
+}
+
+function googleGeminiFirstClassChannelFaqDescription(
+	agentSlug: string,
+	docsPath: string,
+	agentLabel: string
+): string {
+	const links = buildAgentFaqLinks(agentSlug, docsPath);
+	const yt = faqLink(links.agentChannel('youtube'), 'YouTube');
+	return `${agentLabel} on OpenQuok is Gemini-first. ${yt} is a first-class example for video and Shorts — start there when you publish to Google’s networks, then add other channels from the same workspace.`;
 }
 
 function xaiGrokSurfaceCompareFaqDescription(): string {
@@ -292,6 +337,40 @@ export function buildMcpClientEcosystemFaqItems(mcpSlug: string): PublicFaqItem[
 		];
 	}
 
+	if (slug === 'android-studio') {
+		return [
+			{
+				title: 'How is Android Studio different from Antigravity CLI?',
+				description: googleGeminiSurfaceCompareFaqDescription()
+			},
+			{
+				title: 'Which channels are Gemini-first on Android Studio?',
+				description: googleGeminiFirstClassChannelFaqDescription(
+					'android-studio',
+					'/docs/mcp-setup-guides/android-studio',
+					'Android Studio'
+				)
+			}
+		];
+	}
+
+	if (slug === 'antigravity-cli') {
+		return [
+			{
+				title: 'How is Antigravity CLI different from Android Studio?',
+				description: googleGeminiSurfaceCompareFaqDescription()
+			},
+			{
+				title: 'Which channels are Gemini-first on Antigravity CLI?',
+				description: googleGeminiFirstClassChannelFaqDescription(
+					'antigravity-cli',
+					'/docs/mcp-setup-guides/antigravity-cli',
+					'Antigravity CLI'
+				)
+			}
+		];
+	}
+
 	return [];
 }
 
@@ -317,6 +396,12 @@ function firstClassChannelAudienceHook(hostSlug: string, platformLabel: string):
 			return `${platformLabel} is first-class for Grok Build on OpenQuok.`;
 		}
 		return `${platformLabel} is first-class for Grok Bot on OpenQuok.`;
+	}
+	if (ecosystemId === 'google-gemini') {
+		if (slug === 'antigravity-cli') {
+			return `${platformLabel} is a Gemini-first example for Antigravity CLI on OpenQuok.`;
+		}
+		return `${platformLabel} is a Gemini-first example for Android Studio on OpenQuok.`;
 	}
 	return `${platformLabel} is a first-class channel for this host on OpenQuok.`;
 }
@@ -493,6 +578,10 @@ export function buildAgentHostEcosystemChannelSiblingGridHubTitle(
 		return `${agent}: X first, then every supported channel`;
 	}
 
+	if (ecosystemId === 'google-gemini' && agent.length > 0) {
+		return `${agent}: Gemini-first — YouTube and every supported channel`;
+	}
+
 	return buildPublicAgentChannelSiblingGridHubTitle(agent);
 }
 
@@ -513,6 +602,16 @@ export function getPrimaryAgentHostSlugForChannelPage(channelSlug: string): stri
 	if (ecosystemId === 'meta-consumer') return 'meta-muse';
 	if (ecosystemId === 'xai-grok') return 'grok-bot';
 	return undefined;
+}
+
+/** Primary host or MCP slug for channel-page ecosystem copy and integration grid sort. */
+export function getPrimaryEcosystemSurfaceSlugForChannelPage(
+	channelSlug: string
+): string | undefined {
+	return (
+		getPrimaryAgentHostSlugForChannelPage(channelSlug) ??
+		(getChannelPageEcosystemId(channelSlug) === 'google-gemini' ? 'android-studio' : undefined)
+	);
 }
 
 /** Fourth WhoIsFor card on `/channels/{slug}` for vendor-aligned first-class channels. */
@@ -544,6 +643,16 @@ export function buildPublicChannelEcosystemAudienceTailoredCard(
 		};
 	}
 
+	if (ecosystemId === 'google-gemini') {
+		return {
+			iconName: icons.AndroidStudio.name,
+			iconClass: 'text-emerald-400',
+			title: 'Gemini-first in Google’s toolchain',
+			description: `${label} fits Gemini MCP scheduling on OpenQuok. YouTube is the flagship example for video and Shorts. Connect OpenQuok in Android Studio or Antigravity CLI, then schedule every other network from the same workspace.`,
+			containerClass: CARD_CONTAINER_CLASS
+		};
+	}
+
 	return undefined;
 }
 
@@ -553,7 +662,7 @@ export function applyPublicChannelPageAudienceFirstCardHook(
 	channelSlug: string,
 	platformLabel: string
 ): AudienceCard[] {
-	const hostSlug = getPrimaryAgentHostSlugForChannelPage(channelSlug);
+	const hostSlug = getPrimaryEcosystemSurfaceSlugForChannelPage(channelSlug);
 	if (!hostSlug || !isFirstClassChannelForHost(hostSlug, channelSlug) || cards.length === 0) {
 		return [...cards];
 	}
@@ -576,14 +685,35 @@ export function buildPublicChannelEcosystemFaqItems(params: {
 }): PublicFaqItem[] {
 	const { channelSlug, platformLabel } = params;
 	const ecosystemId = getChannelPageEcosystemId(channelSlug);
-	const hostSlug = getPrimaryAgentHostSlugForChannelPage(channelSlug);
+	const hostSlug = getPrimaryEcosystemSurfaceSlugForChannelPage(channelSlug);
 	if (!ecosystemId || !hostSlug) return [];
 
-	const agentLinks = buildAgentFaqLinks(hostSlug, `/docs/agent-setup-guides/${hostSlug}`);
+	const docsBase =
+		getChannelPageEcosystemId(channelSlug) === 'google-gemini'
+			? `/docs/mcp-setup-guides/${hostSlug}`
+			: `/docs/agent-setup-guides/${hostSlug}`;
+	const agentLinks = buildAgentFaqLinks(hostSlug, docsBase);
 	const channelLanding = faqLink(
 		agentLinks.agentChannel(channelSlug),
 		`${platformLabel} agent landing`
 	);
+
+	if (ecosystemId === 'google-gemini') {
+		return [
+			{
+				title: `Is ${platformLabel} Gemini-first on OpenQuok?`,
+				description: `Yes. Google’s Gemini MCP clients on OpenQuok are Gemini-first. ${googleGeminiFirstClassChannelFaqDescription(
+					'android-studio',
+					'/docs/mcp-setup-guides/android-studio',
+					'Android Studio'
+				)}`
+			},
+			{
+				title: `How do Android Studio and Antigravity CLI fit ${platformLabel} scheduling?`,
+				description: `${googleGeminiSurfaceCompareFaqDescription()} Open the ${channelLanding} for ${platformLabel} CLI examples.`
+			}
+		];
+	}
 
 	if (ecosystemId === 'xai-grok') {
 		return [
@@ -631,6 +761,10 @@ export function buildAgentHostEcosystemChannelSiblingGridHubDescription(
 
 	if (ecosystemId === 'xai-grok' && agent.length > 0) {
 		return `Start with X for ${agent}, then add every other supported network from the same cloud-desktop teammate.`;
+	}
+
+	if (ecosystemId === 'google-gemini' && agent.length > 0) {
+		return `Gemini-first scheduling for ${agent} — start with YouTube for video and Shorts, then open every other supported channel for workflows, CLI examples, and FAQs.`;
 	}
 
 	return buildPublicAgentChannelSiblingGridHubDescription(agent);

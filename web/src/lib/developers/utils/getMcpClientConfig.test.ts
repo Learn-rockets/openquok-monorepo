@@ -75,6 +75,24 @@ describe('getMcpClientConfig', () => {
 		expect(parsed.mcpServers[MCP_SERVER_NAME].headers.Authorization).toBe(`Bearer ${API_KEY}`);
 	});
 
+	it('generates Android Studio path auth with httpUrl in mcp.json', () => {
+		const { config, hint } = getMcpClientConfig('Android Studio', 'path', MCP_BASE, API_KEY);
+		expect(hint).toContain('MCP Servers');
+		const parsed = JSON.parse(config) as {
+			mcpServers: Record<string, { httpUrl: string }>;
+		};
+		expect(parsed.mcpServers[MCP_SERVER_NAME].httpUrl).toBe(`${MCP_BASE}/mcp/${API_KEY}`);
+	});
+
+	it('generates Android Studio header auth with httpUrl and Authorization', () => {
+		const { config } = getMcpClientConfig('Android Studio', 'header', MCP_BASE, API_KEY);
+		const parsed = JSON.parse(config) as {
+			mcpServers: Record<string, { httpUrl: string; headers: { Authorization: string } }>;
+		};
+		expect(parsed.mcpServers[MCP_SERVER_NAME].httpUrl).toBe(`${MCP_BASE}/mcp`);
+		expect(parsed.mcpServers[MCP_SERVER_NAME].headers.Authorization).toBe(`Bearer ${API_KEY}`);
+	});
+
 	it('generates Antigravity CLI header auth with mcp_config.json hint', () => {
 		const { config, hint } = getMcpClientConfig('Antigravity CLI', 'header', MCP_BASE, API_KEY);
 		expect(hint).toContain('~/.gemini/config/mcp_config.json');
