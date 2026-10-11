@@ -90,6 +90,12 @@
 			cardContainerClass:
 				'bg-linear-to-br from-sky-400/20 via-cyan-300/16 to-blue-300/16 text-sky-100 ring-sky-300/28'
 		},
+		blotato: {
+			heroContainerClass:
+				'bg-linear-to-br from-lime-500/35 via-amber-400/25 to-orange-400/20 text-lime-50 ring-lime-500/40',
+			cardContainerClass:
+				'bg-linear-to-br from-lime-500/22 via-amber-400/18 to-orange-400/14 text-lime-50 ring-lime-500/28'
+		},
 		breakreach: {
 			heroContainerClass:
 				'bg-linear-to-br from-violet-600/35 via-purple-500/25 to-fuchsia-400/20 text-violet-50 ring-violet-500/40',

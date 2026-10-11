@@ -12,6 +12,7 @@ import type {
 	PublicFaqItemId
 } from '$lib/content/constants/competitors/types';
 import { buildComparePair } from '$lib/content/constants/competitors/buildComparePair';
+import { blotatoCompareProduct } from '$lib/content/constants/competitors/blotato';
 import { bufferCompareProduct } from '$lib/content/constants/competitors/buffer';
 import { breakreachCompareProduct } from '$lib/content/constants/competitors/breakreach';
 import { clawPostCompareProduct } from '$lib/content/constants/competitors/claw-post';
@@ -48,6 +49,7 @@ export { hootsuiteCompareProduct } from '$lib/content/constants/competitors/hoot
 export { laterCompareProduct } from '$lib/content/constants/competitors/later';
 export { mixpostCompareProduct } from '$lib/content/constants/competitors/mixpost';
 export { openpostCompareProduct } from '$lib/content/constants/competitors/openpost';
+export { blotatoCompareProduct } from '$lib/content/constants/competitors/blotato';
 export { bufferCompareProduct } from '$lib/content/constants/competitors/buffer';
 export { breakreachCompareProduct } from '$lib/content/constants/competitors/breakreach';
 export { clawPostCompareProduct } from '$lib/content/constants/competitors/claw-post';
@@ -70,6 +72,7 @@ export const PUBLIC_COMPARE_PRODUCTS: readonly CompareProduct[] = [
 	hopperHqCompareProduct,
 	laterCompareProduct,
 	bufferCompareProduct,
+	blotatoCompareProduct,
 	breakreachCompareProduct,
 	clawPostCompareProduct,
 	recurpostCompareProduct,
