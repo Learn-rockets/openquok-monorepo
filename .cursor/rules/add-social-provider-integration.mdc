@@ -604,6 +604,12 @@ Use the same channel order across all five markdown files when practical (Facebo
 
 **Do not** add a channel to the hub catalog without completing the three surfaces above (common miss: README + docs assets while only updating `landing-social-platforms.ts`).
 
+### Compare / alternatives (OpenQuok channel column)
+
+`/compare/openquok/{competitor}` and related pairs read OpenQuok’s **channels** list from `listAvailablePublicChannelCompareLabels()` in `web/src/lib/content/constants/channels/index.ts` (wired in `competitors/openquok.ts`). That helper walks **`PUBLIC_CHANNEL_LANDING_PAGES`** — including **`available: false`** coming-soon entries — so registering `channels/catalog/platforms/{slug}.ts` in **`channels/catalog/seeds.ts`** is enough for the OpenQuok column to pick up the new `platformLabel` (and any `comparePlatformLabels` extras). **Do not** hand-append channel names to `openquok.ts`.
+
+When a **competitor** also ships the network, add the same human label to that vendor’s `web/src/lib/content/constants/competitors/{slug}.ts` `channels` array so channel icons resolve on both sides of the table (see **add-competitors.mdc**). Smoke-test `/compare/openquok/{slug}` after go-live or when the competitor list changes.
+
 ## Docs and agent resources (user-facing providers)
 
 | Artifact | Path |
@@ -903,6 +909,7 @@ Host channel VMs: `agents/channels/{host}.ts` (from `listPublicChannelsForHub()`
 - **Build Backlinks `schedule_post`:** `{catalogSlug}-post-editor` (or `COMPOSER_BENTO_BY_CATALOG_SLUG` fallback) registered in `resolveSchedulePostComposerBentoId.ts`; `INTEGRATION_ID_TO_CATALOG_SLUG` when `provider.identifier` differs from catalog slug; unit test in `resolveSchedulePostComposerBentoId.test.ts`.
 - **Landing page:** hero + feature sections + FAQ filled; **copy is problem-first, user-facing, and ASD-STE100** (short sentences, active voice, `you`; not feature/spec lists); hero + feature CTAs from `hero-copy.ts` → `/pricing`.
 - **Marketing platform icon strips (three surfaces):** `landing-social-platforms.ts` (`HERO_SOCIAL_PLATFORMS` + features grid rows); `README.md` icon row + prose + `assets/readme/socials/{slug}.svg`; `getting-started/index.md` + `web/static/docs/_assets/platforms/socials/{slug}.svg`; mirror row on `platforms/index.md` and `platforms/connect-rules.md` (see **Marketing platform icon strips** above).
+- **Compare / alternatives:** OpenQuok channel column auto-updates from catalog seeds via `listAvailablePublicChannelCompareLabels()` — no `openquok.ts` channel edits; add the network to relevant `competitors/{vendor}.ts` `channels` when the competitor publishes it (e.g. Postiz + Skool); spot-check `/compare/openquok/{competitor}`.
 - **Hub:** new channel appears on `/channels` (coming-soon badge or live link).
 - **Site footer:** no manual `PUBLIC_FOOTER_LINKS` / `buildPublicFooterLinks.ts` edits for the provider slug — **Supported Channels** picks up the catalog entry; **How to self-host with different social channels** picks up `social-integration/{identifier}.md` (non-draft, with `title` + `order`); tool columns follow live-channel rules above. Spot-check footer labels and hrefs before merge.
 - **Connect user guide:** `web/src/content/docs/channels/connect.md` — OAuth, credentials, and browser-extension tabs; `platforms/connect-rules.md` fourth family row; invite-link note for `customFields` / `isChromeExtension`.

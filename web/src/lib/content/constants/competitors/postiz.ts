@@ -51,7 +51,8 @@ const POSTIZ_CHANNELS = [
 	'Reddit',
 	'Discord',
 	'Slack',
-	'Telegram'
+	'Telegram',
+	'Skool'
 ];
 
 const POSTIZ_FEATURE_SUPPORT: Partial<Record<PublicPricingCompareRowId, CompareFeatureCell>> = {

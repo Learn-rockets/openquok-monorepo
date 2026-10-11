@@ -146,14 +146,26 @@ export function listAvailablePublicChannels(): PublicChannelLandingPageViewModel
 	return PUBLIC_CHANNEL_LANDING_PAGES.filter((page) => page.available);
 }
 
-/** Platform labels for competitor compare tables — includes `comparePlatformLabels` extras. */
+/**
+ * Platform labels for competitor compare tables (`openquok.ts` and peer `competitors/*.ts`).
+ * Uses every entry in `PUBLIC_CHANNEL_LANDING_PAGES` (live and coming-soon) so new catalog
+ * channels appear on `/compare/*` without hand-editing OpenQuok. Also appends `comparePlatformLabels` extras.
+ */
 export function listAvailablePublicChannelCompareLabels(): string[] {
 	const labels: string[] = [];
+	const seen = new Set<string>();
 
-	for (const channel of listAvailablePublicChannels()) {
-		labels.push(channel.platformLabel);
+	for (const channel of listPublicChannelsForHub()) {
+		const push = (label: string) => {
+			if (seen.has(label)) return;
+			seen.add(label);
+			labels.push(label);
+		};
+		push(channel.platformLabel);
 		if (channel.comparePlatformLabels) {
-			labels.push(...channel.comparePlatformLabels);
+			for (const extra of channel.comparePlatformLabels) {
+				push(extra);
+			}
 		}
 	}
 
