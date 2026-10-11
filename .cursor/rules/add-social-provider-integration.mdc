@@ -1,5 +1,5 @@
 ---
-description: Checklist for adding a social channel — backend provider + web composer/OAuth + cross-account plug preview + docs + public API provider settings page + self-host env + public SEO landing page + build-backlinks schedule_post composer bento + agent channel SEO routes + public Photo Editor channel routes + public Best Time to Post channel routes + public Humanizer channel routes + feature bento showcases + auto-derived site footer links + Extensions Hub listing tag (secret-admin)
+description: Agent checklist for a new social channel — backend, web, docs, catalog, SEO, tools (one PR). Deep guide add-provider.md; public API sync public-api-surface-sync.mdc.
 globs:
   - backend/integrations/**
   - backend/config/GlobalConfig.ts
@@ -8,925 +8,204 @@ globs:
   - web/src/lib/ui/components/posts/providers/**
   - web/src/lib/ui/components/posts/providers/ShowAllProviders.svelte
   - web/src/lib/ui/components/posts/AddEditModal.svelte
-  - web/src/lib/ui/components/posts/CreateSocialPostModal.svelte
   - web/src/lib/ui/components/posts/AddProvider.svelte
   - web/src/lib/ui/components/posts/SettingsAccordion.svelte
   - web/src/lib/ui/components/posts/IntegrationContinue.svelte
   - web/src/lib/integrations/continue-provider/**
   - web/src/lib/integrations/browser-extension/**
-  - web/src/lib/integrations/ContinueIntegration.presenter.svelte.ts
   - extension/**
   - common/src/browser-extension/**
-  - web/src/content/docs/installation/chrome-extension.md
-  - web/src/routes/(legal)/terms/+page.svelte
-  - web/src/routes/(legal)/privacy-policy/+page.svelte
-  - web/src/routes/(legal)/cookie-policy/+page.svelte
   - web/src/data/social-providers.ts
-  - web/src/lib/area-protected/ProtectedAnalyticsPage.presenter.svelte.ts
-  - web/src/routes/(protected)/account/analytics/**
+  - web/src/lib/content/constants/channels/**
+  - web/src/lib/content/constants/competitors/**
   - web/src/content/docs/social-integration/**
-  - web/src/content/docs/cli-examples/**
   - web/src/content/docs/public-api-providers/**
   - web/src/content/docs/contribution-opportunities/add-provider.md
-  - web/src/content/docs/creating-posts/writing-the-post.md
-  - web/src/content/docs/creating-posts/threads-and-comments.md
-  - web/src/lib/posts/utils/create-post/followUp.ts
-  - web/src/lib/posts/utils/create-post/providerSettings.ts
-  - web/src/lib/posts/utils/composer/mediaDrop.ts
-  - web/src/lib/posts/utils/composer/composerMediaSettings.ts
-  - web/src/lib/ui/components/media/MultiMedia.svelte
-  - web/src/lib/ui/components/posts/CreateSocialPostModal.svelte
-  - web/src/lib/ui/media-files/ImageSlider.svelte
-  - web/src/lib/ui/media-files/VideoOrImage.svelte
-  - web/src/routes/(public)/p/[postId]/**
-  - web/src/lib/ui/components/preview/crossAccountPlugPreview.ts
-  - web/src/lib/ui/components/posts/thread/**
-  - backend/utils/dtos/PostDTO.ts
-  - orchestrator/activities/scheduledSocialPostActivities.ts
-  - web/src/lib/content/constants/channels/**
-  - web/src/lib/link-directory/utils/resolveSchedulePostComposerBentoId.ts
-  - web/src/lib/link-directory/utils/buildBuildBacklinksOpportunityBentoStep.ts
-  - web/src/content/constants/publicAgentChannelConfig.ts
-  - web/src/content/utils/buildAgentChannelLandingVm.ts
-  - web/src/content/utils/buildMcpChannelLandingVm.ts
-  - web/src/content/utils/buildAgentsChannelAudienceSection.ts
-  - web/src/lib/ui/templates/bento/**
-  - web/src/lib/area-public/constants/getRootPathPublicChannels.ts
-  - web/src/lib/area-public/constants/getRootPathPublicAgents.ts
-  - web/src/lib/area-public/PublicAgentByPage.presenter.svelte.ts
-  - web/src/lib/opportunities/server/loadAgentOpportunitiesPreview.server.ts
-  - web/src/routes/(public)/channels/**
-  - web/src/routes/(public)/agents/[slug]/[channelSlug]/**
-  - web/src/routes/(public)/extensions/**
-  - web/src/lib/canvas/constants/publicCanvasChannelConfig.ts
-  - web/src/lib/canvas/canvas.types.ts
-  - web/src/lib/ui/canvas-editor/utils/aspectRatioPresets.ts
-  - web/src/routes/(public)/tools/photo-editor/**
-  - web/src/lib/ui/templates/photo-editor/**
-  - web/src/lib/ui/components/photo-editor/**
-  - web/src/lib/area-public/PublicPhotoEditorPage.presenter.svelte.ts
-  - web/src/lib/area-public/constants/getRootPathPublicTools.ts
-  - web/src/routes/(public)/tools/+page.server.ts
-  - web/src/routes/(public)/tools/+page.svelte
-  - web/src/lib/best-time-to-post/**
-  - web/src/routes/(public)/tools/best-time-to-post/**
-  - web/src/lib/ui/templates/best-time-to-post/**
-  - web/src/lib/ui/components/best-time-to-post/**
-  - web/src/lib/ai-humanize/**
-  - web/src/routes/(public)/tools/humanizer/**
-  - web/src/lib/ui/templates/humanize/**
-  - web/src/lib/ui/components/humanize/**
-  - web/src/lib/area-public/PublicHumanizePage.presenter.svelte.ts
-  - web/src/routes/(public)/channels/[slug]/+page.svelte
-  - web/src/lib/ui/templates/landing-page/PublicComingSoonIntegrationPage.svelte
-  - web/src/lib/ui/templates/landing-page/PublicAgentLandingPage.svelte
-  - web/src/lib/ui/templates/landing-page/PublicChannelHero.svelte
-  - web/src/lib/ui/templates/landing-page/PublicChannelsHubGrid.svelte
-  - agent/skills/openquok-core/SKILL.md
-  - agent/skills/openquok-core/resources/**
+  - agent/skills/openquok-core/**
   - infra/self-host/.env.example
   - infra/self-host/docker-compose.yml
   - web/src/content/docs/installation/docker-compose.md
+  - web/src/content/docs/installation/chrome-extension.md
+  - web/src/content/docs/channels/connect.md
+  - web/src/content/docs/platforms/**
+  - web/src/content/docs/creating-posts/**
+  - web/src/content/docs/cli-examples/**
+  - web/src/lib/posts/utils/create-post/followUp.ts
+  - web/src/lib/posts/utils/create-post/providerSettings.ts
+  - backend/utils/dtos/PostDTO.ts
+  - orchestrator/**
+  - web/src/lib/ui/templates/bento/**
+  - web/src/routes/(public)/channels/**
+  - web/src/routes/(public)/agents/**
+  - web/src/lib/best-time-to-post/**
+  - web/src/lib/canvas-editor/utils/aspectRatioPresets.ts
+  - web/src/lib/skill-builder/**
+  - web/src/lib/ai-humanize/**
+  - web/src/lib/link-directory/utils/resolveSchedulePostComposerBentoId.ts
+  - web/src/data/landing-social-platforms.ts
+  - backend/swagger/jsdoc/**
 alwaysApply: false
 ---
 
 # Adding a social provider
 
-Ship **backend + web + docs + public API provider settings page + self-host env + public channel landing page + agent channel SEO routes + public Photo Editor channel routes + public Best Time to Post channel routes + public Humanizer channel routes + feature bento showcases** in one change. Add the **Extensions Hub listing tag in secret-admin** (not SQL seeds). Connect is a fork of this checklist, not a separate product surface — pick **OAuth** (default), **credentials in OpenQuok**, or **browser extension**.
+**Agent:** Ship **one PR** that completes every item in [PR checklist](#pr-checklist). Do not stop at backend-only unless the user explicitly scoped that. Extended prose and connect walkthrough: `web/src/content/docs/contribution-opportunities/add-provider.md`. Also follow **public-api-surface-sync**, **add-competitors** (competitor channel lists), **web-seo-pseo**, **agent-skill**, **source-project-neutrality**.
 
-| Family | Operator developer app? | User action | OpenQuok env keys | Reference |
+**Extensions Hub tag:** secret-admin only — no `listing_tags` SQL seeds.
+
+## Connect family
+
+| Family | Operator app? | User | Env / keys | Reference |
 | --- | --- | --- | --- | --- |
-| **OAuth** (default) | Yes | Redirect to the platform | `config.integrations.*` + self-host `.env.example` + docker-compose row | **Threads** (single-step), **Instagram (Business)** (Page picker + compose settings), **Facebook Page** (Meta OAuth + link-preview settings) |
-| **Credentials in OpenQuok** | **No** | Paste personal API key / app password into Add Channel | **None** — do not invent empty `{PROVIDER}_*` placeholders | **Dev.to (`devto`)** |
-| **Browser extension** | **No** | Install OpenQuok extension, stay signed in on platform site, approve dashboard connect | **`VITE_OPENQUOK_BROWSER_EXTENSION_ID`** on web; extension `externally_connectable` for self-host origins | **Skool (`skool`)** — `common/src/browser-extension/`, `extension/`, `web/src/lib/integrations/browser-extension/` |
-
-Public landing + bento references: **facebook**, **threads** in `channels/catalog/platforms/` and `web/src/lib/ui/templates/bento/minor-templates/`. Agent channel SEO references: **facebook** at `/agents/openclaw/facebook`. Photo Editor channel references: **facebook**, **instagram** at `/tools/photo-editor/{slug}`. Best Time to Post references: **tiktok**, **linkedin** at `/tools/best-time-to-post/{slug}`; benchmark tables in `web/src/lib/best-time-to-post/constants/benchmarkSlots.ts`. Humanizer references: **linkedin**, **x** at `/tools/humanizer/{slug}`; generic mocked composer at `/tools/humanizer`. Listing tag: `/secret-admin/catalog-manager/tags`. Full guide: `web/src/content/docs/contribution-opportunities/add-provider.md`.
+| **OAuth** | Yes | Platform redirect | `config.integrations.*`, `infra/self-host/.env.example`, docker-compose row | threads, instagram-business, facebook |
+| **Credentials** | No | API key in Add Channel | None — no `{PROVIDER}_*` placeholders | devto |
+| **Browser extension** | No | Extension + signed-in on platform | `VITE_OPENQUOK_BROWSER_EXTENSION_ID`; extension `externally_connectable` | skool — `common/src/browser-extension/`, `extension/`, `web/src/lib/integrations/browser-extension/` |
 
 ## Identifier contract
 
-Use one kebab-case slug everywhere: `provider.identifier`, DB `provider_identifier`, OAuth callback `/integration/oauth/{identifier}`, `getLaunchProviderConfig`, CLI filters, docs filenames, **channel catalog** `slug` / `platformId` (`channels/catalog/platforms/{slug}.ts`), **`listing_tags.slug`**, `/channels/{slug}`, **`/tools/best-time-to-post/{slug}`**, **`/tools/photo-editor/{slug}`**, **`/tools/humanizer/{slug}`**, and **`/agents/{agentSlug}/{slug}`** (agent channel SEO). Do not fork slugs between layers. When `platformId` differs from the marketing slug (rare), still key **`benchmarkSlots.ts` `PLATFORM_WINDOWS`** by every identifier the calculator can pass (`platformSlug` from channel config / platform select).
+One kebab-case slug everywhere: `provider.identifier`, DB `provider_identifier`, OAuth `/integration/oauth/{identifier}`, `getLaunchProviderConfig`, docs, `channels/catalog/platforms/{slug}.ts`, `/channels/{slug}`, tool routes, `/agents/{host}/{slug}`. Key `benchmarkSlots.ts` `PLATFORM_WINDOWS` by every slug the calculator passes.
 
-## Backend (required)
+## Backend
 
-1. **`SocialProvider` class** — `backend/integrations/providers/{id}/` implementing `social.integrations.interface.ts`: connect (`generateAuthUrl`, `authenticate`), `post`, `maxLength`, scopes. Split publish logic into helpers (e.g. `*GraphPublish.ts`) when non-trivial.
+1. **`SocialProvider`** — `backend/integrations/providers/{id}/`: connect, `post`, `maxLength`; helpers for publish. **OAuth** / **credentials** (`customFields`, base64 JSON `code`) / **extension** (`isChromeExtension`, `extensionCookies`, `extensionToken`, `POST /integrations/extension-refresh`).
+2. **Register** — `integrationManager.ts`.
+3. **Config** — OAuth: `GlobalConfig`, `.env.development.example`, `infra/self-host/.env.example`, redirect URI. Credentials + extension: **no** operator OAuth env; `GET /public/social/:identifier` → **400** (dashboard connect only).
+4. **Between-steps OAuth** — `pages()`, `fetchPageInformation()` when `isBetweenSteps` (Meta Page pattern).
+5. **Publish settings** — resolver from `providerSettings` (flat CLI + nested buckets) + unit tests.
+6. **`comment()`** — only if same-account follow-ups ship; else `postComment: 'NONE'` and no follow-up marketing.
+7. **Tests** — connect, publish, follow-ups, cross-account plugs as applicable.
+8. **Analytics** — if `analytics()` / `postAnalytics()` ship, add exact `provider.identifier` to `SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS` in `web/src/data/social-providers.ts` (same PR). Skip when no analytics (e.g. extension-only Skool).
+9. **Cross-account plugs** — `internalPlugCatalog()` + orchestrator handlers + `crossAccountPlugs` in settings when applicable; skip otherwise.
 
-   `generateAuthUrl` / `authenticate` are **OAuth code exchange** (default) **or credentials**:
-   - **OAuth:** `generateAuthUrl` returns a platform authorize URL; `authenticate` exchanges `code`.
-   - **Credentials:** implement `customFields()` (catalog metadata: `key`, `label`, `validation` regex, `type`). Session `getIntegrationUrl` still seeds org/state cache — `generateAuthUrl` returns a random `state` and sets `url` to that `state` (not a real redirect). `authenticate` decodes `code` as base64 JSON (e.g. `{ apiKey }`), validates against the platform, and stores the secret as `accessToken`. Reference: **Dev.to (`devto`)**.
-   - **Browser extension:** set `isChromeExtension = true` and `extensionCookies` (aligned with `common/src/browser-extension/cookieSessionProviders.ts`). Same state + base64 JSON `code` as credentials, but payload is session cookies from the extension. Store encrypted session JSON in `integrations.token`. Return signed **`extensionToken`** on connect for `POST /integrations/extension-refresh`. Register cookie provider in `extension/` + shared catalog. Reference: **Skool (`skool`)**.
-2. **Register** — add `new YourProvider()` in `backend/integrations/integrationManager.ts` (no new REST routes).
-3. **Config (OAuth only)** — operator app secrets via `config.integrations.*` in `GlobalConfig.ts` + `.env.development.example`. Also add the same empty keys to **`infra/self-host/.env.example`** (Social provider apps section) so self-host operators get the vars. Redirect URI: `oauthFrontendOrigin()` + `oauthFrontendSocialCallbackPath(identifier)`.
+## Extensions Hub listing tag
 
-   **Credentials (`customFields()` set):** skip `GlobalConfig`, `.env.development.example`, and `infra/self-host/.env.example` — do not invent empty `{PROVIDER}_*` placeholders. Document in `web/src/content/docs/installation/docker-compose.md` that the channel needs **no** operator developer app. Session `getIntegrationUrl` still seeds cache for the dashboard form; `GET /public/social/:identifier` (`getIntegrationUrlPublicApi`) must **400** (connect this channel in the dashboard with an API key). Do not add a new public connect route.
-
-   **Browser extension (`isChromeExtension`):** skip operator OAuth env keys. Document `VITE_OPENQUOK_BROWSER_EXTENSION_ID` in `web/.env.development.example` and ship `web/src/content/docs/installation/chrome-extension.md`. Self-host: note `externally_connectable` manifest customization. `GET /public/social/:identifier` must **400** (dashboard + extension only). Wire `IntegrationConnectionService` verifier skip + `extensionToken` on connect; extension refresh route + JWT helper beside invite tokens.
-4. **Between-steps OAuth** — when `isBetweenSteps: true`: implement `pages()` + `fetchPageInformation()`; extend `IntegrationConnectionService.saveProviderPageForOrganization` / `preservesUserTokenForRefresh` if user token must stay in `refresh_token` (Meta Page pattern).
-5. **Provider settings at publish** — read from `postDetails.settings.providerSettings`. Accept **flat CLI keys** and **nested web buckets** (e.g. `providerSettings.url` and `providerSettings.facebook.url`). Export a resolver + unit tests beside publish helpers.
-6. **replies (`comment`)** — when the platform API can publish a **reply or comment on the user’s own post** after the main publish (thread reply, quote-less reply, nested comment, etc.), implement `comment()` on the provider class (not only `post`). Read text from `postDetails.message` and **media from `postDetails.settings`** when the network allows attachments on replies. Unit-test comment payload shaping (text-only vs one image vs carousel) beside publish helpers. If the network **cannot** schedule same-account follow-ups, omit `comment()` and set `postComment: 'NONE'` in launch config — do not claim follow-ups on the landing page or in agent recipes.
-7. **Tests** — unit tests for OAuth edge cases, publish payload shaping, **comment / follow-up publish**, **cross-account plug publish**, and connection save when behavior differs.
-8. **Platform analytics** (when `SocialProvider.analytics()` and/or `postAnalytics()` ship) — append the **exact** `provider.identifier` to `SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS` in `web/src/data/social-providers.ts` in the **same PR**. `/account/analytics` (`ProtectedAnalyticsPagePresenter`) filters `connectedChannelsVm` through that allow-list before calling `GET /api/v1/analytics/:integrationId`; a missing slug hides the channel from **Targeted channels** even when connect and publish work. Use the real catalog slug only — do **not** assume a marketing alias covers it (e.g. `instagram` does **not** include `instagram-business` or `instagram-standalone`). When multiple identifiers share one network, list **each** slug explicitly. Skip the allow-list entry only when the provider deliberately omits `analytics()` (no insights on dashboard or post statistics modal).
-9. **Cross-account internal plugs** — when another connected channel can **comment on or repost** the published post after the main publish, ship `internalPlugCatalog()` entries and orchestrator plug handlers (not only same-account `comment()`). Persist enabled rows on the **publishing** channel in `providerSettings.{bucket}.crossAccountPlugs` (`enabled`, `plugName`, `delayMs`, `integrationIds`, `fields`). Unit-test plug payload shaping and platform API edge cases (URN normalization, permission errors) beside publish helpers. Skip this item when the network has no cross-account plug story — do not add empty catalog entries or preview UI.
-
-## Extensions Hub listing tags (required for social channels) — no DB migrations
-
-The public **Extensions Hub** (`/extensions`) filters skills and MCP listings by **tag**. Each social channel needs a matching `listing_tags` row so hub filters stay aligned with shipped providers.
-
-**Do not** edit `backend/supabase/db/listing-tags/**`, `backend/supabase/db/listings/**`, or re-aggregate `backend/supabase/migrations/` for a new channel tag. Create the tag in secret-admin (or hand paste-ready copy to an operator). Same CMS path as agent launches in **add-agent**.
-
-### Listing tag — Listing Manager
-
-1. `/secret-admin/catalog-manager/tags` → **Add tag** (or edit an existing tag)
-2. **Name:** human label that slugs to `provider.identifier` via `stringToSlug` (punctuation is stripped — e.g. `Dev.to` → `devto`, `YouTube` → `youtube`)
-3. **Description:** one neutral sentence on what the channel integration covers (no third-party attribution)
-4. **Tag groups:** check the hub filter groups in the tag modal (seeded catalog groups include **Social platforms**, **Videos**, **Photos**, **Text**). Use the **Tag groups** tab on the same page to create or rename groups when needed — do not seed groups via SQL.
-   - Video-first channels (e.g. YouTube, TikTok) → **Videos** and usually **Social platforms**
-   - Image-first feeds (e.g. Instagram) → **Photos** and usually **Social platforms**
-   - Text / microblog channels (e.g. X, Threads, LinkedIn) → **Text** and usually **Social platforms**
-5. Optional: edit **openquok-core** playbook/building-block → tags picker → add the new tag
-
-Agent / MCP tags (OpenClaw, Cursor, Codex, …) are **not** part of this checklist — only add those when shipping agent or MCP catalog entries.
-
-If the provider is live (`available: true` on the channel landing), add the tag when the integration ships — do not leave hub filters missing a channel users can connect.
-
-Hub UI: `web/src/routes/(public)/extensions/+page.svelte` + `ExtensionsTagFilter.svelte` (no per-provider page changes when only catalog data changes).
+`/secret-admin/catalog-manager/tags` → Name slugs to `provider.identifier`; description; tag groups (**Social platforms** + Videos/Photos/Text). No agent/MCP tags here. Live channels: tag when integration ships.
 
 ## Web (composer + connect)
 
-Connect catalog is backend-driven; composer wiring is **opt-in per provider**.
+1. **Launch config** — `{id}.provider.ts` + `providers/index.ts` (`postComment`, `comments`, validation).
+2. **Preview** — `{id}Preview.svelte` + `ShowAllProviders` branch; `mediaStoragePaths` for blob classification; see [Post preview](#post-preview-when-composer-ships).
+3. **Page picker** — `continue-provider/{id}.ts` when `isBetweenSteps`.
+4. **Settings** — `{id}Settings.svelte` + `SettingsAccordion`; preview reads `effectivePreviewProviderSettings` from `previewChannel.id` (not `followUpTargetIntegrationId`).
+5. **`social-providers.ts`** — display name, icon; analytics allow-list when applicable.
+6. **Credentials** — `AddProvider` dialog; exclude from invite links; `IntegrationContinue` must not redirect to non-URL `state`.
+7. **Extension** — `BrowserExtensionConnectDialog`, `browser-extension/*`, STORE/REMOVE refresh token; docs `installation/chrome-extension.md`.
+8. **Connect docs** — `channels/connect.md`, `platforms/connect-rules.md`.
 
-1. **Launch config** — `web/src/lib/ui/components/posts/providers/{id}/{id}.provider.ts` (`LaunchProviderConfig`: limits, `postComment`, optional `comments`, optional `checkValidity` / `checkValidityAsync`). Register in `providers/index.ts` → `getLaunchProviderConfig`. When the provider supports scheduled follow-ups, also complete **Follow-up comments / reply chains** (below) — declaring `postComment: 'COMMENT'` alone does **not** wire the composer or worker.
-2. **Preview** — **per-channel** `{id}Preview.svelte` + branch in `ShowAllProviders.svelte` (see **Post Preview architecture** below). When compose settings exist, wire **Post Preview provider settings** (below) so Settings changes update the preview live. When cross-account internal plugs ship, also wire **Cross-account plug preview** (below).
-3. **OAuth Page picker** (when `isBetweenSteps`) — config in `web/src/lib/integrations/continue-provider/{id}.ts`, register in `continue-provider/index.ts`; reuse `IntegrationContinue.svelte` + `ContinueIntegration.presenter.svelte.ts` + `ContinueProviderPicker.svelte`.
-4. **Compose settings** (optional) — `{id}Settings.svelte`; wire provider branch in `SettingsAccordion.svelte`; emit **only that provider’s bucket** (do not write unrelated `threads` / `instagram` defaults). Add types/helpers in `provider.types.ts` and `{id}.provider.ts`. When settings affect what users see before publish (title, tags, cover, post type, etc.), also ship **Post Preview provider settings** (below).
-5. **`web/src/data/social-providers.ts`** (required when the slug is new **or** when shipping platform analytics) — single catalog for display labels, icons, and the analytics allow-list:
+## Post preview (when composer ships)
 
-   | Export / table | When to update |
-   | --- | --- |
-   | `socialProviderDisplayNameByIdentifier` | Human label (e.g. `Instagram (Business)`) for filters, chips, docs |
-   | `SOCIAL_PROVIDER_ICON_SPECS` / `socialProviderIconByIdentifier` | Composer, calendar, and channel chips icon |
-   | **`SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS`** | **Required** when backend implements `analytics()` — must include **exact** `provider.identifier` (see Backend §8). Consumed by `ProtectedAnalyticsPagePresenter.supportedIntegrations` and `buildAgentChannelLandingVm` (`analyticsBentoId`). |
+Per-channel `{id}Preview.svelte` only (not `GeneralPreviewComponent` for shipped networks). Minimum: phone `max-w` frame, fixed aspect, correct `ImageSlider` variant for photos, `classify*PreviewMediaMode` + tests, wire `/p/[postId]`. References: `TiktokPreview.svelte`, `InstagramPreview.svelte`, `mediaDrop.ts`, `AddEditModal.svelte`. Image-heavy networks need letterbox — do not use full-width `object-cover` only.
 
-   **Analytics pitfall:** `ChannelKindFilter` lists every connected channel, but only identifiers in `SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS` appear under **Targeted channels** on `/account/analytics` and receive `GET /api/v1/analytics/:integrationId`. If users can connect and publish but analytics shows “No analytics available” with only sibling channels in the chip row, check for a missing allow-list entry first.
+## Follow-ups (only when `comment()` ships)
 
-6. **Credentials connect** (`customFields` on the catalog) — in-app form, not a platform redirect:
-   - **Add Channel** — `AddProvider.svelte` shows the provider in the normal grid and opens the credentials dialog (password input + regex from catalog). Submit: `getAuthorizeUrl` (seeds cache; returned `url` is the `state`) then `connectSocial` with that `state` and `code` = `btoa(JSON.stringify({ apiKey }))`.
-   - **Invite links** — keep filtering `customFields` providers out of invite-link copy.
-   - **Continue / refresh** — `IntegrationContinue.svelte` must **not** set `window.location.href` to a non-URL `state` string. When the catalog has `customFields`, reuse the same credentials form so `?refresh=` works without an OAuth redirect.
-7. **Browser extension connect** (`isChromeExtension` on the catalog) — extension + dashboard, not platform OAuth:
-   - **Add Channel** — `AddProvider.svelte` opens `BrowserExtensionConnectDialog.svelte` (ToS / risk copy aligned with legal pages), then PING + GET_COOKIES via `web/src/lib/integrations/browser-extension/`, then `connectSocial` with base64 JSON cookies.
-   - **Invite links** — exclude `isChromeExtension` providers (same as credentials).
-   - **After connect** — `IntegrationContinue.svelte` / `afterExtensionChannelConnect` → STORE_REFRESH_TOKEN with `extensionToken` + backend URL; disconnect → REMOVE_REFRESH_TOKEN.
-   - **Docs** — `web/src/content/docs/installation/chrome-extension.md` + `web/src/content/docs/social-integration/{identifier}.md` (Skool reference).
-8. **User connect guide** — update `web/src/content/docs/channels/connect.md`: OAuth tab; credentials table; **browser extension** tab when `isChromeExtension` ships. Update `web/src/content/docs/platforms/connect-rules.md` fourth connect type row + catalog table.
+Update: `followUp.ts` (`channelSupportsFollowUpComments`, bucket); `PostDTO.ts` `replyChainBucketForProvider`; `scheduledSocialPostActivities.ts` `supportsFollowUps` + reply settings to `comment()`; `SetGridTable.presenter` if needed; launch `postComment` / `comments`; `{bucket}.replies` in agent/CLI/docs; `threads-and-comments.md` row; preview/bento `threadReplies` if marketed.
 
-Keep composer validation aligned with backend publish rules (`checkValidity` ↔ `validateCreatePost` / publish helper constraints).
+## Cross-account plugs (only when catalog ships them)
 
-### Post Preview architecture (per-channel)
+Update: `providerSettings.ts` bucket; `crossAccountPlugPreview.ts`; `AddEditModal` / `ShowAllProviders`; `{id}CrossAccountPlugsPreview.svelte`; orchestrator handlers; agent docs `{bucket}.crossAccountPlugs`. No shared generic plug preview component.
 
-Post Preview is **not one shared mock** — each network has its own `{id}Preview.svelte` under `web/src/lib/ui/components/posts/providers/{id}/`. `ShowAllProviders.svelte` routes by `channel.identifier` (Instagram uses `startsWith('instagram')`; unknown identifiers fall back to `GeneralPreviewComponent`).
+## Channel catalog & public SEO
 
-Fixing preview layout for **one** provider (e.g. TikTok, then Instagram) does **not** fix siblings. Ship or refresh preview layout **per provider** using the checklist below.
+**Catalog:** `channels/catalog/platforms/{slug}.ts` → `catalog/seeds.ts` (`PUBLIC_CHANNEL_LANDING_PAGES`). Fields: `slug`, `platformLabel`, `icon`, hero/meta, `featureSections` (≥3 comma-separated phrases per **title**; `bentoId` at go-live), FAQ, `docsPath`, `available`. Copy: problem-first, ASD-STE100 (short sentences, **you**). CTAs from `landing/hero-copy.ts` → `/pricing`. No new `+page` per slug.
 
-| Layer | Shared vs per-channel |
+**Go-live (`available: true`):** three feature bentos — `feature-bento.ts`, `BentoPublicChannelFeature.svelte`, `bento/minor-templates/{slug}/`; no generic `/landing/*.mp4`. Build-backlinks: `resolveSchedulePostComposerBentoId.ts` + `{slug}-post-editor` or `COMPOSER_BENTO_BY_CATALOG_SLUG` + test.
+
+### Auto-wired from catalog seeds (verify; do not hand-edit per slug)
+
+| Surface | Source |
 | --- | --- |
-| Preview media URLs | **Shared** — `postMediaPreviewUrl` / `postMediaPreviewUrls` in `web/src/lib/posts/utils/composer/mediaDrop.ts`; `AddEditModal` derives `effectivePreviewMediaUrls` from `postMediaItems`; public `/p/[postId]` uses the same helper via `GetScheduledPost.presenter` |
-| Preview chrome + layout | **Per-channel** — phone-width frame, aspect ratio, carousel vs single, platform header/actions, story vs feed modes live in `{id}Preview.svelte` |
-| Media rendering helpers | **Shared building blocks** — `ImageSlider.svelte`, `VideoOrImage.svelte`, `PreviewScheduledSocialReplies.svelte`; add an `ImageSlider` `variant` when a platform needs letterboxing (see table below) |
-| Extra preview props | **Per-channel wiring** — add props on `{id}Preview.svelte` and pass them only from that branch in `ShowAllProviders.svelte`. `mediaStoragePaths` (parallel to `mediaUrls`) is required when the preview must classify photo vs video during compose (`blob:` URLs have no extension) |
+| `/channels`, `/channels/{slug}` | `seeds.ts` + generic routes |
+| Footer **Supported Channels** | `listPublicChannelLandingSeedsForFooter()` |
+| Footer **self-host guides** | `social-integration/{id}.md` (`title`, `order`, not draft) |
+| Compare OpenQuok column | `listAvailablePublicChannelCompareLabels()` — includes coming-soon; **do not** edit `openquok.ts` channels |
+| Humanizer + `/tools/humanizer/{slug}` | `listPublicChannelsForHub()` |
+| Payload wizard slugs | `PUBLIC_API_POSTING_PLATFORM_SLUGS` |
 
-#### Preview layout status (update when you ship a fix)
+### Manual when adding / go-live (same PR as catalog)
 
-| Provider | Phone frame | Letterbox / fit | `mediaStoragePaths` | `classify*PreviewMediaMode` | Notes |
-| --- | --- | --- | --- | --- | --- |
-| **TikTok** | `max-w-[292px]`, 9:16 | `variant="tiktok"` (photos, contain, black) | Yes | `classifyTiktokPreviewMediaMode` | Reference implementation |
-| **Instagram** | feed `max-w-[340px]` 4:5; story `max-w-[292px]` 9:16 | `instagram` / `instagram-story` (photos, contain); videos `cover` | Yes | `classifyInstagramPreviewMediaMode` | Story vs feed from `readInstagramLaunchSettings` |
-| **Facebook** | feed `max-w-[340px]`; story `max-w-[292px]` | `letterbox-dark` / `instagram-story` (photos); videos `cover` | Yes | `classifyComposerPreviewMediaMode` | Feed 1.91:1 / story 9:16 |
-| **Threads** | `max-w-[340px]`, 4:3 | `instagram` (photos, contain); videos `cover` | Yes | `classifyComposerPreviewMediaMode` | |
-| **X** | `max-w-[340px]`, 16:9 | `instagram` (photos, contain); videos `cover` | Yes | `classifyComposerPreviewMediaMode` | |
-| **LinkedIn** | `max-w-[340px]`, 1.91:1 | `letterbox-dark` (photos); videos `cover` | Yes | `classifyComposerPreviewMediaMode` | |
-| **YouTube** | `max-w-[340px]`, 16:9 | `VideoOrImage` `contain` | Yes | `VideoOrImage` + storage path | Title + thumbnail from settings |
-| **Dev.to** | `max-w-[340px]`, cover 1000:420 | `contain` on cover | Yes | `VideoOrImage` + storage path | Settings-driven cover |
-| **Global Edit** | `max-w-[340px]` | `VideoOrImage` + storage path | Yes | `isVideoPreviewSource` | `GeneralPreviewComponent` |
+| Item | Action |
+| --- | --- |
+| Icon strips (×3) | `landing-social-platforms.ts`, `README.md` + `assets/readme/socials/{slug}.svg`, `getting-started/index.md` + `static/docs/_assets/...`; mirror `platforms/index.md`, `platforms/connect-rules.md` |
+| App icons | `social-providers.ts`, `branded-icons.ts` |
+| Compare competitors | Add label to `competitors/{vendor}.ts` `channels` when they ship the network (**add-competitors.mdc**) |
+| Skill Builder | `channels/tools/skill-builder/general.ts` recipes + `skillBuilderChannelExamplePayloads.ts` (coming-soon OK with recipes) |
+| Photo Editor | `aspectRatioPresets.ts` + groups; live only (`available: true`) |
+| Best Time | `benchmarkSlots.ts` `PLATFORM_WINDOWS['{slug}']`; live only; no fake analytics copy |
+| Tool Tier-3 copy | `channels/tool-surfaces/{slug}.ts` + `channelToolSurfaceMetaBySlug.ts` |
+| Agent `/agents/{host}/{slug}` | `agents/channels/general.ts`, bentos, CLI/MCP strings; no analytics bento if not on allow-list — `buildAgentsChannelFeatureSections.ts` |
+| `agentMultiPlatformKanbanMock.ts` | Optional card on generic agent/MCP pages |
 
-When users report “preview too large” or “wrong crop” on a provider **not** in the shipped rows above, apply the **Preview layout fix checklist** for that provider in the same PR — do not only document the gap.
+## Programmatic tools (summary)
 
-#### `ImageSlider` variants (`web/src/lib/ui/media-files/ImageSlider.svelte`)
-
-| `variant` | Fit | Letterbox background | Use when |
+| Tool | Route | Gate | Manual |
 | --- | --- | --- | --- |
-| `default` | `cover` | — | Videos filling the frame; providers not yet on letterbox path |
-| `tiktok` | `contain` | black | TikTok photo carousels in 9:16 |
-| `instagram` | `contain` | `bg-base-100` | Instagram **feed** photos in 4:5 |
-| `instagram-story` | `contain` | black | Instagram **story** photos in 9:16 |
-| `letterbox-dark` | `contain` | `bg-[#18191A]` | Facebook feed, LinkedIn feed photos |
-
-Add a new variant when a platform needs a distinct letterbox background or carousel chrome — do not overload `default` with per-platform conditionals. Shared photo/video classification for most feed-style networks: `classifyComposerPreviewMediaMode` in `mediaDrop.ts` (TikTok/Instagram keep provider-specific helpers when carousel chrome differs).
-
-#### Photo vs video during compose (`blob:` URLs)
-
-Composer preview URLs are often `blob:` (no file extension). **Never** classify media type from `mediaUrls` alone when storage paths exist.
-
-1. Export `classify{Provider}PreviewMediaMode(urls, storagePaths?)` from `{id}.provider.ts` (return at least `'empty' | 'video' | 'photo'`).
-2. Prefer `storagePaths[i]` for extension checks; fall back to public URL extension only when path is missing.
-3. Unit-test blob URL + storage path pairs in `{id}.provider.test.ts` (mirror `tiktok.provider.test.ts`, `instagram.provider.test.ts`).
-4. Pass `mediaStoragePaths` from `AddEditModal` → `ShowAllProviders` → `{id}Preview` (and ensure `/p/[postId]` passes the same paths).
-
-#### Preview layout fix checklist (per provider)
-
-Use when adding a provider **or** when preview media overflows the column, crops oddly, or breaks after channel switch.
-
-1. **Frame** — wrap `{id}Preview.svelte` in `mx-auto w-full max-w-[…px]` so the preview column does not stretch media to full width. Typical caps: **340px** feed cards, **292px** 9:16 story/Reels-style frames.
-2. **Aspect** — fixed media region: `relative` + `aspect-[4/5]` (IG feed), `aspect-[9/16]` (story/TikTok), `aspect-[1.91/1]` (Facebook/LinkedIn link), `aspect-video` (X), etc. Put `ImageSlider` in `absolute inset-0 h-full w-full` inside that box.
-3. **Fit** — photos: letterbox with the correct `ImageSlider` `variant`; videos: `variant="default"` (`cover`) unless the network letterboxes video too.
-4. **Classification** — add `classify{Provider}PreviewMediaMode` + tests; wire `mediaStoragePaths` on the `ShowAllProviders` branch.
-5. **Settings-driven modes** — if compose settings change aspect (e.g. Instagram `postType: 'story'`), branch layout and `variant` in `{id}Preview.svelte` using `read{Provider}LaunchSettings`.
-6. **Public preview** — confirm `/p/[postId]` passes `mediaStoragePaths` into `ShowAllProviders` so shared links match the composer.
-7. **Regression** — upload a tall portrait + a landscape image in the composer; switch Global ↔ per-network focus; confirm preview media still loads (`postMediaPreviewUrl` keeps `localPreviewUrl` until remove; do not revoke blobs on `MultiMedia` unmount).
-
-**When adding a provider (minimum)**
-
-1. Create `{id}Preview.svelte` with network-native layout (match real feed/story/article chrome where practical).
-2. Add an `{:else if identifier === '{id}'}` (or `startsWith`) branch in `ShowAllProviders.svelte` — pass only the props that preview needs (`providerSettings`, `threadReplies`, `crossAccountPlugs`, `mediaStoragePaths`, `delayedEngagementReply`, etc.).
-3. If the provider accepts images in compose, plan for **preview layout fix checklist** items 1–4 before calling preview “done” — a bare `ImageSlider` with `object-cover` full column width is not sufficient for image-heavy networks.
-4. Bento composer mocks — use real `ShowAllProviders` + mock channel VM with matching `identifier` (see `BentoThreadsComposerPreview.svelte`, `BentoInstagramComposerPreview.svelte`, `BentoTiktokComposerPreview.svelte`).
-
-**Do not**
-
-- Assume a media or layout fix in one `{id}Preview.svelte` applies to all channels — regression-test the provider you changed; when touching shared helpers (`mediaDrop.ts`, `ImageSlider`, `VideoOrImage`, `MultiMedia`), spot-check siblings.
-- Put all platforms in one preview component or branch on post type inside `GeneralPreviewComponent` for shipped networks — extend `ShowAllProviders` instead.
-- Rely on preview URL file extensions alone during compose — `blob:` URLs have no extension; use `postMediaPreviewUrl` (local blob → API `publicUrl` → storage URL) and pass storage paths when classification needs extensions.
-- Gate **Media details** (gear) on `localPreviewUrl` alone — uploaded composer items keep blob previews; use `isGuestOnlyComposerMedia` in `composerMediaSettings.ts` (guest flat filename only).
-
-**References:** `TiktokPreview.svelte`, `InstagramPreview.svelte`, `tiktok.provider.ts` (`classifyTiktokPreviewMediaMode`), `instagram.provider.ts` (`classifyInstagramPreviewMediaMode`), `mediaDrop.ts`, `AddEditModal.svelte` (`effectivePreviewMediaUrls`, `previewChannelKey`).
-
-### Follow-up comments / reply chains (required when `comment()` ships)
-
-Multi-part posts (main caption + delayed follow-up rows) are **shared composer infrastructure** — each new provider that supports follow-ups must update **gates and buckets**, not only `{id}.provider.ts`.
-
-**Decide first**
-
-| Platform capability | Launch config | Backend | Composer / worker |
-| --- | --- | --- | --- |
-| Same-account thread / reply chain after main post | `postComment: 'POST'` (thread-style) or `'COMMENT'` / `'ALL'` | `comment()` implemented | Full checklist below |
-| Comments only on own post (not thread-style UI) | `postComment: 'COMMENT'` | `comment()` implemented | Full checklist below |
-| No scheduled follow-ups | `postComment: 'NONE'` | omit `comment()` | Skip section; landing + agent docs must not claim reply chains |
-
-**Launch config flags** (`{id}.provider.ts`)
-
-| Field | Meaning |
-| --- | --- |
-| `postComment` | Drives **Add …** button label in **Follow-up comments** (`Add more thread` / `Add comment` / `Add comment or post`). |
-| `comments` | Follow-up row media affordance: omit or `true` → media allowed on follow-up rows when composer supports it; `'no-media'` → text-only follow-ups (e.g. Instagram, LinkedIn). Does **not** limit main-post media. |
-| `checkValidity` | When reply media is restricted, validate `ctx.threadReplies` (extend `LaunchProviderCheckContext` if needed) and align with backend `comment()` rules. |
-
-**Shared web gates** (update when adding a follow-up-capable identifier)
-
-| File | Action |
-| --- | --- |
-| `web/src/lib/posts/utils/create-post/followUp.ts` | Add identifier to `channelSupportsFollowUpComments`; add bucket in `followUpBucketForChannel` (e.g. `threads`, `instagram`, `x`, `linkedin`, `facebook` — not a catch-all `threads` fallback). |
-| `backend/utils/dtos/PostDTO.ts` | Add bucket in `replyChainBucketForProvider`; ensure `extractFollowUpRepliesFromProviderSettingsObject` reads `providerSettings.{bucket}.replies`. |
-| `orchestrator/activities/scheduledSocialPostActivities.ts` | Extend `supportsFollowUps` in `maybePublishThreadsReplies`; pass **reply `settings` (with media)** into `social.comment()`, not empty `{}`. |
-| `web/src/lib/sets/SetGridTable.presenter.svelte.ts` | Extend `followUpBucketForIdentifier` when sets show follow-up columns. |
-| `web/src/lib/posts/CreateSocialPost.presenter.svelte.ts` | Toast / help text lists the new channel (do not say “Threads and Instagram only” when X / LinkedIn / Facebook are supported). |
-
-**Provider settings shape** — follow-ups live in `providerSettingsByIntegrationId[integrationId].{bucket}.replies`:
-
-```json
-{ "id": "<uuid>", "message": "…", "delaySeconds": 0, "media": [{ "id": "…", "path": "…" }] }
-```
-
-`media` is optional; persisted in `posts.settings` JSON (text also mirrored to `post_thread_replies.content`). Use the **provider’s bucket key** (`linkedin` for `linkedin` and `linkedin-page`, etc.).
-
-**Composer UI** (usually no per-provider Svelte beyond launch config)
-
-- **Follow-up comments** panel: `ThreadRepliesEditor.svelte` + `AddEditModal.svelte` (shown when `channelSupportsFollowUpComments` matches).
-- **Reorder** is global (up/down on reply rows) — no per-provider work unless you add provider-specific help text in `ThreadRepliesEditor`.
-- **Preview** — `{id}Preview.svelte`: accept `threadReplies` and render via `PreviewScheduledSocialReplies` when follow-ups are a shipped feature; pass mock reply rows in bento previews (`hideProviderHelp`, `compactEditor`, one row).
-
-**Docs & agent** (when follow-ups ship)
-
-| Artifact | Action |
-| --- | --- |
-| `web/src/content/docs/creating-posts/threads-and-comments.md` | Add row to **What each platform does** (composer yes/no, publish behavior, media on follow-ups); bump `lastUpdated`. |
-| `web/src/content/docs/creating-posts/index.md` | Cross-link if the channel is a primary follow-up example. |
-| `agent/skills/openquok-core/resources/{id}-examples.md` | Document `{bucket}.replies` in Provider settings + a recipe; add `examples/*-follow-up*.json` when CLI/API examples exist. |
-| `channel catalog` / FAQ | Claim follow-ups only when composer + worker paths above are wired. |
-
-**References:** Threads (`threads.replies`, finisher, internal plug), X (`x.replies`, quote-less replies), Instagram (`instagram.replies`, text-only), Facebook (`facebook.replies`, optional one image), LinkedIn (`linkedin.replies`, text-only).
-
-### Post Preview provider settings (required when compose settings exist)
-
-When a provider has compose-time settings (`{id}Settings.svelte`), the Post Preview column must read the same `providerSettings` bucket the Settings panel writes — not an empty object. The Dev.to “Untitled article” bug shipped because preview settings were wired from `followUpTargetIntegrationId` (Threads follow-up only) instead of the preview channel.
-
-| Layer | Rule |
-| --- | --- |
-| `AddEditModal.svelte` | Derive preview settings from `previewChannel.id` + `providerSettingsByIntegrationId` (`effectivePreviewProviderSettings`); pass to `ShowAllProviders`. Do not rely on parent modals passing `previewProviderSettings` from `followUpTargetIntegrationId`. |
-| Parent modals (`CreateSocialPostModal.svelte`, `payload-wizard/+page.svelte`, etc.) | Do **not** wire `previewProviderSettings` from `followUpTargetIntegrationId` — that ID is only set for Threads/Instagram  replies and leaves other providers with `{}`. |
-| `ShowAllProviders.svelte` | Pass `{providerSettings}` on **every** preview branch that reads compose settings (not only Dev.to). |
-| `{id}Preview.svelte` | Accept `providerSettings` prop; use `read{Provider}LaunchSettings(providerSettings)`; render title, tags, cover, post-type hints, etc. live as the user edits Settings. |
-| Bento mocks | Pass explicit mock `providerSettings` into `ShowAllProviders` (see `BentoDevtoSettingsPreview.svelte`). |
-
-**References:** Dev.to (`title`, `tags`, `series`, `mainImage`), YouTube (`title`, `thumbnail`), TikTok photo carousel (`title`). Threads thread finisher / delayed engagement reply use the same derived settings object when the preview channel is Threads.
-
-### Cross-account plug preview (required when `internalPlugCatalog()` includes cross-account plugs)
-
-Cross-account plugs let a **publishing** channel schedule comments or reposts from **other connected channels** after the main post goes live. Composer preview must show those acting channels with platform-native styling — not a shared generic block.
-
-**Decide first**
-
-| Platform capability | Backend | Composer preview |
-| --- | --- | --- |
-| Cross-account comment from selected channels | `internalPlugCatalog()` + orchestrator plug handler | `{id}CrossAccountPlugsPreview.svelte` + dynamic comment counts in `{id}Preview.svelte` |
-| Cross-account repost only (no comment plug) | Same | Preview shows repost rows; comment counts stay follow-up-only |
-| No cross-account plugs | Omit catalog entries | Skip this section; landing/bento must not claim cross-account engagement |
-
-**Shared helpers** — `web/src/lib/ui/components/preview/crossAccountPlugPreview.ts`
-
-| Export | Use |
-| --- | --- |
-| `buildCrossAccountPlugPreviewItems` | Composer + bento mocks: channels + `crossAccountPlugs` + plug defs → preview rows |
-| `buildCrossAccountPlugPreviewFromProviderSettings` | Public preview when only `providerSettings` is available |
-| `crossAccountSettingsBucketForIdentifier` | Map `provider.identifier` → settings bucket (`threads`, `x`, `linkedin` for `linkedin-page`) |
-| `summarizeScheduledSocialPreviewEngagement` | Drive comment/repost counts in `{id}Preview.svelte` from follow-ups + cross-account rows |
-| `formatCrossAccountPlugDelayLabel` / `formatLinkedInEngagementSummary` | Platform-specific preview copy |
-
-**Shared web gates** (update when adding a cross-account-capable identifier)
-
-| File | Action |
-| --- | --- |
-| `web/src/lib/posts/utils/create-post/providerSettings.ts` | Extend `CrossAccountPlugSettingsBucket`; wire `buildCrossAccountPlugsProviderPatch` bucket |
-| `crossAccountPlugPreview.ts` | Extend `crossAccountSettingsBucketForIdentifier` |
-| `AddEditModal.svelte` | Build `previewCrossAccountPlugs` via `buildCrossAccountPlugPreviewItems`; flush plug dialog settings on close (`syncPlugDialogSettingsToParent`) so publish persists `crossAccountPlugs` |
-| `ShowAllProviders.svelte` | Pass `crossAccountPlugs` into preview branches; derive from `providerSettings` when prop empty (public `/p/[postId]`) |
-| `{id}Preview.svelte` | Accept optional `crossAccountPlugs`; call `summarizeScheduledSocialPreviewEngagement`; render `{id}CrossAccountPlugsPreview` below follow-ups when rows exist |
-| `{id}CrossAccountPlugsPreview.svelte` | **New per provider** under `providers/{id}/` — platform-native layout for `CrossAccountPlugPreviewItem[]` |
-
-**Provider settings shape** — cross-account plugs live on the **publishing** channel bucket:
-
-```json
-{
-  "threads": {
-    "crossAccountPlugs": [
-      {
-        "plugName": "threads-cross-account-comment",
-        "enabled": true,
-        "delayMs": 120000,
-        "integrationIds": ["<acting-channel-id>"],
-        "fields": { "comment": "…" }
-      }
-    ]
-  }
-}
-```
-
-Use the provider’s bucket key (`linkedin` for both `linkedin` and `linkedin-page`). X repost plugs omit `fields.comment`; comment plugs require non-empty caption validation in `validateProviderCaptionLength`.
-
-**Platform preview component** (`{Provider}CrossAccountPlugsPreview.svelte`)
-
-- Place beside `{id}Preview.svelte` in `web/src/lib/ui/components/posts/providers/{id}/`.
-- Props: `items: CrossAccountPlugPreviewItem[]` only — keep platform chrome inside the component.
-- Use `IntegrationChannelPicture` for avatars with **fixed** flex constraints (`h-12 w-12` + matching `min-*` / `max-*` / `shrink-0`) so profile images do not blow out the layout.
-- Map `item.kind` (`comment` \| `repost`) to network-appropriate labels and body copy.
-- Do **not** reintroduce a shared `PreviewCrossAccountPlugs.svelte`; styling diverges per network (Threads thread continuation, LinkedIn comment card, X repost row).
-
-**References:** `ThreadsCrossAccountPlugsPreview.svelte`, `LinkedInCrossAccountPlugsPreview.svelte`, `XCrossAccountPlugsPreview.svelte`.
-
-**Bento / landing** — when marketing cross-account plugs, pass mock `crossAccountPlugs` in `{slug}LandingMock.ts` and wire composer bento previews with `crossAccountPlugsPreview={true}` + `buildCrossAccountPlugPreviewItems` (see `BentoThreadsComposerPreview.svelte`, `BentoLandingCrossAccountPlugsPreview.svelte`).
-
-**Docs & agent** — document `{bucket}.crossAccountPlugs` in `resources/{id}-examples.md` **Provider settings** and MCP/CLI examples when the catalog ships cross-account plugs.
-
-### Writing the post — editor table (user docs)
-
-When composer support ships, update `web/src/content/docs/creating-posts/writing-the-post.md` → **Editor by platform**.
-
-Map `SocialProvider.editor` on the provider class to the **Used by** column:
-
-| `editor` | Action |
-| --- | --- |
-| `normal` | Add platform to **Standard** row if not covered by “most social channels”; otherwise no change. |
-| `markdown` | Append `**{Platform}** when unlocked` on **Markdown** row. |
-| `html` | Append on **HTML** row (note if publish strips to plain text, like X). |
-| `none` | First live Plain provider: replace “None yet” with that platform. |
-
-**Rules:** one table only (`Editor | Toolbar | Used by`); change **Toolbar** only for real toolbar exceptions; bump `lastUpdated` in the same PR; `editor` on the provider class is the source of truth.
-
-## Public channel landing page (SEO marketing)
-
-Routes and UI are **generic** — adding a channel is a **catalog entry only** (no new `+page` files per slug).
-
-| Artifact | Path / URL |
-| --- | --- |
-| Content catalog | `web/src/lib/content/constants/channels/catalog/platforms/{slug}.ts`; register in `catalog/seeds.ts`; import via `channels/index.ts` |
-| Route helpers | `web/src/lib/area-public/constants/getRootPathPublicChannels.ts` (`channels`, `channels/{slug}`) |
-| Hub route | `/channels` — `web/src/routes/(public)/channels/+page.server.ts` lists `listPublicChannelsForHub()` |
-| Detail route | `/channels/{slug}` — `web/src/routes/(public)/channels/[slug]/+page.server.ts` resolves `getPublicChannelBySlug(slug)` (404 when missing); `available: false` renders a coming-soon hero plus the full landing sections below |
-| Page route | `web/src/routes/(public)/channels/[slug]/+page.svelte` — live hero (`PublicChannelHero`) or coming-soon hero (`PublicComingSoonIntegrationPage` with `heroOnly`) |
-| Hub grid | `web/src/lib/ui/templates/landing-page/PublicChannelsHubGrid.svelte` |
-| Hero (live) | `web/src/lib/ui/templates/landing-page/PublicChannelHero.svelte` |
-| Hero (coming soon) | `web/src/lib/ui/templates/landing-page/PublicComingSoonIntegrationPage.svelte` |
-
-Navbar link to `/channels` is already in `web/src/lib/config/constants/config.ts`; **do not add per-channel nav entries**. Per-channel **footer** links are auto-derived — see **Site footer** below.
-
-### Catalog entry (`PublicChannelLandingPageViewModel`)
-
-Add a constant in `channels/catalog/platforms/{slug}.ts` and register it in **`channels/catalog/seeds.ts`** (`PUBLIC_CHANNEL_LANDING_PAGES`; append to `COMING_SOON_CHANNELS` only for minimal stubs before the full file exists). Optional re-export from **`channels/index.ts`**.
-
-Registering in **`channels/catalog/seeds.ts`** auto-wires the sitewide footer **Supported Channels** column (`buildPublicFooterSupportedChannelLinks` → `listPublicChannelLandingSeedsForFooter()`). Do **not** hand-edit `config.ts` or `buildPublicFooterLinks.ts` for each new slug.
-
-| Field | Rule |
-| --- | --- |
-| `slug`, `platformId` | Same kebab-case slug as `provider.identifier` |
-| `platformLabel` | Human-readable name (e.g. `Facebook`, `X`) |
-| `icon` | `icons.{Provider}.name` from `$data/icons` |
-| `heroTitle`, `heroDescription` | Platform-specific H1 and lead copy |
-| `metaTitle`, `metaDescription`, `keywords` | SEO; title becomes `{metaTitle} \| {companyName}` on the page |
-| `featureSections` | **3–4 sections** typical: subtitle, title, description, `bentoId` (preferred), `mediaOnRight` (alternate left/right). Each **`title` needs ≥3 comma-separated phrases** (see **Feature section titles** below). See **Feature bento showcases** — do **not** ship go-live pages with generic `/landing/*.mp4` placeholders when the provider has a bento set. |
-| `faqSubtitle`, `faqTitle`, `faqDescription`, `faqItems` | Channel-specific FAQ; JSON-LD `FAQPage` is generated in `+page.server.ts` |
-| `docsPath` | Setup guide path, e.g. `/docs/social-integration/{id}` — must match the doc you ship |
-| `available` | `true` when Skill Builder / Photo Editor channel routes and live hero CTAs should ship; `false` for **Soon** badges on hub/nav and a coming-soon hero on `/channels/{slug}` and `/agents/{agentSlug}/{slug}` (full landing sections still render) |
-
-**Coming soon (provider not ready):** add a full catalog entry in `channels/catalog/platforms/{slug}.ts` with `available: false` (or append a minimal stub to `COMING_SOON_CHANNELS` in **`channels/catalog/seeds.ts`** before the full file exists). Hub and header show a **Soon** badge; `/channels/{slug}` and agent channel pages use `PublicComingSoonIntegrationPage` (`heroOnly`) for the hero and omit listings preview — all other sections still render from the catalog copy.
-
-**Go live:** flip `available: true` (and ensure backend integration is registered). Ship **provider-specific bento showcases** for all three feature sections (see below). Copy must describe **only features already implemented** — do not oversell.
-
-### Landing copy voice (problem-first, ASD-STE100)
-
-Write `heroTitle`, `heroDescription`, `hubDescription`, `featureSections`, `audienceCards`, and FAQ answers for **the person scheduling posts** — lead with the pain or outcome, not a settings checklist.
-
-Use **ASD-STE100 Simplified Technical English**. Use short sentences. Put one idea in each sentence. Use active voice. Address the reader as **you**. Use plain words. Do not explain in the copy (or in chat) that you follow this style. Feature **titles** keep ≥3 comma-separated phrases for hero theme; **descriptions** stay STE100.
-
-| Prefer | Avoid |
-| --- | --- |
-| What the user struggles with or wants (reach, consistency, time saved, approval control) | Feature inventories (`privacy_level`, `providerSettings`, toggle names, API paths) |
-| Plain outcomes (“Queue to your inbox. Pick trending audio in the app.”) | Long clauses joined with em dashes |
-| Second person (“you”, “your posts”, “your workspace”) | Passive product specs (“supports X, Y, Z settings”) |
-
-**`featureSections` pattern:**
-
-- **`subtitle`** — user problem or job-to-be-done (e.g. `Trending audio`, `Bulk scheduling`), not an internal label (`Compose settings`).
-- **`title`** — see **Feature section titles** below.
-- **`description`** — problem → how OpenQuok helps → result; mention shipped workflow steps the bento shows. One idea per sentence.
-
-**Reference:** TikTok `featureSections[1]` in `channels/tiktok.ts` — inbox drafts + manual trending audio for algorithm reach; bento still shows composer settings, but copy sells the user problem.
-
-### Feature section titles (comma parts)
-
-Applies to **`featureSections[].title` only** (feature-row `<h2>` via `HeroWithLeftMedia` / `HeroWithRightMedia`). It does **not** apply to **`heroTitle`** on the page `<h1>` — channel/agent heroes parse the full string without comma splitting (**web-landingpage** → Page hero vs feature-row titles).
-
-`HeroWithLeftMedia` / `HeroWithRightMedia` pass titles into `PublicLandingSectionHeading` with **`gradientMode="part"`** when the string contains a comma (per-clause colors + highlight chips from `landingHeroTheme.ts`). **Every section title needs at least three comma-separated phrases** — fewer parts skip the pink accent line and often look flat.
-
-Pattern: `{lead with platform name}, {middle with a highlight word}, {closing phrase}`
-
-| Comma parts | Feature-row styling (`gradientMode="part"`) |
-| --- | --- |
-| 1–2 | Plain + partial gradient only |
-| 3+ | Plain first line → emerald/lime/amber middle → fuchsia/rose/orange accent on last |
-
-Each phrase must read cleanly on its own line — do not break mid-thought (e.g. `…TikTok, add the sound…` renders as `,add` on the next line). Reuse words from `LANDING_HERO_TITLE_HIGHLIGHT_WORDS` in `landingHeroTheme.ts` where natural (`plugs`, `track`, `threads`, `carousels`, `linkedin`, `winners`, …) for white pill highlights.
-
-Apply on **add and update** — when editing any `channels/catalog/platforms/{slug}.ts` feature row, keep all section titles at 3+ parts.
-
-**Audience cards** — who they are + what pain is solved (e.g. founders shipping product while TikTok runs), not role labels with feature lists.
-
-Agent skill files and setup docs stay **feature-accurate and terse** — do not paste landing marketing prose into `resources/{id}-examples.md` (see below).
-
-### Feature bento showcases (required at go-live)
-
-Each live `/channels/{slug}` page renders three feature rows via `HeroWithLeftMedia` / `HeroWithRightMedia`. When `featureSections[].bentoId` is set, the route renders `BentoPublicChannelFeature` instead of a static video (`web/src/routes/(public)/channels/[slug]/+page.svelte`).
-
-**When adding or go-live-ing a provider, implement bento for all three feature sections** — same bar as composer preview and analytics wiring. Reference **facebook** and **threads**.
-
-| Layer | Path / action |
-| --- | --- |
-| Bento ID union | Add `{slug}-…` literals to `web/src/lib/content/constants/channels/catalog/feature-bento.ts` |
-| Router component | Branch in `web/src/lib/ui/templates/bento/minor-templates/BentoPublicChannelFeature.svelte` |
-| Catalog wiring | Set `bentoId` (not `imageSrc`) on each `featureSections` row in `channels/catalog/platforms/{slug}.ts` |
-| Mock data | `web/src/lib/ui/templates/bento/minor-templates/{slug}/{slug}LandingMock.ts` (+ optional `{slug}LandingKanbanMock.ts`, `{slug}LandingAnalyticsMock.ts`) |
-| Preview panels | Reuse **real** product UI read-only: kanban (`KanbanBoardFilters` + `KanbanColumn`), composer (`PicksSocialsComponent`, `ShowAllProviders`, `SettingsAccordion` with `embedded`, provider settings), analytics (`RenderAnalyticsGrid` + metric seeds matching backend `analytics()`) |
-| Wrappers | `Bento{Provider}{Feature}.svelte` → `BentoCard` + `BentoGridOneCol` (mirror `BentoFacebookBulkScheduling.svelte`, `BentoThreadsMediaReplies.svelte`) |
-
-**Typical three-section themes** (pick what the provider actually ships):
-
-1. **Bulk scheduling** — kanban / calendar batching (`*-bulk-scheduling`).
-2. **Compose differentiator** — provider-specific composer or settings (`*-video-links`, `*-media-replies`, `{id}Settings` in `SettingsAccordion`, etc.).
-3. **Insights** — platform analytics dashboard (`*-insights`) when `SocialProvider.analytics()` is implemented; otherwise choose another shipped capability and still use a bento (do not fall back to generic MP4s at go-live).
-
-**Mock preview conventions:**
-
-- Outer wrapper: `pointer-events-none select-none`; pass `disabled={true}` / `noop` handlers so panels are visual-only.
-- Prefer `SettingsAccordion` with `embedded` and `open={true}` for settings previews (see `BentoFacebookSettingsPreview.svelte`, `BentoThreadsComposerPreview.svelte`).
-- Keep landing mocks **short**: `ThreadRepliesEditor` → `hideProviderHelp={true}`; nested editors → `compactEditor` / `SettingsAccordion` → `compactEditors`; limit mock reply rows to one when showing follow-ups.
-- Mock channel view models live beside previews (`CreateSocialPostChannelViewModel` with `identifier` matching the provider slug).
-- Feature copy (title, description, FAQ) must match what the bento demonstrates.
-
-**Do not** use competitor landing pages as a feature checklist; document only OpenQuok behavior.
-
-### Build Backlinks site guides (`schedule_post` composer bento)
-
-Public `/build-backlinks/{siteSlug}` opportunity sections use **OpenQuok CTA → Schedule post (workspace)** (`schedule_post`) plus **OpenQuok channel** slug to pick the right panel when editors add playbook steps in link-directory manager.
-
-| Step order | Right media (when channel resolves) |
-| --- | --- |
-| **1** | Safari mock (site URL, `ctaHref`, or `/channels/{slug}`) |
-| **2–3** | OpenQuok composer bento (not Safari) |
-
-Resolver: `web/src/lib/link-directory/utils/resolveSchedulePostComposerBentoId.ts` (used by `buildBuildBacklinksOpportunityStepMedia` in `buildBuildBacklinksOpportunityBentoStep.ts`). Unit tests: `resolveSchedulePostComposerBentoId.test.ts`.
-
-**When go-live-ing a provider with composer support, wire build-backlinks in the same PR as `{slug}-post-editor` (or documented fallback):**
-
-| Action | Path |
-| --- | --- |
-| Add `{catalogSlug}-post-editor` to the bento union | `web/src/lib/content/constants/channels/catalog/feature-bento.ts` |
-| Router + composer preview wrapper | `BentoPublicChannelFeature.svelte` + `bento/minor-templates/{slug}/` (same bar as **Feature bento showcases** — section 2 compose row) |
-| Register catalog slug → bento id | `POST_EDITOR_BENTO_BY_CATALOG_SLUG` in `resolveSchedulePostComposerBentoId.ts` — key is **public channel catalog slug** (e.g. `instagram`), not always `provider.identifier` |
-| Integration id ≠ catalog slug | Also append to `INTEGRATION_ID_TO_CATALOG_SLUG` (e.g. `instagram-business` → `instagram`, `linkedin-page` → `linkedin`) |
-| No `{slug}-post-editor` bento yet | Set `COMPOSER_BENTO_BY_CATALOG_SLUG` to the compose showcase id used on `/channels/{slug}` (e.g. Bluesky → `bluesky-threads`); do not leave `schedule_post` opportunities on Safari-only for steps 2–3 |
-| Tests | Extend `resolveSchedulePostComposerBentoId.test.ts` (and step media tests if behavior is non-obvious) |
-
-**Link-directory admin (no extra code):** opportunity **OpenQuok CTA kind** = Schedule post, **OpenQuok channel** = integration identifier or catalog slug matching the maps above. Step **title/body** do not select media — only CTA + channel + step **order** (2–3 show composer).
-
-**Do not** assume build-backlinks updates automatically when only backend `integrationManager` registers a provider; without the resolver + bento rows, `schedule_post` stays Safari for every step.
-
-### CTA (detail pages)
-
-Use trial CTAs from `web/src/lib/content/constants/landing/hero-copy.ts`, matching `LandingPage.svelte`:
-
-- **Hero (H1 band):** `PUBLIC_LANDING_HERO_TRIAL_CTA` (hosted 7-day trial — not “free forever”)
-- **Feature rows / repeats:** `PUBLIC_LANDING_COMPACT_TRIAL_CTA`
-- **Href:** `/pricing` (`publicChannelByPagePresenter.secondaryCtaHref`)
-
-Wire `heroCtaText` into `PublicChannelHero` and `featureCtaText` into `HeroWithLeftMedia` / `HeroWithRightMedia` on `web/src/routes/(public)/channels/[slug]/+page.svelte`. **Do not** add login-dependent CTAs (`Open workspace`), a secondary “Setup guide” button, or a bottom CTA block.
-
-### Load / page conventions
-
-- `+page.server.ts` files own SSR, meta tags (`createMetaData`), and JSON-LD schema.
-- `+page.ts` follows the universal load pattern (`await parent()`, merge `isLoggedIn` / roles on the client branch). See **web-sveltekit-universal-page-load**.
-- `+page.svelte` exposes load fields via `$derived(data.*)` and owns the page markup (no separate `*Page.svelte` wrapper).
-
-### Site footer (`PUBLIC_FOOTER_LINKS`)
-
-Footer columns are assembled in `web/src/lib/config/constants/config.ts` from builders in `web/src/lib/config/utils/buildPublicFooterLinks.ts`. **Do not** hand-add per-provider rows to `PUBLIC_FOOTER_LINKS` or extend the builders when shipping a channel — complete the catalog/docs items in this checklist and the footer updates at build time.
-
-| Footer section | Ship in this PR | Auto-wired from |
-| --- | --- | --- |
-| **Supported Channels** | `channels/catalog/platforms/{slug}.ts` + append to **`PUBLIC_CHANNEL_LANDING_PAGES`** in `channels/catalog/seeds.ts` | `listPublicChannelLandingSeedsForFooter()` → `/channels/{slug}` |
-| **How to self-host with different social channels** | `social-integration/{id}.md` + `social-integration/index.md` LinkCard | Eager glob on `web/src/content/docs/social-integration/**`; frontmatter `title`, `order` (omit `draft: true`) |
-| **Skill Builder Tools** | Live channel (`available: true`) + Skill Builder recipes | `listSkillBuilderChannelsForHub()` |
-| **Photo Editor Tools** | Live channel + aspect presets (recommended at go-live) | `listCanvasChannelsForHub()` |
-| **Best Time to Post Tools** | Live channel + `PLATFORM_WINDOWS['{identifier}']` | `listBestTimeChannelsForHub()` |
-| **Humanizer Tools** | Any `channel catalog` entry (including coming-soon) | `listHumanizeChannelsForHub()` |
-| **Autonomous Agent Integrations** | Agent channel SEO (bento + CLI when go-live) | Agent hosts from `listPublicAgentHostSeedsForFooter()`; per-channel rows from `/agents/{agentSlug}/{slug}` catalog |
-
-**Self-host setup doc frontmatter:** filename slug must match `provider.identifier` (link → `/docs/social-integration/{identifier}`). Set `title` for the footer label, `order` to sort among sibling guides, and optional `sidebar.label` when the footer label should differ from the page title.
-
-**Verify in PR:** on any public page, confirm the new channel appears under **Supported Channels** and the operator setup guide under **How to self-host with different social channels** with the expected label and href. Edit `buildPublicFooterLinks.ts` only when introducing a **new footer column type**, not for each provider.
-
-See also **web-seo-pseo** → Footer inventory.
-
-### Marketing platform icon strips (three surfaces — same PR as catalog)
-
-When a channel is registered in **`PUBLIC_CHANNEL_LANDING_PAGES`** (`channels/catalog/seeds.ts`), update **all three** public icon strips in the **same PR** as the catalog entry — do not wait for `available: true` and do not rely on `/channels/{slug}` alone.
-
-| # | Surface | What to update |
-| --- | --- | --- |
-| 1 | **Main landing hero** | `web/src/data/landing-social-platforms.ts` — `HERO_SOCIAL_PLATFORMS` (strip in `HeroMain.svelte`), `FEATURES_GRID_SOCIAL_PLATFORMS`, and `FEATURES_GRID_SOCIAL_ROWS`. Prefer `icons.*Glyph` + `GLYPH_TILE` when peer networks use glyph tiles. |
-| 2 | **Repository README** | `README.md` — **Supported platforms** `<p>` icon row (`https://www.openquok.com/channels/{slug}`) and nearby prose lists (e.g. **Connect channels** bullet). Add `assets/readme/socials/{slug}.svg` (32×32; match other social marks — vector SVG preferred, embedded PNG acceptable when no official vector exists). |
-| 3 | **Docs getting started** | `web/src/content/docs/getting-started/index.md` — same icon row markup (`/channels/{slug}`, `/docs/_assets/platforms/socials/{slug}.svg`). Add `web/static/docs/_assets/platforms/socials/{slug}.svg` (copy from `assets/readme/socials/{slug}.svg` when identical). |
-
-**Docs mirrors (keep in sync with getting started):** duplicate the same `<a><img …></a>` row on:
-
-- `web/src/content/docs/platforms/index.md`
-- `web/src/content/docs/platforms/connect-rules.md`
-
-Use the same channel order across all five markdown files when practical (Facebook → Threads → Instagram → LinkedIn → X → YouTube → TikTok → Dev.to → Bluesky → …).
-
-**App UI icons** (`web/src/data/icons/branded-icons.ts`, `social-providers.ts`) are separate from strip SVGs — ship both when the channel is user-visible.
-
-**Do not** add a channel to the hub catalog without completing the three surfaces above (common miss: README + docs assets while only updating `landing-social-platforms.ts`).
-
-### Compare / alternatives (OpenQuok channel column)
-
-`/compare/openquok/{competitor}` and related pairs read OpenQuok’s **channels** list from `listAvailablePublicChannelCompareLabels()` in `web/src/lib/content/constants/channels/index.ts` (wired in `competitors/openquok.ts`). That helper walks **`PUBLIC_CHANNEL_LANDING_PAGES`** — including **`available: false`** coming-soon entries — so registering `channels/catalog/platforms/{slug}.ts` in **`channels/catalog/seeds.ts`** is enough for the OpenQuok column to pick up the new `platformLabel` (and any `comparePlatformLabels` extras). **Do not** hand-append channel names to `openquok.ts`.
-
-When a **competitor** also ships the network, add the same human label to that vendor’s `web/src/lib/content/constants/competitors/{slug}.ts` `channels` array so channel icons resolve on both sides of the table (see **add-competitors.mdc**). Smoke-test `/compare/openquok/{slug}` after go-live or when the competitor list changes.
-
-## Docs and agent resources (user-facing providers)
+| Humanizer | `/tools/humanizer/{slug}` | All catalog | Optional hub blurb |
+| Payload wizard | `/tools/payload-wizard/{slug}` | API catalog slug | `formatExamples.ts`, hub blurb |
+| Skill Builder | `/tools/skill-builder/{slug}` | Live or `CHANNEL_RECIPES` | Recipes + payloads |
+| Photo Editor | `/tools/photo-editor/{slug}` | `available: true` | Aspect presets |
+| Best Time | `/tools/best-time-to-post/{slug}` | `available: true` | `PLATFORM_WINDOWS` |
+
+Extension / no analytics: do not claim workspace analytics on Best Time, Photo Editor, or agent insight rows.
+
+## Docs & agent
 
 | Artifact | Path |
 | --- | --- |
-| Connect flows (user guide) | `web/src/content/docs/channels/connect.md` — keep OAuth, credentials, and **browser extension** tabs aligned with shipped providers. **OAuth:** OAuth redirect tab (+ follow-up picker when `isBetweenSteps`). **Credentials:** credentials table + invite exclusion. **Browser extension:** extension tab + link to `installation/chrome-extension.md`. |
-| Setup guide | `web/src/content/docs/social-integration/{id}.md` + `index.md` LinkCard. **Credentials:** user API key path; no operator OAuth env. **Browser extension:** extension install + platform login; no operator OAuth env. **OAuth:** operator app + redirect URI as today. |
-| Browser extension install | `web/src/content/docs/installation/chrome-extension.md` when `isChromeExtension` — build/load unpacked, `VITE_OPENQUOK_BROWSER_EXTENSION_ID`, self-host `externally_connectable`. |
-| CLI examples (human docs) | `web/src/content/docs/cli-examples/{id}.md` |
-| **Public API provider settings** | `web/src/content/docs/public-api-providers/{identifier}.md` + hub updates in `public-api-providers/index.md` |
-| Follow-up replies (user docs) | `web/src/content/docs/creating-posts/threads-and-comments.md` — platform table when the channel supports scheduled follow-ups |
-| Self-host env template | **OAuth only:** `infra/self-host/.env.example` — add `{PROVIDER}_*` / `{PROVIDER}_*_SECRET` (or the keys `GlobalConfig` expects) under **Social provider apps**. **Credentials:** no new secrets; optional one-line comment that the user pastes an API key in the dashboard. |
-| Self-host install docs | **OAuth:** add the new ID/secret pair to **Optional: Social provider apps** in `web/src/content/docs/installation/docker-compose.md`. **Credentials:** call out that the channel needs **no** operator app (keep Related / in-section LinkCard to `/docs/social-integration`). |
-| Agent skill index | `agent/skills/openquok-core/SKILL.md` — add row under **Channels** with user-intent summary + link to `{id}-examples.md` |
-| Agent per-channel file | `agent/skills/openquok-core/resources/{id}-examples.md` (slug = `provider.identifier`; e.g. `facebook`, `threads`, `instagram-business`) |
-| Agent settings hub | `agent/skills/openquok-core/resources/provider-settings.md` — update when merge semantics or cross-channel setting patterns change |
-| Agent workflows | `agent/skills/openquok-core/resources/patterns.md`, `command-reference.md` |
-| Composer editor modes (user) | `web/src/content/docs/creating-posts/writing-the-post.md` — **Editor by platform** **Used by** for the provider’s `editor` |
-| **Media and character caps (user)** | `web/src/content/docs/platforms/media-rules.md` — see **Platforms media and settings** below |
-| **Composer Settings reference (user)** | `web/src/content/docs/platforms/per-channel-settings.md` — see **Platforms media and settings** below |
-
-### Platforms media and settings (required when composer or public API ships)
-
-Update **both** files in the **same PR** as `connect-rules.md` (not only `public-api-providers/{identifier}.md`).
-
-| File | What to add or update |
-| --- | --- |
-| `web/src/content/docs/platforms/media-rules.md` | **Media and character caps** table row (main-post media rules + character cap from `maxLength()` / publish helpers); **Media on follow-up comments** row when `comment()` ships or `postComment` is not `NONE`; **Caption editors** row for the provider’s `SocialProvider.editor`; **Settings-only media** row when hero/thumbnail/cover is Settings-only (not the media strip). Bump `lastUpdated`. |
-| `web/src/content/docs/platforms/per-channel-settings.md` | `### {Display name}` section: channel key badge, Settings table (required title/group/category/privacy fields from `{id}Settings.svelte`), callouts for connect family (OAuth / credentials / browser extension), links to `social-integration/{id}.md` and `public-api-providers/{identifier}.md`. Bump `lastUpdated`. |
-
-Copy must match `validateCreatePost`, publish resolvers, and composer validation — not landing-page marketing.
-
-### Agent skill file (`resources/{id}-examples.md`)
-
-Required sections (see **agent-skill** rule): **Supported features**, **Agent tasks** (user intent → section), **Provider settings**, then **Recipes**. Document only shipped capabilities — align with backend publish helpers and composer settings the API persists (`providerSettingsByIntegrationId`), not marketing-only claims from the landing catalog.
-
-- **Flat CLI keys** where the backend resolver accepts them (e.g. Facebook `url`, Instagram `post_type`).
-- **Nested API buckets** the worker reads at publish time (e.g. `threads.replies`, `instagram.replies`) in `--providerSettingsByIntegrationId` examples.
-- **Do not** paste `channel catalog` hero/feature marketing prose into agent files; reuse the same facts in terse tables.
-- Optional: `{id}-publish.md` under `resources/` when agents need server-side publish/debug detail (pattern: `threads-publish.md`).
-
-### Public API provider settings page
-
-**When:** every new `provider.identifier` registered in `integrationManager.ts`.
-
-**Filename:** `{identifier}.md` (kebab-case slug — same as OAuth callback and CLI filters).
-
-**Title / sidebar:** `{DisplayName} Settings` from `socialProviderDisplayNameByIdentifier` in `web/src/data/social-providers.ts`, dropping parentheses for readability:
-
-- `Instagram (Business)` → **Instagram Business Settings** (not “Instagram Settings”)
-- `Facebook Page` → **Facebook Page Settings** (not “Facebook Settings”)
-- `Instagram (Standalone)` → **Instagram Standalone Settings**
-
-**`order`:** append after existing provider pages (current max is 10 for Dev.to — bump by 1 for each new provider).
-
-**Page sections** (mirror `web/src/content/docs/public-api-providers/threads.md`):
-
-1. **Quick reference** — identifier, connect URL (`GET /api/v1/public/social/{identifier}` or “dashboard credentials” for Dev.to), setup guide link, character cap, media rules (from `web/src/content/docs/platforms/connect-rules.md`, `media-rules.md`, and `per-channel-settings.md`)
-2. **Settings on create post** — `providerSettingsByIntegrationId[<uuid>]` with flat CLI keys + nested composer bucket
-3. **Field reference table** — from backend publish/settings resolver + unit tests
-4. **Follow-up comments** — `{bucket}.replies` when `comment()` ships; omit section when `postComment: 'NONE'`
-5. **Internal / cross-account plugs** — only when catalog ships them; link to `web/src/content/docs/automations/internal-plugs.md` / `web/src/content/docs/automations/cross-account-plugs.md`
-6. **Complete example** — `POST /api/v1/public/posts` curl/JSON
-7. **Related** — `LinkCard` to CLI examples, social-integration setup, hub overview
-
-**Hub updates** (required in the same PR):
-
-- `web/src/content/docs/public-api-providers/index.md` — add row to **Provider catalog** table + `LinkCard` in **Provider settings reference** CardGrid
-- `web/src/content/docs/platforms/connect-rules.md` — add network to catalog table if not already listed; update `media-rules.md`, `per-channel-settings.md`, `platforms/index.md` (naming / follow-ups when needed), and `analytics.md` when behavior differs
-
-**Content sources:** `resources/{identifier}-examples.md`, `cli-examples/{id}.md`, backend `*Publish.ts` / `resolve*Settings.ts`. Do **not** duplicate the old monolithic `supported-social-channels.md` pattern.
-
-**Sidebar config:** no change when adding a page inside `public-api-providers/` — `docsSidebarPublicApi` in `web/src/lib/docs/constants/config.ts` already autogenerates the **Provider settings** section.
-
-Follow **docs-conventions**, **agent-skill**, and **source-project-neutrality** (no third-party repo names in code or docs).
-
-## Programmatic Skill Builder SEO (channel routes)
-
-Ship channel-specific Skill Builder pages alongside the generic tool when a social provider is live (`available: true` on `channel catalog`).
-
-| Artifact | Path / URL |
-| --- | --- |
-| Generic builder (all channels) | `/tools/skill-builder` — no channel slug; default starter workflow |
-| Channel builder | `/tools/skill-builder/{channelSlug}` — `{channelSlug}` matches catalog `slug` / `provider.identifier` where they align (e.g. `facebook`, `threads`) |
-| Channel catalog | `web/src/lib/skill-builder/constants/publicSkillBuilderChannelConfig.ts` — recipes, SEO meta, CLI example payloads (aligned with `agent/skills/openquok-core/resources/examples/*.json`) |
-| Example payloads | `web/src/lib/skill-builder/constants/skillBuilderChannelExamplePayloads.ts` |
-| Workflow builder | `web/src/lib/skill-builder/utils/buildChannelSkillBuilderWorkflowSteps.ts` |
-| Shared page UI | `web/src/lib/ui/templates/skill-builder/SkillBuilderToolPage.svelte` |
-| Channel hub grid | `web/src/lib/ui/components/skill-builder/SkillBuilderChannelHubGrid.svelte` — grid on generic and channel builder pages |
-| Route helper | `getRootPathPublicSkillBuilderChannel(slug)` in `getRootPathPublicTools.ts` |
-| Tools hub entry | `SkillBuilderHubToolCard.svelte` on `/tools` — `ShiftingTabDropdown` with **For all** vs **By channel** tabs |
-
-### Catalog entry (`publicSkillBuilderChannelConfig`)
-
-When adding or go-live-ing a provider that already has CLI examples:
-
-1. Add `CHANNEL_PROVIDER_IDENTIFIERS` jq filter ids (match `integrations:list` identifiers).
-2. Add `CHANNEL_RECIPES` rows with `posts:create` example payloads copied from agent JSON examples (or inline when no JSON file exists).
-3. Hub links are derived from `listAvailablePublicChannels()` — new live channels appear automatically after recipes exist.
-4. Set `cliExamplesPath` to `/docs/cli-examples/{slug}` (must match shipped human docs).
-
-Channel pages 404 when the slug is missing from `channel catalog` or `available: false`.
-
-## Programmatic Photo Editor SEO (channel routes)
-
-Ship channel-specific Photo Editor pages alongside the generic tool when a social provider is live (`available: true` on `channel catalog`). Routes are **generic** — channel pages are **auto-derived** from the live channel catalog (no new `+page` files per slug).
-
-| Artifact | Path / URL |
-| --- | --- |
-| Generic editor (all channels) | `/tools/photo-editor` — neutral default aspect (`DEFAULT_ASPECT_RATIO_ID`, General tab) |
-| Channel editor | `/tools/photo-editor/{channelSlug}` — `{channelSlug}` matches catalog `slug` / `provider.identifier` (e.g. `facebook`, `threads`) |
-| Channel catalog | `web/src/lib/canvas/constants/publicCanvasChannelConfig.ts` — built from `listAvailablePublicChannels()` + aspect helpers |
-| Page presenter | `web/src/lib/area-public/PublicPhotoEditorPage.presenter.svelte.ts` — generic vs channel view model |
-| Shared page UI | `web/src/lib/ui/templates/photo-editor/PhotoEditorToolPage.svelte` |
-| Channel hub grid | `web/src/lib/ui/components/photo-editor/PhotoEditorChannelHubGrid.svelte` — grid on generic and channel editor pages |
-| Route helpers | `getRootPathPublicPhotoEditor()` and `getRootPathPublicPhotoEditorChannel(slug)` in `getRootPathPublicTools.ts` |
-| Tools hub entry | `ChannelHubToolCard` on `/tools` — `ShiftingTabDropdown` with **For all** vs **By channel** tabs (`listCanvasChannelsForHub()`) |
-
-### Auto-derived (no per-provider route files)
-
-- Channel pages at `/tools/photo-editor/{channelSlug}` via generic route + `publicCanvasChannelConfig.ts` (built from `listAvailablePublicChannels()`).
-- Tools hub channel picker via `listCanvasChannelsForHub()`.
-- SEO meta defaults from channel `platformLabel` + merged `keywords` from `channel catalog`.
-
-Channel pages 404 when the slug is missing from `channel catalog` or `available: false`.
-
-### Manual updates when shipping a new provider
-
-When go-live-ing a provider, update aspect-ratio presets **before or with** the integration so channel pages open on platform-specific formats (not General fallbacks).
-
-| Artifact | Path / action |
-| --- | --- |
-| Platform presets | `web/src/lib/ui/canvas-editor/utils/aspectRatioPresets.ts` — add `{platform}-*` preset rows with `exportWidth` / `exportHeight` / hints |
-| Platform group tab | `ASPECT_RATIO_PLATFORM_GROUPS` — add or extend a group with ordered `presetIds` for the picker tab |
-| Provider → group map | `aspectPlatformGroupIdForProviderIdentifier(...)` — map `provider.identifier` (and aliases like `instagram-business` → `instagram`) to the group id |
-| Channel catalog | `channels/catalog/seeds.ts` — `available: true` (already required); slug must match `provider.identifier` |
-
-**Note:** If a provider has no dedicated aspect group yet, the channel page still appears but falls back to General presets — ship platform-specific presets before or with go-live for a good UX. Channel pages default to the platform’s **first preset** in the group (via `defaultAspectRatioIdForComposer`), not General.
-
-## Programmatic Best Time to Post SEO (channel routes)
-
-Ship channel-specific **Best Time to Post** calculator pages alongside the generic tool when a social provider is live (`available: true` on `channel catalog`). Routes are **generic** — channel pages are **mostly auto-derived** from the live channel catalog (no new `+page` files per slug). Slot **math** is **not** account analytics; it comes from static benchmark tables for controlled timing tests.
-
-| Artifact | Path / URL |
-| --- | --- |
-| Generic calculator (all channels) | `/tools/best-time-to-post` — platform picker from live channels; default platform in `DEFAULT_PLATFORM_SLUG` (`best-time-to-post.types.ts`) |
-| Channel calculator | `/tools/best-time-to-post/{channelSlug}` — `{channelSlug}` matches catalog `slug` (e.g. `tiktok`, `linkedin`) |
-| Benchmark windows (required for go-live quality) | `web/src/lib/best-time-to-post/constants/benchmarkSlots.ts` — `PLATFORM_WINDOWS` per slug; `DEFAULT_WINDOWS` fallback when a key is missing |
-| Last-reviewed date (public FAQ) | `BENCHMARK_SLOTS_LAST_REVIEWED` in `benchmarkSlots.ts` — bump when you add or refresh a platform table (`publicBestTimeToPostFaqConfig.ts` imports it) |
-| Channel SEO + hub cards | `web/src/lib/best-time-to-post/constants/publicBestTimeToPostChannelConfig.ts` — built from `listAvailablePublicChannels()` |
-| FAQ (generic + tailored channel copy) | `web/src/lib/best-time-to-post/constants/publicBestTimeToPostFaqConfig.ts` — channel pages get platform-specific answers via `buildBestTimeToPostFaqSection` |
-| Plan + calendar preview | `buildTimingTestPlan.ts`, `buildBestTimeCalendarPreview.ts` — audience timezone vs shown timezone; cadence rules documented in `benchmarkSlots.ts` module comment |
-| Shared page UI | `web/src/lib/ui/templates/best-time-to-post/BestTimeToPostToolPage.svelte`, `BestTimeToPostCalculatorPanel.svelte` |
-| Channel hub grid | `web/src/lib/ui/components/best-time-to-post/BestTimeToPostChannelHubGrid.svelte` — **By channel** on generic and channel pages |
-| Route helpers | `getRootPathPublicBestTimeToPost()` and `getRootPathPublicBestTimeToPostChannel(slug)` in `getRootPathPublicTools.ts` |
-
-### Auto-derived (no per-provider route files)
-
-- Channel pages at `/tools/best-time-to-post/{channelSlug}` via generic route + `publicBestTimeToPostChannelConfig.ts` (from `listAvailablePublicChannels()`).
-- Platform select options on the calculator use the same hub link list (`listBestTimeChannelsForHub()`).
-- SEO meta defaults from `platformLabel` + merged `keywords` from `channel catalog`.
-- Channel FAQ tailors the first two items (benchmark vs analytics, where clock times come from) from `platformLabel`.
-
-Channel pages **404** when the slug is missing from `channel catalog` or `available: false`.
-
-### Manual updates when shipping a new provider
-
-When go-live-ing a provider, add **platform-specific benchmark windows** in the **same PR** as `available: true`. Do not rely on `DEFAULT_WINDOWS` for a shipped channel unless you intentionally accept generic midweek afternoons until a dedicated table lands.
-
-| Artifact | Path / action |
-| --- | --- |
-| Platform window table | `benchmarkSlots.ts` — add `PLATFORM_WINDOWS['{slug}']` with seven `weekday` rows (1 = Mon … 7 = Sun), each with ordered `times` (first = primary for `3_per_week` Tue/Wed/Thu). Hours are **audience-local** clock times, not UTC. |
-| Identifier aliases | When composer / `platformId` uses a different key than the channel slug (e.g. `instagram-business`), duplicate or share the same `DayWindow[]` under both keys so the calculator never silently falls back. |
-| Research refresh | Update module comment themes as needed; set `BENCHMARK_SLOTS_LAST_REVIEWED` to the calendar date of the review. |
-| Hub card blurb (optional) | `publicBestTimeToPostChannelConfig.ts` — `CHANNEL_HUB_DESCRIPTIONS['{slug}']` for a sharper **By channel** card; otherwise a generic `${platformLabel} benchmark windows…` string is used. |
-| Extended tool SERP copy (optional) | `channels/tool-surfaces/{slug}.ts` — sparse `ChannelToolContentOverride` per tool; register in `CHANNEL_CONTENT_OVERRIDES` in `tools/{tool}/general.ts`. See **web-seo-pseo** (Tier 3). |
-
-**Cadence behavior** (do not reimplement in the provider PR — document slots accordingly):
-
-- `3_per_week` → Tuesday, Wednesday, Thursday only, **first** time in each day’s `times` array.
-- `daily` → all seven days, one slot per day (first time).
-- `2_per_day` / `3_per_day` → first two or three times per selected day.
-- Content type applies a small minute offset within the same local hour band (`CONTENT_TYPE_MINUTE_OFFSET`).
-
-The tool does **not** call integration APIs or read workspace analytics. Copy on the page and FAQ must stay aligned with that (benchmark timing **test plan**, not “your best hour”).
-
-## Programmatic Humanizer SEO (channel routes)
-
-Ship channel-specific **Humanizer** pages alongside the generic tool for **every public catalog channel**, including coming-soon scheduler networks (`available: false`). Humanizer is a local rewriter, not a publisher, so sample chips and `/tools/humanizer/{slug}` pages must not wait on `available: true`. Routes are **generic** — channel pages are **auto-derived** from `listPublicChannelsForHub()` (no new `+page` files per slug). The guest composer is mocked (no OAuth, no posts repository).
-
-| Artifact | Path / URL |
-| --- | --- |
-| Generic tool | `/tools/humanizer` — Global Edit mock, all catalog channels selectable (including coming-soon schedulers) |
-| Channel tool | `/tools/humanizer/{channelSlug}` — `{channelSlug}` matches catalog `slug` / `provider.identifier` (e.g. `linkedin`, `facebook`) |
-| Channel catalog | `web/src/lib/ai-humanize/constants/publicHumanizeChannelConfig.ts` — built from `listPublicChannelsForHub()` |
-| Page presenter | `web/src/lib/area-public/PublicHumanizePage.presenter.svelte.ts` — generic vs channel VM |
-| Guest composer | `web/src/lib/ai-humanize/PublicHumanizeComposer.presenter.svelte.ts` — local body/media/selection only |
-| Shared page UI | `web/src/lib/ui/templates/humanize/HumanizeToolPage.svelte` |
-| Channel hub grid | `web/src/lib/ui/components/humanize/HumanizeChannelHubGrid.svelte` — **For all** + **By channel** on generic and channel pages |
-| FAQ | `web/src/lib/ai-humanize/constants/publicHumanizeFaqConfig.ts` — generic + `buildHumanizeFaqSection(slug, label)` |
-| Route helpers | `getRootPathPublicHumanizer()` and `getRootPathPublicHumanizerChannel(slug)` in `getRootPathPublicTools.ts` |
-| Tools hub entry | `ChannelHubToolCard` on `/tools` — `ShiftingTabDropdown` with **For all** vs **By channel** tabs (`listHumanizeChannelsForHub()`) |
-
-### Auto-derived (no per-provider route files)
-
-- Channel pages at `/tools/humanizer/{channelSlug}` via generic route + `publicHumanizeChannelConfig.ts` (from `listPublicChannelsForHub()`).
-- Hub links and Tools card dropdown from `listHumanizeChannelsForHub()`.
-- SEO meta defaults from `platformLabel` + merged `keywords` from `channel catalog`.
-- Channel FAQ tailors the “what is Humanizer” and platform items from `platformLabel`.
-- Mock channels on the composer come from `listPublicChannelsForHub()`. Channel pages **preselect + focus** the matching mock (`composerMode: 'custom'`).
-
-Channel pages **404** only when the slug is missing from `channel catalog`. Do **not** 404 Humanizer pages for `available: false`.
-
-### Manual updates when shipping a new provider
-
-Catalog channels appear automatically when added to `channel catalog` — no extra Humanizer route files, and do not wait for `available: true`. Optional hub blurb:
-
-| Artifact | Path / action |
-| --- | --- |
-| Hub card blurb (optional) | `publicHumanizeChannelConfig.ts` — `CHANNEL_HUB_DESCRIPTIONS['{slug}']` for a sharper **By channel** card; otherwise a generic `Rewrite ${platformLabel} drafts…` string is used. |
-
-Do **not** claim detector-proof results in copy or FAQ. Humanizer rewrites so a draft reads less machine-written; users still review invented details in Roughen mode.
-
-## Programmatic Agent channel SEO (agent host routes)
-
-Ship platform-specific agent landing pages alongside the generic agent host page when a social provider is live (`available: true` on `channel catalog`). Routes are **generic** — adding a channel is a **catalog + bento + CLI recipe update** (no new `+page` files per slug).
-
-| Artifact | Path / URL |
-| --- | --- |
-| Generic agent host (all platforms) | `/agents/openclaw`, `/agents/hermes` — multi-platform kanban bento (`agent-multi-platform-bulk-scheduling`) |
-| Agent channel page | `/agents/{agentSlug}/{channelSlug}` — e.g. `/agents/openclaw/facebook`; `{channelSlug}` matches catalog `slug` |
-| Supported agent slugs | Agent hosts (`openclaw`, `hermes`) and **all live MCP clients** (`claude-cowork`, `cursor`, `codex`, …) from `publicMcpConfig.ts` |
-| Channel catalog | `web/src/lib/content/constants/publicAgentChannelConfig.ts` — bento IDs, listing tag, SEO meta, CLI command reference |
-| Landing VM builder | `buildAgentChannelLandingVm.ts` (agent hosts) and `buildMcpChannelLandingVm.ts` (MCP clients) — merge base VM with platform copy and showcases |
-| Feature section overrides | `buildAgentsChannelFeatureSections.ts` — shared kanban/analytics bento + CLI or MCP prompt snippets |
-| CLI command reference | `web/src/lib/content/utils/buildAgentChannelCliCommandReference.ts` — per-platform commands aligned with `agent/skills/openquok-core/resources/{id}-examples.md` and `examples/*.json` |
-| Opportunities preview filter | `loadAgentOpportunitiesPreviewStateless({ listingTagSlug })` — playbooks + building blocks filtered by `listing_tags.slug` |
-| Presenter | `PublicAgentByPagePresenter.loadAgentChannelStateless(agentSlug, channelSlug)` |
-| Shared page UI | `web/src/lib/ui/templates/landing-page/PublicAgentLandingPage.svelte` and `PublicMcpLandingPage.svelte` — coming-soon channels pass `isChannelComingSoon` (hero swap + skip listings preview) |
-| Route helper | `getRootPathPublicAgentChannel(agentSlug, channelSlug)` in `getRootPathPublicAgents.ts` |
-| Route files | `web/src/routes/(public)/agents/[slug]/[channelSlug]/+page.server.ts` (+ `+page.ts`, `+page.svelte`) |
-
-MCP channel pages use **example prompts** (not CLI commands) in kanban/analytics feature rows. Generic MCP pages (`/agents/{mcpSlug}`) use the **multi-platform** kanban bento (`agent-multi-platform-bulk-scheduling`), same as generic agent host pages.
-
-Agent channel pages 404 only when the agent/MCP slug or channel slug is missing from the catalogs. `available: false` on the channel still resolves the route (coming-soon hero, no listings preview; MCP clients derive per-channel config via `getPublicAgentChannelBySlug`).
-
-Derived from the base agent host VM (`publicAgentConfig.ts`) plus `buildAgentChannelLandingVm` / `buildMcpChannelLandingVm`:
-
-| Section | Channel-specific behavior |
-| --- | --- |
-| Hero | `Schedule {Platform} from {AgentLabel} then you approve` |
-| Kanban feature row | Copy + bento from catalog `featureSections[1]` (compose/settings — same as `/channels/{slug}` section 2, e.g. Facebook **Video & links**) |
-| Analytics feature row | Copy + bento from catalog `featureSections[2]` (insights — same as `/channels/{slug}` section 3) |
-| Playbooks & Building Blocks | Filtered by `listingTagSlug` (= channel slug); see-all links → `/playbooks/tags/{slug}` and `/building-blocks/tags/{slug}` |
-| Command reference | Platform CLI table (agent hosts only) from `buildAgentChannelCliCommandReference` |
-| WhoIsFor | Channel catalog via **`getPublicChannelBySlug`** on `/channels/{slug}`; agent × channel via **`buildAgentsChannelAudienceSection`** + **`resolveAgentChannelAudienceCards`** — ecosystem rules: **web-seo-agent-ecosystems** |
-| FAQ | Platform-focused titles and answers |
-
-Generic `/agents/openclaw` and generic MCP pages (e.g. `/agents/claude-cowork`) keep **social media** hero copy and the **multi-platform** kanban mock (`agentMultiPlatformKanbanMock.ts`). When go-live-ing a new provider, add a representative card there so generic agent and MCP pages reflect the expanded catalog.
-
-### Catalog entry (`publicAgentChannelConfig`)
-
-Host channel VMs: `agents/channels/{host}.ts` (from `listPublicChannelsForHub()`). MCP × channel: composed per **web-seo-pseo** file map (`mcps/channels/index.ts`). New catalog channels appear on agent/MCP channel routes **after** bento showcases and CLI/MCP examples exist. When adding or go-live-ing a provider, also update:
-
-1. **`CHANNEL_PROVIDER_IDENTIFIERS`** in `publicAgentChannelConfig.ts` — jq filter ids (match `integrations:list` identifiers; mirror Skill Builder).
-2. **`KANBAN_BENTO_BY_CHANNEL`** and **`ANALYTICS_BENTO_BY_CHANNEL`** — map slug → `{slug}-bulk-scheduling` and `{slug}-insights` (requires bento IDs in `channels/catalog/feature-bento.ts` and branches in `BentoPublicChannelFeature.svelte`; same bar as `/channels/{slug}`).
-3. **`CHANNEL_CLI_RECIPES`**, **`KANBAN_EXAMPLE_BY_CHANNEL`**, and **`kanbanMcpPrompts` / `analyticsMcpPrompts`** in `publicAgentChannelConfig.ts` / `buildAgentChannelCliCommandReference.ts` — CLI commands (agent hosts) and example prompts (MCP clients), aligned with `resources/{id}-examples.md` and `examples/*.json`.
-4. **`agentMultiPlatformKanbanMock.ts`** (optional but recommended) — one mock kanban card for the new platform on generic agent host pages.
-
-5. **Agent × channel feature rows (no analytics):** when the provider is **not** on `SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS`, `buildAgentsChannelFeatureSections.ts` merges the channel `*-follow-ups` (or `*-threads`) row into the host “Analytics” slot and **drops** “Scale what works”. Do not add `{slug}-insights` bento or analytics CLI on agent landings for extension-only / no-insights networks.
-
-## Programmatic tool routes (pSEO)
-
-| Tool | Route | When the channel appears | Tailoring (same PR as catalog or go-live prep) |
-| --- | --- | --- | --- |
-| **Humanizer** | `/tools/humanizer/{slug}` | **Every** `listPublicChannelsForHub()` entry (including `available: false`) | Optional `CHANNEL_HUB_DESCRIPTIONS` in `channels/tools/humanizer/general.ts` |
-| **Payload wizard** | `/tools/payload-wizard/{slug}` | Every slug in `PUBLIC_API_POSTING_PLATFORM_SLUGS` (auto from API catalog) | Optional `CHANNEL_HUB_DESCRIPTIONS` in `channels/tools/payload-wizard/general.ts`; examples from `formatExamples.ts` |
-| **Skill Builder** | `/tools/skill-builder/{slug}` | **Live** schedulers (`available: true`) **plus** coming-soon catalog channels with `CHANNEL_RECIPES` (`listSkillBuilderCatalogChannels`) | `CHANNEL_PROVIDER_IDENTIFIERS` + `CHANNEL_RECIPES` in `channels/tools/skill-builder/general.ts`; payloads in `skillBuilderChannelExamplePayloads.ts`; hub shows **Scheduler soon** when `schedulerAvailable` is false |
-| **Photo Editor** | `/tools/photo-editor/{slug}` | `available: true` only | `aspectRatioPresets.ts` — preset rows + `ASPECT_RATIO_PLATFORM_GROUPS` + `aspectPlatformGroupIdForProviderIdentifier`; Tier-3 copy in `tool-surfaces/{slug}.ts` |
-| **Best Time to Post** | `/tools/best-time-to-post/{slug}` | `available: true` only | `benchmarkSlots.ts` → `PLATFORM_WINDOWS['{slug}']`; Tier-3 copy in `tool-surfaces/{slug}.ts` (honest: benchmark plan, not platform analytics) |
-| **Payload wizard (account)** | `/account/payload-wizard` | Protected app — not channel SEO | — |
-
-**Tier-3 tool copy (Skill Builder, Photo Editor, Best Time):** add `web/src/lib/content/constants/channels/tool-surfaces/{slug}.ts`, register in `tool-surfaces/shared/channelToolSurfaceMetaBySlug.ts` (`TOOL_SURFACE_CHANNEL_SLUGS` + `TOOL_SURFACE_CHANNEL_META`). Coming-soon channels (`available: false`) may ship meta **before** go-live so Skill Builder / Photo Editor / Best Time routes work the day `available` flips — Humanizer and Payload wizard do not need `available: true`.
-
-**Browser extension / no analytics:** Best Time and Photo Editor FAQ copy must **not** claim OpenQuok or Skool-style analytics; Skill Builder recipes should mention extension connect when `isChromeExtension`.
-
-## PR self-check
-
-- Provider registered in `integrationManager.ts` and `getLaunchProviderConfig` (if composer support).
-- **OAuth only:** Redirect URI in platform console matches `/integration/oauth/{identifier}` exactly.
-- **Credentials only:** no new env vars; docker-compose callout that there is no operator app; dashboard Add Channel / refresh connect works; `GET /public/social/{identifier}` returns 400.
-- **Browser extension only:** `VITE_OPENQUOK_BROWSER_EXTENSION_ID` on web; extension package + cookie catalog; connect returns `extensionToken`; `GET /public/social/{identifier}` returns 400; legal/privacy/cookie docs mention extension session handling.
-- `providerSettings` shape documented for CLI (`providerSettingsByIntegrationId`) and resolved in backend publish code.
-- Unit tests added/updated for non-trivial paths.
-- **`web/src/data/social-providers.ts`:** display name + icon for new slug; **`SUPPORTED_ANALYTICS_PROVIDER_IDENTIFIERS`** includes exact `provider.identifier` when `analytics()` / `postAnalytics()` ship (not a parent alias like `instagram` for `instagram-business`).
-- **`channels/catalog/platforms/{slug}.ts`:** `slug` / `platformId` match `provider.identifier`; `docsPath` matches setup guide; `available` reflects ship state; **`featureSections` use `bentoId`**, not generic `/landing/*.mp4`, at go-live; **each `featureSections[].title` has ≥3 comma-separated phrases**.
-- **Feature bento:** IDs in `channels/catalog/feature-bento.ts` (and related router/mock files under `bento/minor-templates/`); branches in `BentoPublicChannelFeature.svelte`; showcases match shipped features only.
-- **Build Backlinks `schedule_post`:** `{catalogSlug}-post-editor` (or `COMPOSER_BENTO_BY_CATALOG_SLUG` fallback) registered in `resolveSchedulePostComposerBentoId.ts`; `INTEGRATION_ID_TO_CATALOG_SLUG` when `provider.identifier` differs from catalog slug; unit test in `resolveSchedulePostComposerBentoId.test.ts`.
-- **Landing page:** hero + feature sections + FAQ filled; **copy is problem-first, user-facing, and ASD-STE100** (short sentences, active voice, `you`; not feature/spec lists); hero + feature CTAs from `hero-copy.ts` → `/pricing`.
-- **Marketing platform icon strips (three surfaces):** `landing-social-platforms.ts` (`HERO_SOCIAL_PLATFORMS` + features grid rows); `README.md` icon row + prose + `assets/readme/socials/{slug}.svg`; `getting-started/index.md` + `web/static/docs/_assets/platforms/socials/{slug}.svg`; mirror row on `platforms/index.md` and `platforms/connect-rules.md` (see **Marketing platform icon strips** above).
-- **Compare / alternatives:** OpenQuok channel column auto-updates from catalog seeds via `listAvailablePublicChannelCompareLabels()` — no `openquok.ts` channel edits; add the network to relevant `competitors/{vendor}.ts` `channels` when the competitor publishes it (e.g. Postiz + Skool); spot-check `/compare/openquok/{competitor}`.
-- **Hub:** new channel appears on `/channels` (coming-soon badge or live link).
-- **Site footer:** no manual `PUBLIC_FOOTER_LINKS` / `buildPublicFooterLinks.ts` edits for the provider slug — **Supported Channels** picks up the catalog entry; **How to self-host with different social channels** picks up `social-integration/{identifier}.md` (non-draft, with `title` + `order`); tool columns follow live-channel rules above. Spot-check footer labels and hrefs before merge.
-- **Connect user guide:** `web/src/content/docs/channels/connect.md` — OAuth, credentials, and browser-extension tabs; `platforms/connect-rules.md` fourth family row; invite-link note for `customFields` / `isChromeExtension`.
-- **Agent skill:** `resources/{identifier}-examples.md` with Supported features + Agent tasks + Provider settings + recipes; `SKILL.md` **Channels** row updated; `web/src/content/docs/cli-examples/{id}.md` shipped or updated for human docs; sync `web/src/content/docs/public-api-providers/{identifier}.md` when `providerSettingsByIntegrationId` shapes change.
-- **Public API provider docs:** `web/src/content/docs/public-api-providers/{identifier}.md` with correct `{DisplayName} Settings` title; hub `index.md` catalog row + LinkCard; `platforms/connect-rules.md` catalog row when new network; follow-up/plug sections match shipped backend only.
-- **Platforms media and settings:** `media-rules.md` — caps table, follow-up media row (if applicable), caption editor row, settings-only media (if applicable); `per-channel-settings.md` — `### {Display name}` Settings table + connect callouts; both `lastUpdated` bumped (see **Platforms media and settings** above).
-- **Self-host (OAuth):** new OAuth env keys in `infra/self-host/.env.example` (Social provider apps); matching row in `web/src/content/docs/installation/docker-compose.md` **Optional: Social provider apps**; do not add secrets to the `web` Compose service (API/workers only via `.env`).
-- **Self-host (credentials):** no `{PROVIDER}_*` keys; docker-compose notes that the channel uses a user API key in the dashboard.
-- **Skill Builder SEO:** `CHANNEL_PROVIDER_IDENTIFIERS` + `CHANNEL_RECIPES` in `channels/tools/skill-builder/general.ts`; example payloads in `skillBuilderChannelExamplePayloads.ts`; `/tools/skill-builder/{slug}` resolves for `listSkillBuilderCatalogChannels()` (live **or** recipes-ready coming-soon); hub **Scheduler soon** badge when catalog `available: false`.
-- **Payload wizard SEO:** slug on `PUBLIC_API_POSTING_PLATFORM_SLUGS` + `formatExamples.ts`; optional hub blurb in `channels/tools/payload-wizard/general.ts`; `/tools/payload-wizard/{slug}` auto-ships with API catalog (no `available` gate).
-- **Tool surfaces (Tier 3):** `tool-surfaces/{slug}.ts` + registry in `channelToolSurfaceMetaBySlug.ts` (see **Programmatic tool routes** table); `overrides.registry.test.ts` — every live channel has meta; coming-soon may register meta before go-live.
-- **Photo Editor SEO:** aspect presets + platform group + `aspectPlatformGroupIdForProviderIdentifier` mapping for the new identifier; `/tools/photo-editor/{slug}` resolves when channel is live; channel page defaults to the platform’s first preset (not General); Tools hub Photo Editor card shows the new channel in the **By channel** dropdown.
-- **Best Time to Post:** `PLATFORM_WINDOWS['{identifier}']` in `benchmarkSlots.ts` (no silent `DEFAULT_WINDOWS` for a live channel); `BENCHMARK_SLOTS_LAST_REVIEWED` updated when windows change; optional `CHANNEL_HUB_DESCRIPTIONS` entry; `/tools/best-time-to-post/{slug}` resolves when channel is live; calculator platform picker and **By channel** hub include the new channel automatically.
-- **Humanizer:** all public catalog channels (including coming-soon schedulers) appear as mock chips on `/tools/humanizer` and as `/tools/humanizer/{slug}` pages automatically; optional `CHANNEL_HUB_DESCRIPTIONS` hub blurb; Tools hub Humanizer card shows the new channel in the **By channel** dropdown. Copy and FAQ stay honest (no classifier guarantees). Do not gate Humanizer samples on `available: true`.
-- **Agent channel SEO:** `CHANNEL_PROVIDER_IDENTIFIERS`, `KANBAN_BENTO_BY_CHANNEL`, and (only when analytics ships) `ANALYTICS_BENTO_BY_CHANNEL` in `agents/channels/general.ts`; CLI/MCP strings in `buildAgentChannelCliCommandReference.ts`; `/agents/{agentSlug}/{slug}` resolves for all catalog channels on **agent hosts and MCP clients** (coming-soon when `available: false`); when **no** `analytics()`, verify agent/MCP pages omit analytics “Scale what works” rows (`buildAgentsChannelFeatureSections.ts`); generic agent/MCP kanban mock updated when the catalog gains a platform.
-- **Listing tags:** do **not** edit SQL seeds or re-aggregate migrations. Create the tag in `/secret-admin/catalog-manager/tags` with a **Name** that slugs to `provider.identifier` and a one-sentence description; optional attach on openquok-core listings via the tags picker.
-- **Post Preview:** `{id}Preview.svelte` + `ShowAllProviders` branch for the new identifier; shared `postMediaPreviewUrl` / `effectivePreviewMediaUrls` wired; **preview layout fix checklist** completed for image/video networks (phone `max-w`, fixed aspect, `ImageSlider` variant, `classify*PreviewMediaMode` + tests, `mediaStoragePaths` on branch); update **Preview layout status** table in this rule when shipping layout work; public `/p/[postId]` matches composer; when compose settings ship, preview reads `providerSettings` via `read*LaunchSettings`; `AddEditModal` derives settings from `previewChannel.id` (not `followUpTargetIntegrationId`); `ShowAllProviders` passes `providerSettings` to every preview that consumes it.
-- **Follow-up comments:** when `comment()` ships — `followUp.ts` + `replyChainBucketForProvider` + orchestrator `supportsFollowUps` updated; launch `postComment` / `comments` set; `{bucket}.replies` documented in agent + CLI examples; `threads-and-comments.md` platform row; landing/bento copy matches composer (text-only vs media-on-replies); preview/bento show `threadReplies` when marketed.
-- **Cross-account plugs:** when `internalPlugCatalog()` ships cross-account entries — orchestrator plug handlers + `{bucket}.crossAccountPlugs` persistence; extend `CrossAccountPlugSettingsBucket` + `crossAccountSettingsBucketForIdentifier`; `{Provider}CrossAccountPlugsPreview.svelte` wired from `{id}Preview.svelte`; `ShowAllProviders` passes/derives `crossAccountPlugs`; dynamic engagement counts in preview; plug dialog settings flush on close; bento mocks when marketed; agent/MCP docs for `{bucket}.crossAccountPlugs`.
-- **Writing the post:** `writing-the-post.md` **Editor by platform** table lists the new channel under the correct **Standard** / **Markdown** / **HTML** / **Plain** row; `lastUpdated` bumped.
+| Setup | `social-integration/{id}.md` + index LinkCard |
+| Connect | `channels/connect.md`, `platforms/connect-rules.md` |
+| Public API page | `public-api-providers/{identifier}.md` + index; **public-api-surface-sync** (Swagger, SDK, MCP docs if exposed) |
+| Platforms | `media-rules.md`, `per-channel-settings.md` |
+| CLI | `cli-examples/{id}.md` |
+| Agent | `SKILL.md` row; `resources/{id}-examples.md` (terse, not landing prose) |
+| Editor table | `creating-posts/writing-the-post.md` from `SocialProvider.editor` |
+| Follow-ups | `creating-posts/threads-and-comments.md` when applicable |
+| Self-host | OAuth: `.env.example` + `docker-compose.md` row; credentials/extension: no operator secrets |
+
+## PR checklist
+
+Use as the execution list; details above only when you need them.
+
+**Backend & connect**
+
+- [ ] `SocialProvider` + `integrationManager.ts`; tests for connect/publish/follow-ups/plugs
+- [ ] Connect family: OAuth env **or** credentials/extension rules; `GET /public/social/{id}` → 400 for non-OAuth public connect
+- [ ] Extension: cookie catalog, `extension/`, `extensionToken`, refresh route, legal/docs
+- [ ] `providerSettings` resolvers + CLI/API shapes documented
+- [ ] Analytics allow-list only if `analytics()` ships
+
+**Web**
+
+- [ ] Launch config + preview (+ settings preview wiring) + optional `SettingsAccordion`
+- [ ] `social-providers.ts` display + icon
+- [ ] Follow-up / plug gates only if backend supports them
+- [ ] `writing-the-post.md` editor row when composer ships
+
+**Catalog & marketing**
+
+- [ ] `channels/catalog/platforms/{slug}.ts` + `seeds.ts`; `available` correct
+- [ ] Go-live: three bentos; feature copy matches shipped behavior only
+- [ ] Icon strips ×3 + README SVG; compare competitor `channels` if applicable
+- [ ] Secret-admin listing tag (no SQL)
+- [ ] Spot-check: `/channels/{slug}`, footer links, `/compare/openquok/{competitor}`
+
+**Tools & agent (by gate)**
+
+- [ ] Humanizer: auto from catalog; optional hub blurb
+- [ ] Skill Builder recipes (+ payloads) for coming-soon or live
+- [ ] Photo Editor + Best Time only when `available: true` (presets / `PLATFORM_WINDOWS`)
+- [ ] `tool-surfaces/{slug}.ts` when using Tier-3 copy
+- [ ] Agent channel: bentos, CLI/MCP, `buildAgentsChannelFeatureSections` (no fake analytics)
+- [ ] Build-backlinks composer bento when go-live with composer
+
+**Docs & API surface**
+
+- [ ] `social-integration`, `connect-rules`, `media-rules`, `per-channel-settings`
+- [ ] `public-api-providers/{id}.md` + OpenAPI/SDK/MCP/docs per **public-api-surface-sync** if route is public
+- [ ] `cli-examples`, `resources/{id}-examples.md`, `SKILL.md`
+- [ ] `threads-and-comments.md` row if follow-ups ship
+
+**Do not**
+
+- Hand-edit `openquok.ts` channel list, `PUBLIC_FOOTER_LINKS`, or per-channel nav for each slug
+- SQL-seed listing tags or oversell analytics / follow-ups on extension-only channels
+- Ship go-live channel pages with placeholder MP4 instead of bentos
