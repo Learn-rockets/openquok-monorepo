@@ -7,6 +7,14 @@
 
 node_modules
 
+# Browser extension (not built on Vercel; keep extension/package.json for the workspace)
+extension/dist
+extension/node_modules
+extension/openquok-browser-extension.zip
+extension/src
+extension/scripts
+extension/icons
+
 # Local caches and prior build output (not needed for upload; can be 1GB+)
 .pnpm-store
 **/.svelte-kit

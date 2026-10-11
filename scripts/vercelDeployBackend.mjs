@@ -27,6 +27,10 @@ agent/server/src
 agent/server/src/**
 sdk/src
 sdk/src/**
+extension/src
+extension/src/**
+extension/scripts
+extension/scripts/**
 `;
 
 let orgId = process.env.VERCEL_ORG_ID;

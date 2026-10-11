@@ -6,5 +6,7 @@ agent
 agent/**
 sdk
 sdk/**
+extension
+extension/**
 .backups
 .backups/**

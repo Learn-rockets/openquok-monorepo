@@ -2,6 +2,7 @@
 /node_modules
 /orchestrator/node_modules
 /common/node_modules
+/extension/node_modules
 .pnpm-store
 
 # Generated files
@@ -10,6 +11,8 @@
 # /backend/integrations/providers/*.js
 /common/dist
 /orchestrator/dist
+/extension/dist
+/extension/openquok-browser-extension.zip
 
 # Dotenv / env (never commit secrets; keep example files)
 .env

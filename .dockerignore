@@ -33,5 +33,6 @@ orchestrator/**/*.test.ts
 # Large or irrelevant paths for app images
 agent/server/node_modules
 agent/server/dist
+extension
 sdk
 LICENSE
