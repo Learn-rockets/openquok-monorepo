@@ -33,11 +33,12 @@ export const grokBotAgent = {
 		'xAI Grok social scheduling',
 		'Cursor Grok Bot',
 		'Cursor Grok Bot OpenQuok',
-		'Cursor Ultra Grok Bot scheduling',
-		'Cursor Teams Premium Grok Bot',
+		'Cursor Pro Grok Bot scheduling',
+		'Cursor Teams Grok Bot',
 		'SpaceX Grok Bot scheduling',
 		'openquok-core skill',
 		'Grok Bot routines social posts',
+		'SuperGrok OpenQuok',
 		'SuperGrok Heavy OpenQuok',
 		'agentic social media scheduler',
 		'Grok teammate schedule posts',
@@ -65,7 +66,7 @@ export const grokBotAgent = {
 			iconClass: 'text-neutral-300',
 			title: 'Eligible plan subscribers',
 			description:
-				'You create a Bot on SuperGrok Heavy, Cursor Ultra, or Cursor Teams Premium. Each Bot is an always-on teammate with its own environment.',
+				'You create a Bot on Cursor Pro, Pro+, Ultra, or self-serve Teams, or link SuperGrok / X Premium+ per Cursor’s plan matrix. Each Bot is an always-on teammate with its own environment.',
 			containerClass: 'h-full min-h-[18rem]'
 		},
 		{
@@ -284,7 +285,7 @@ openquok analytics:post <post-id> -d 30`
 		{
 			title: 'Which plans can use Grok Bot?',
 			description:
-				`Grok Bot requires an eligible subscription such as SuperGrok Heavy, Cursor Ultra, or Cursor Teams Premium. Sign in with your Cursor account when you install the desktop or iOS app. OpenQuok billing is separate — you still need an OpenQuok workspace and connected channels. Plan limits are on ${faqLink(publicFaqHref.pricing, 'Pricing')}.`
+				`Grok Bot is included with Cursor Pro, Pro+, Ultra, and self-serve Cursor Teams — sign in with the same Cursor account on desktop or iOS. You can also link individual SuperGrok, SuperGrok Plus, SuperGrok Heavy, or X Premium+, or sign in with a self-serve Grok Business seat; weekly usage tiers do not stack. SuperGrok Lite is not included. See ${faqLink('https://cursor.com/help/grok-bot/plans', 'Cursor Grok Bot plans and billing')}. OpenQuok billing is separate — you still need a workspace and connected channels on ${faqLink(publicFaqHref.pricing, 'Pricing')}.`
 		},
 		{
 			title: 'How do I install the openquok-core skill in Grok Bot?',
