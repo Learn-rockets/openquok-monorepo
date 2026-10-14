@@ -24,6 +24,7 @@ import {
 	metaMuseAgentChannelHost
 } from '$lib/content/constants/agents/channels/meta-muse';
 import { manusAgentChannelConfigs, manusAgentChannelHost } from '$lib/content/constants/agents/channels/manus';
+import { geminiAgentChannelConfigs, geminiAgentChannelHost } from '$lib/content/constants/agents/channels/gemini';
 import { hermesAgentChannelConfigs, hermesAgentChannelHost } from '$lib/content/constants/agents/channels/hermes';
 import {
 	openclawAgentChannelConfigs,
@@ -51,6 +52,7 @@ export {
 	metaMuseAgentChannelConfigs
 } from '$lib/content/constants/agents/channels/meta-muse';
 export { manusAgentChannelHost, manusAgentChannelConfigs } from '$lib/content/constants/agents/channels/manus';
+export { geminiAgentChannelHost, geminiAgentChannelConfigs } from '$lib/content/constants/agents/channels/gemini';
 
 /** Agent host slugs that support `/agents/{agentSlug}/{channelSlug}` SEO pages. */
 export const PUBLIC_AGENT_CHANNEL_HOST_SLUGS = [
@@ -60,7 +62,8 @@ export const PUBLIC_AGENT_CHANNEL_HOST_SLUGS = [
 	'dots',
 	'thinkrail',
 	'meta-muse',
-	'manus'
+	'manus',
+	'gemini'
 ] as const;
 
 export type PublicAgentChannelHostSlug = (typeof PUBLIC_AGENT_CHANNEL_HOST_SLUGS)[number];
@@ -75,7 +78,8 @@ const channelConfigsByHostSlug: Record<
 	dots: dotsAgentChannelConfigs,
 	thinkrail: thinkrailAgentChannelConfigs,
 	'meta-muse': metaMuseAgentChannelConfigs,
-	manus: manusAgentChannelConfigs
+	manus: manusAgentChannelConfigs,
+	gemini: geminiAgentChannelConfigs
 };
 
 const channelConfigByHostAndSlug = new Map<string, PublicAgentChannelPageConfig>();
@@ -180,5 +184,6 @@ export const AGENT_CHANNEL_HOSTS = [
 	dotsAgentChannelHost,
 	thinkrailAgentChannelHost,
 	metaMuseAgentChannelHost,
-	manusAgentChannelHost
+	manusAgentChannelHost,
+	geminiAgentChannelHost
 ] as const;
