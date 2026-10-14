@@ -1,3 +1,4 @@
+import { AGENTS_HUB_CLOUD_BROWSER_VS_OPENQUOK_FAQ } from '$lib/content/constants/agents/agentCloudSchedulingFaq';
 import type { PublicAgentsHubCompareSection, PublicAgentsHubFaqSection } from '$lib/content/constants/agents/types';
 import {
 	appendPublicGeneralFaqItems,
@@ -93,7 +94,8 @@ export const PUBLIC_AGENTS_HUB = {
 				title: 'Do I still approve posts before they publish?',
 				description:
 					'Yes, regardless of path. Agent hosts and MCP clients create drafts or scheduled items in your OpenQuok workspace. Nothing goes live on autopilot — review on the calendar or kanban and approve what should publish.'
-			}
+			},
+			AGENTS_HUB_CLOUD_BROWSER_VS_OPENQUOK_FAQ
 		],
 			PUBLIC_AGENTS_HUB_FAQ_ITEM_IDS
 		)

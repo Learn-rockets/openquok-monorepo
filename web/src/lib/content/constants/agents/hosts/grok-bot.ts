@@ -7,6 +7,7 @@ import {
 	OPENQUOK_CLI_COMMAND_REFERENCE
 } from '$lib/content/constants/agents/cli-command-reference';
 import { PUBLIC_AGENT_OPPORTUNITIES_PREVIEW_SECTION } from '$lib/content/constants/agents/general';
+import { buildAgentCloudBrowserVsOpenQuokFaqItem } from '$lib/content/constants/agents/agentCloudSchedulingFaq';
 import {
 	buildPublishApprovalFaqAnswer,
 	COMPARISON_PUBLISH_CHOICE_FEATURE,
@@ -275,7 +276,7 @@ openquok analytics:post <post-id> -d 30`
 	faqSubtitle: 'Frequently asked questions',
 	faqTitle: 'Grok Bot + OpenQuok, answered',
 	faqDescription:
-		'What Grok Bot is, plan eligibility, how to install openquok-core, shared computer credentials, human approval, and why CLI beats MCP-only for scheduling.',
+		'What Grok Bot is, plan eligibility, cloud browser vs official APIs, how to install openquok-core, credential safety, human approval, and why CLI beats MCP-only for scheduling.',
 	faqItems: [
 		{
 			title: 'What is Grok Bot?',
@@ -302,6 +303,7 @@ openquok analytics:post <post-id> -d 30`
 			description:
 				`Draft and schedule posts, upload media, configure plugs, and pull analytics across your connected channels. See ${faqLink(publicFaqHref.channels, 'supported channels')} and ${faqLink(publicFaqHref.cliManagingPosts, 'CLI post commands')}; openquok-core returns structured JSON for the agent.`
 		},
+		buildAgentCloudBrowserVsOpenQuokFaqItem('Grok Bot'),
 		{
 			title: 'Which social media platforms are supported?',
 			description:
