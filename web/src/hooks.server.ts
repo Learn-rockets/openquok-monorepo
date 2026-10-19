@@ -1,4 +1,4 @@
-import { redirect, type Handle } from '@sveltejs/kit';
+import { redirect, type Handle, type HandleFetch } from '@sveltejs/kit';
 
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
@@ -14,6 +14,8 @@ import {
 	getRootPathCatalogManagerSegment,
 	getRootPathSecretAdminArea
 } from '$lib/area-admin/constants/getRootPathSecretAdminArea';
+import { appendVisitorClientIpHeaders } from '$lib/core/ssrVisitorClientIpHeaders';
+import { isSsrBackendApiRequest } from '$lib/core/resolveSsrBackendApiRequest';
 import { route } from '$lib/utils/path';
 
 const LEGACY_SECRET_ADMIN_LISTING_MANAGER_SEGMENT = 'listing-manager';
@@ -99,13 +101,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			// Vite dev SSR cannot always resolve a client IP for proxied `/api` fetches.
 			clientAddress = undefined;
 		}
-		if (clientAddress) {
-			const prior = event.request.headers.get('x-forwarded-for');
-			headers.set(
-				'x-forwarded-for',
-				prior?.trim() ? `${prior}, ${clientAddress}` : clientAddress
-			);
-		}
+		appendVisitorClientIpHeaders(event.request.headers, headers, clientAddress);
 
 		const init: RequestInit = {
 			method: event.request.method,
@@ -144,4 +140,21 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	const response = await resolve(event);
 	return maybeEnsureUtf8Charset(response);
+};
+
+export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
+	if (!isSsrBackendApiRequest(new URL(request.url))) {
+		return fetch(request);
+	}
+
+	const headers = new Headers(request.headers);
+	let clientAddress: string | undefined;
+	try {
+		clientAddress = event.getClientAddress();
+	} catch {
+		clientAddress = undefined;
+	}
+	appendVisitorClientIpHeaders(event.request.headers, headers, clientAddress);
+
+	return fetch(new Request(request, { headers }));
 };
