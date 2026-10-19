@@ -3,7 +3,7 @@ import type { BlogPostCommentViewModel } from '$lib/blogs/GetBlog.presenter.svel
 
 import { error } from '@sveltejs/kit';
 
-import { throwPublicCmsLoadError } from '$lib/core/publicCmsLoadErrors';
+import { throwPublicCmsLoadError } from '$lib/public-cms';
 
 import {
 	buildBlogInlineImageSrc,

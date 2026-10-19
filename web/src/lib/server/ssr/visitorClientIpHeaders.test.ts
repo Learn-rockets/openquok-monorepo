@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { appendVisitorClientIpHeaders } from './ssrVisitorClientIpHeaders';
+import { appendVisitorClientIpHeaders } from './visitorClientIpHeaders';
 
 describe('appendVisitorClientIpHeaders', () => {
 	it('never forwards cf-connecting-ip to the API', () => {

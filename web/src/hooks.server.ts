@@ -14,8 +14,7 @@ import {
 	getRootPathCatalogManagerSegment,
 	getRootPathSecretAdminArea
 } from '$lib/area-admin/constants/getRootPathSecretAdminArea';
-import { appendVisitorClientIpHeaders } from '$lib/core/ssrVisitorClientIpHeaders';
-import { isSsrBackendApiRequest } from '$lib/core/resolveSsrBackendApiRequest';
+import { appendVisitorClientIpHeaders, isSsrBackendApiRequest } from '$lib/server/ssr';
 import { route } from '$lib/utils/path';
 
 const LEGACY_SECRET_ADMIN_LISTING_MANAGER_SEGMENT = 'listing-manager';

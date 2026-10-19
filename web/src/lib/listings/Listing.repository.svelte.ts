@@ -8,7 +8,7 @@ import {
 import {
 	publicCmsEditorManagedDetailRequestOptions,
 	publicCmsServerRequestOptions
-} from '$lib/core/publicCmsFetch';
+} from '$lib/public-cms';
 
 import {
 	getDefaultSchemaTypeForListingKind,

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { ApiError } from '$lib/core/HttpGateway';
-import { throwPublicCmsLoadError } from '$lib/core/publicCmsLoadErrors';
+import { throwPublicCmsLoadError } from '$lib/public-cms/loadErrors';
 
 function apiError(status: number): ApiError {
 	return new ApiError(`Request failed with status ${status}`, {
