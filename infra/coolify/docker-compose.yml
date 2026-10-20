@@ -1,0 +1,152 @@
+# OpenQuok on Coolify — pull-only (images built by .github/workflows/coolify-images.yml).
+#
+# Coolify settings:
+#   Build pack: Docker Compose
+#   Base directory: /infra/coolify          (Coolify writes .env here; services read it via env_file)
+#   Docker Compose location: /docker-compose.yml
+#   Domains: web -> https://<your-domain>:3000
+#   Env: OPENQUOK_IMAGE_REGISTRY=ghcr.io/<your-github-username-lowercase> plus the app env vars.
+
+name: openquok
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  # Named volumes are root-owned; chown so the image `node` user (uid 1000) can write uploads.
+  uploads-init:
+    image: busybox:1.36
+    volumes:
+      - uploads-data:/uploads
+    command: ["sh", "-c", "chown -R 1000:1000 /uploads"]
+    restart: "no"
+
+  api:
+    image: ${OPENQUOK_IMAGE_REGISTRY}/openquok-api:${OPENQUOK_IMAGE_TAG:-latest}
+    pull_policy: always
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      UPLOAD_DIRECTORY: /uploads
+      # Workers own BullMQ jobs; do not also run refresh loops inside the API.
+      ENABLE_INTEGRATION_REFRESH_ORCHESTRATOR: "false"
+    volumes:
+      - uploads-data:/uploads
+    depends_on:
+      redis:
+        condition: service_healthy
+      uploads-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 90s
+
+  # VITE_* are baked into this image by the GitHub workflow (repo variables), not read at runtime.
+  web:
+    image: ${OPENQUOK_IMAGE_REGISTRY}/openquok-web:${OPENQUOK_IMAGE_TAG:-latest}
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      HOST: "0.0.0.0"
+      PORT: "3000"
+      OPENQUOK_API_PROXY_TARGET: http://api:3000
+      MAINTENANCE_MODE: ${MAINTENANCE_MODE:-off}
+    depends_on:
+      api:
+        condition: service_healthy
+
+  worker-integration-refresh:
+    image: ${OPENQUOK_IMAGE_REGISTRY}/openquok-orchestrator:${OPENQUOK_IMAGE_TAG:-latest}
+    pull_policy: always
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      UPLOAD_DIRECTORY: /uploads
+      ORCHESTRATOR_WORKER_HEALTH_PORT: "3091"
+    command: ["node", "dist/worker/runIntegrationRefreshBullMqWorker.js"]
+    volumes:
+      - uploads-data:/uploads
+    depends_on:
+      redis:
+        condition: service_healthy
+      uploads-init:
+        condition: service_completed_successfully
+
+  worker-notification-email:
+    image: ${OPENQUOK_IMAGE_REGISTRY}/openquok-orchestrator:${OPENQUOK_IMAGE_TAG:-latest}
+    pull_policy: always
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      UPLOAD_DIRECTORY: /uploads
+      ORCHESTRATOR_WORKER_HEALTH_PORT: "0"
+    command: ["node", "dist/worker/runNotificationEmailBullMqWorker.js"]
+    healthcheck:
+      disable: true
+    volumes:
+      - uploads-data:/uploads
+    depends_on:
+      redis:
+        condition: service_healthy
+      uploads-init:
+        condition: service_completed_successfully
+
+  worker-scheduled-social-post:
+    image: ${OPENQUOK_IMAGE_REGISTRY}/openquok-orchestrator:${OPENQUOK_IMAGE_TAG:-latest}
+    pull_policy: always
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      UPLOAD_DIRECTORY: /uploads
+      ORCHESTRATOR_WORKER_HEALTH_PORT: "0"
+    command: ["node", "dist/worker/runScheduledSocialPostBullMqWorker.js"]
+    healthcheck:
+      disable: true
+    volumes:
+      - uploads-data:/uploads
+    depends_on:
+      redis:
+        condition: service_healthy
+      uploads-init:
+        condition: service_completed_successfully
+
+volumes:
+  redis-data:
+  uploads-data:
